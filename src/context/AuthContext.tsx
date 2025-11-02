@@ -34,9 +34,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
         // If no stored session, attempt login with initData
         if (initData) {
-          const authResponse = await authService.loginWithTelegram(
-            initData.toString()
-          );
+          const authResponse = await authService.loginWithTelegram(initData);
           setUser(authResponse.user);
         }
       } catch (error) {
