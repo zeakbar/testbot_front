@@ -1,6 +1,6 @@
 import type { PropsWithChildren, FC } from 'react';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { useInitData } from '@tma.js/sdk-react';
+import { useRawInitData } from '@tma.js/sdk-react';
 import { authService } from '@/api/auth';
 import type { User } from '@/api/types';
 import { Loading } from '@/components/Loading/Loading';
@@ -18,7 +18,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const initData = useInitData();
+  const initData = useRawInitData();
 
   useEffect(() => {
     const initializeAuth = async () => {
