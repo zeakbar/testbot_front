@@ -54,13 +54,17 @@ class ApiClient {
   }
 
   public async get<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'GET',
-      headers: this.buildHeaders(),
-      ...options,
-    });
+    try {
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        method: 'GET',
+        headers: this.buildHeaders(),
+        ...options,
+      });
 
-    return this.handleResponse<T>(response);
+      return this.handleResponse<T>(response);
+    } catch (error) {
+      throw error;
+    }
   }
 
   public async post<T>(
@@ -68,14 +72,18 @@ class ApiClient {
     body?: unknown,
     options?: RequestInit
   ): Promise<T> {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'POST',
-      headers: this.buildHeaders(),
-      body: body ? JSON.stringify(body) : undefined,
-      ...options,
-    });
+    try {
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        method: 'POST',
+        headers: this.buildHeaders(),
+        body: body ? JSON.stringify(body) : undefined,
+        ...options,
+      });
 
-    return this.handleResponse<T>(response);
+      return this.handleResponse<T>(response);
+    } catch (error) {
+      throw error;
+    }
   }
 
   public async put<T>(
@@ -83,24 +91,32 @@ class ApiClient {
     body?: unknown,
     options?: RequestInit
   ): Promise<T> {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'PUT',
-      headers: this.buildHeaders(),
-      body: body ? JSON.stringify(body) : undefined,
-      ...options,
-    });
+    try {
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        method: 'PUT',
+        headers: this.buildHeaders(),
+        body: body ? JSON.stringify(body) : undefined,
+        ...options,
+      });
 
-    return this.handleResponse<T>(response);
+      return this.handleResponse<T>(response);
+    } catch (error) {
+      throw error;
+    }
   }
 
   public async delete<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'DELETE',
-      headers: this.buildHeaders(),
-      ...options,
-    });
+    try {
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        method: 'DELETE',
+        headers: this.buildHeaders(),
+        ...options,
+      });
 
-    return this.handleResponse<T>(response);
+      return this.handleResponse<T>(response);
+    } catch (error) {
+      throw error;
+    }
   }
 
   private async handleResponse<T>(response: Response): Promise<T> {
