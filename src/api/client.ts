@@ -54,18 +54,13 @@ class ApiClient {
   }
 
   public async get<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    try {
-      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-        method: 'GET',
-        headers: this.buildHeaders(),
-        ...options,
-      });
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      method: 'GET',
+      headers: this.buildHeaders(),
+      ...options,
+    });
 
-      return this.handleResponse<T>(response);
-    } catch (error) {
-      console.error(`Failed to fetch GET ${endpoint}:`, error);
-      throw error;
-    }
+    return this.handleResponse<T>(response);
   }
 
   public async post<T>(
