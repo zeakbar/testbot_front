@@ -65,71 +65,41 @@ export const HomePage: FC = () => {
         <SearchBar onSearch={handleSearch} />
 
         {/* Main Content */}
-        {hasSearchResults ? (
-          // Search Results
-          <div className="home-section">
-            <SectionHeader
-              title={`Natijalar (${searchResults.length})`}
-              onViewAll={undefined}
-            />
-            <div className="home-grid-2">
-              {searchResults.map((quiz) => (
-                <QuizCard
-                  key={quiz.id}
-                  quiz={quiz}
-                  onClick={() => console.log('Quiz clicked:', quiz.id)}
-                />
-              ))}
-            </div>
-            {searchResults.length === 0 && (
-              <p className="home-empty-message">
-                Hech qanday natija topilmadi. Boshqa qidiruv urinib ko'ring.
-              </p>
-            )}
-          </div>
-        ) : isLoading ? (
+        {isLoading ? (
           <div className="home-loading">Yuklanmoqda...</div>
         ) : (
           <>
-            {/* Featured/Promoted Quizzes */}
-            {featuredQuizzes.length > 0 && (
-              <div className="home-section">
-                <div className="home-featured-container">
-                  <div className="home-featured-text">
-                    <p className="home-featured-subtitle">
-                      Do'stlaringiz bilan birga
-                    </p>
-                    <h2 className="home-featured-title">
-                      Viktorinani oynang
-                    </h2>
-                  </div>
-                  <button className="home-featured-button">
-                    Do'stlarni topish
-                  </button>
+            {/* Featured Banner */}
+            <div className="home-section">
+              <div className="home-featured-container">
+                <div className="home-featured-text">
+                  <p className="home-featured-subtitle">
+                    Bosh sahifa
+                  </p>
+                  <h2 className="home-featured-title">
+                    O'zingni tekshir
+                  </h2>
                 </div>
-                <div className="home-featured-cards">
-                  {featuredQuizzes.map((quiz) => (
-                    <div key={quiz.id} className="home-featured-avatar">
-                      {quiz.author.avatar}
-                    </div>
-                  ))}
-                </div>
+                <button className="home-featured-button">
+                  Boshlash
+                </button>
               </div>
-            )}
+            </div>
 
-            {/* Discover Section */}
-            {discoverQuizzes.length > 0 && (
+            {/* Recommended Collections */}
+            {recommendedCollections.length > 0 && (
               <div className="home-section">
                 <SectionHeader
-                  title="Kashfiyoting"
-                  onViewAll={() => console.log('View all discover')}
+                  title="Sizga tavsiya etiladi"
+                  onViewAll={() => console.log('View all recommended')}
                 />
                 <div className="home-grid-2">
-                  {discoverQuizzes.map((quiz) => (
-                    <QuizCard
-                      key={quiz.id}
-                      quiz={quiz}
-                      onClick={() => console.log('Quiz clicked:', quiz.id)}
+                  {recommendedCollections.map((collection) => (
+                    <ItemCard
+                      key={collection.id}
+                      item={collection}
+                      type="collection"
+                      onClick={() => navigate(`/collection/${collection.id}`)}
                     />
                   ))}
                 </div>
@@ -155,72 +125,26 @@ export const HomePage: FC = () => {
               </div>
             )}
 
-            {/* Top Collections Section */}
-            {collections.length > 0 && (
+            {/* All Collections Navigation */}
+            {allCollections.length > 0 && (
               <div className="home-section">
                 <SectionHeader
-                  title="Top Tuplama"
+                  title="To'plamlar"
                   onViewAll={() => console.log('View all collections')}
                 />
                 <div className="home-collections-nav">
-                  {collections.map((collection) => (
+                  {allCollections.map((collection) => (
                     <button
                       key={collection.id}
                       className="home-collections-icon"
                       onClick={() =>
-                        console.log('Collection clicked:', collection.id)
+                        navigate(`/collection/${collection.id}`)
                       }
                       title={collection.title}
                       type="button"
                     >
                       {collection.image}
                     </button>
-                  ))}
-                  {/* Additional category icons */}
-                  <button
-                    className="home-collections-icon"
-                    type="button"
-                    title="Boshqalar"
-                  >
-                    ⚙️
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Trending Quiz Section */}
-            {trendingQuizzes.length > 0 && (
-              <div className="home-section">
-                <SectionHeader
-                  title="Trending Viktorina"
-                  onViewAll={() => console.log('View all trending')}
-                />
-                <div className="home-grid-2">
-                  {trendingQuizzes.map((quiz) => (
-                    <QuizCard
-                      key={quiz.id}
-                      quiz={quiz}
-                      onClick={() => console.log('Quiz clicked:', quiz.id)}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Top Picks Section */}
-            {discoverQuizzes.length > 0 && (
-              <div className="home-section">
-                <SectionHeader
-                  title="Top Tanlovlar"
-                  onViewAll={() => console.log('View all picks')}
-                />
-                <div className="home-grid-2">
-                  {discoverQuizzes.slice(0, 2).map((quiz) => (
-                    <QuizCard
-                      key={quiz.id}
-                      quiz={quiz}
-                      onClick={() => console.log('Quiz clicked:', quiz.id)}
-                    />
                   ))}
                 </div>
               </div>
