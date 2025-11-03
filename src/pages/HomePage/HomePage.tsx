@@ -16,33 +16,24 @@ import { getTopAuthors } from '@/api/authors';
 import './HomePage.css';
 
 export const HomePage: FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [featuredQuizzes, setFeaturedQuizzes] = useState<Quiz[]>([]);
-  const [discoverQuizzes, setDiscoverQuizzes] = useState<Quiz[]>([]);
-  const [trendingQuizzes, setTrendingQuizzes] = useState<Quiz[]>([]);
+  const navigate = useNavigate();
+  const [recommendedCollections, setRecommendedCollections] = useState<Collection[]>([]);
+  const [allCollections, setAllCollections] = useState<Collection[]>([]);
   const [topAuthors, setTopAuthors] = useState<Author[]>([]);
-  const [collections, setCollections] = useState<Collection[]>([]);
-  const [searchResults, setSearchResults] = useState<Quiz[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [featured, discover, trending, authors, cols] = await Promise.all(
-          [
-            getFeaturedQuizzes(),
-            getDiscoverQuizzes(),
-            getTrendingQuizzes(),
-            getTopAuthors(),
-            getCollections(),
-          ]
-        );
+        const [recommended, all, authors] = await Promise.all([
+          getRecommendedCollections(),
+          getCollections(),
+          getTopAuthors(),
+        ]);
 
-        setFeaturedQuizzes(featured);
-        setDiscoverQuizzes(discover);
-        setTrendingQuizzes(trending);
+        setRecommendedCollections(recommended);
+        setAllCollections(all);
         setTopAuthors(authors);
-        setCollections(cols);
       } catch (error) {
         console.error('Failed to load home page data:', error);
       } finally {
@@ -53,22 +44,11 @@ export const HomePage: FC = () => {
     loadData();
   }, []);
 
-  const handleSearch = async (query: string) => {
-    setSearchQuery(query);
+  const handleSearch = (query: string) => {
     if (query.trim()) {
-      try {
-        const results = await searchQuizzes(query);
-        setSearchResults(results.quizzes);
-      } catch (error) {
-        console.error('Search failed:', error);
-        setSearchResults([]);
-      }
-    } else {
-      setSearchResults([]);
+      navigate(`/search?q=${encodeURIComponent(query)}`);
     }
   };
-
-  const hasSearchResults = searchQuery.trim().length > 0;
 
   return (
     <Page back={false}>
