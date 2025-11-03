@@ -1,0 +1,135 @@
+.search-page {
+  background: var(--color-bg-secondary);
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+/* Results */
+.search-page-results {
+  padding: 12px 0;
+}
+
+.search-page-section {
+  padding: 12px 0;
+}
+
+.search-page-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 12px 16px;
+}
+
+/* Empty State */
+.search-page-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.search-page-empty-icon {
+  font-size: 64px;
+  line-height: 1;
+}
+
+.search-page-empty-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.search-page-empty-description {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  max-width: 300px;
+  line-height: 1.5;
+}
+
+/* Welcome State */
+.search-page-welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.search-page-welcome-icon {
+  font-size: 80px;
+  line-height: 1;
+}
+
+.search-page-welcome-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.search-page-welcome-description {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  max-width: 300px;
+}
+
+/* Loading */
+.search-page-loading {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.search-page-bottom-space {
+  height: 20px;
+}
+
+@media (max-width: 480px) {
+  .search-page-grid {
+    gap: 10px;
+    padding: 10px 12px;
+  }
+
+  .search-page-empty {
+    padding: 50px 16px;
+    gap: 12px;
+  }
+
+  .search-page-empty-icon {
+    font-size: 56px;
+  }
+
+  .search-page-empty-title {
+    font-size: 18px;
+  }
+
+  .search-page-empty-description {
+    font-size: 13px;
+  }
+
+  .search-page-welcome {
+    padding: 60px 16px;
+    gap: 12px;
+  }
+
+  .search-page-welcome-icon {
+    font-size: 64px;
+  }
+
+  .search-page-welcome-title {
+    font-size: 20px;
+  }
+
+  .search-page-welcome-description {
+    font-size: 13px;
+  }
+}
