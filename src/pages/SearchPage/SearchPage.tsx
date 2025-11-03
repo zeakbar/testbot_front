@@ -1,0 +1,166 @@
+import type { FC } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Page } from '@/components/Page';
+import { SearchBar } from '@/components/SearchBar/SearchBar';
+import { SectionHeader } from '@/components/SectionHeader/SectionHeader';
+import { QuizCard } from '@/components/QuizCard/QuizCard';
+import { ItemCard } from '@/components/ItemCard/ItemCard';
+import { globalSearch } from '@/api/collections';
+import type { Test, Set, Collection } from '@/api/types';
+import './SearchPage.css';
+
+export const SearchPage: FC = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const initialQuery = searchParams.get('q') || '';
+
+  const [query, setQuery] = useState(initialQuery);
+  const [tests, setTests] = useState<Test[]>([]);
+  const [sets, setSets] = useState<Set[]>([]);
+  const [collections, setCollections] = useState<Collection[]>([]);
+  const [isLoading, setIsLoading] = useState(!!initialQuery);
+  const [hasSearched, setHasSearched] = useState(!!initialQuery);
+
+  useEffect(() => {
+    if (initialQuery) {
+      handleSearch(initialQuery);
+    }
+  }, [initialQuery]);
+
+  const handleSearch = async (searchQuery: string) => {
+    setQuery(searchQuery);
+    if (!searchQuery.trim()) {
+      setTests([]);
+      setSets([]);
+      setCollections([]);
+      setHasSearched(false);
+      return;
+    }
+
+    setIsLoading(true);
+    setHasSearched(true);
+    try {
+      const results = await globalSearch(searchQuery);
+      setTests(results.tests || []);
+      setSets(results.sets || []);
+      setCollections(results.collections || []);
+    } catch (error) {
+      console.error('Search failed:', error);
+      setTests([]);
+      setSets([]);
+      setCollections([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const totalResults = tests.length + sets.length + collections.length;
+
+  return (
+    <Page back={false}>
+      <div className="search-page">
+        {/* Search Bar */}
+        <SearchBar
+          onSearch={handleSearch}
+          placeholder="Viktorina, Set yoki To'plamni qidirish..."
+        />
+
+        {/* Results */}
+        {hasSearched ? (
+          isLoading ? (
+            <div className="search-page-loading">Qidirilmoqda...</div>
+          ) : totalResults === 0 ? (
+            <div className="search-page-empty">
+              <div className="search-page-empty-icon">🔍</div>
+              <h2 className="search-page-empty-title">
+                "{query}" uchun natija topilmadi
+              </h2>
+              <p className="search-page-empty-description">
+                Boshqa qidiruv so'zlari bilan urining yoki joga qo'shin
+              </p>
+            </div>
+          ) : (
+            <div className="search-page-results">
+              {/* Collections Section */}
+              {collections.length > 0 && (
+                <div className="search-page-section">
+                  <SectionHeader
+                    title={`To'plamlar (${collections.length})`}
+                    onViewAll={undefined}
+                  />
+                  <div className="search-page-grid">
+                    {collections.map((collection) => (
+                      <ItemCard
+                        key={collection.id}
+                        item={collection}
+                        type="collection"
+                        onClick={() =>
+                          navigate(`/collection/${collection.id}`)
+                        }
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Sets Section */}
+              {sets.length > 0 && (
+                <div className="search-page-section">
+                  <SectionHeader
+                    title={`Sets (${sets.length})`}
+                    onViewAll={undefined}
+                  />
+                  <div className="search-page-grid">
+                    {sets.map((set) => (
+                      <ItemCard
+                        key={set.id}
+                        item={set}
+                        type="set"
+                        onClick={() => navigate(`/set/${set.id}`)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Tests/Quizzes Section */}
+              {tests.length > 0 && (
+                <div className="search-page-section">
+                  <SectionHeader
+                    title={`Testlar (${tests.length})`}
+                    onViewAll={undefined}
+                  />
+                  <div className="search-page-grid">
+                    {tests.map((test) => (
+                      <QuizCard
+                        key={test.id}
+                        quiz={{
+                          ...test,
+                          category: 'test',
+                        } as any}
+                        onClick={() => navigate(`/test/${test.id}`)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )
+        ) : (
+          <div className="search-page-welcome">
+            <div className="search-page-welcome-icon">🎓</div>
+            <h2 className="search-page-welcome-title">
+              Qidiruv boshlangsini
+            </h2>
+            <p className="search-page-welcome-description">
+              To'plamlar, Setlar va Testlarni qidiring
+            </p>
+          </div>
+        )}
+
+        <div className="search-page-bottom-space"></div>
+      </div>
+    </Page>
+  );
+};
