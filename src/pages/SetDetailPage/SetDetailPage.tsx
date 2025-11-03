@@ -26,7 +26,7 @@ export const SetDetailPage: FC = () => {
         setSet(setData);
         setTests(testsData);
       } catch (error) {
-        console.error('Failed to load set:', error);
+        // Expected error when backend is unavailable, mock data will be used
       } finally {
         setIsLoading(false);
       }

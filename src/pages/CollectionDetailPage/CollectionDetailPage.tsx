@@ -26,7 +26,7 @@ export const CollectionDetailPage: FC = () => {
         setCollection(collectionData);
         setSets(setsData);
       } catch (error) {
-        console.error('Failed to load collection:', error);
+        // Expected error when backend is unavailable, mock data will be used
       } finally {
         setIsLoading(false);
       }

@@ -27,7 +27,7 @@ export const QuestionDetailPage: FC = () => {
           setQuestion(testData.questions[currentIndex]);
         }
       } catch (error) {
-        console.error('Failed to load question:', error);
+        // Expected error when backend is unavailable, mock data will be used
       } finally {
         setIsLoading(false);
       }

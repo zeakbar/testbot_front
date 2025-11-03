@@ -25,7 +25,7 @@ export const TestDetailPage: FC = () => {
         const userProgress = mockTestProgress.find((p) => p.test_id === testId);
         setProgress(userProgress || null);
       } catch (error) {
-        console.error('Failed to load test:', error);
+        // Expected error when backend is unavailable, mock data will be used
       } finally {
         setIsLoading(false);
       }

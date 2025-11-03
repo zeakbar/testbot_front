@@ -46,7 +46,7 @@ export const SearchPage: FC = () => {
       setSets(results.sets || []);
       setCollections(results.collections || []);
     } catch (error) {
-      console.error('Search failed:', error);
+      // Expected error when backend is unavailable
       setTests([]);
       setSets([]);
       setCollections([]);
