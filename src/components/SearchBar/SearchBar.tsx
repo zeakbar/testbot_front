@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { useState, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './SearchBar.css';
 
 interface SearchBarProps {
@@ -13,6 +14,8 @@ export const SearchBar: FC<SearchBarProps> = ({
 }) => {
   const [query, setQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,10 +26,23 @@ export const SearchBar: FC<SearchBarProps> = ({
     [onSearch]
   );
 
+  const handleFocus = () => {
+    setIsFocused(true);
+    if (location.pathname !== '/search') {
+      navigate('/search');
+    }
+  };
+
   const handleClear = useCallback(() => {
     setQuery('');
     onSearch('');
   }, [onSearch]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && query.trim()) {
+      navigate(`/search?q=${encodeURIComponent(query)}`);
+    }
+  };
 
   return (
     <div className="search-bar-wrapper">
@@ -40,8 +56,9 @@ export const SearchBar: FC<SearchBarProps> = ({
           placeholder={placeholder}
           value={query}
           onChange={handleChange}
-          onFocus={() => setIsFocused(true)}
+          onFocus={handleFocus}
           onBlur={() => setIsFocused(false)}
+          onKeyDown={handleKeyDown}
           aria-label="Search quizzes"
         />
         {query && (
