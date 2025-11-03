@@ -1,21 +1,18 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Page } from '@/components/Page';
 import { SearchBar } from '@/components/SearchBar/SearchBar';
 import { SectionHeader } from '@/components/SectionHeader/SectionHeader';
-import { QuizCard } from '@/components/QuizCard/QuizCard';
+import { ItemCard } from '@/components/ItemCard/ItemCard';
 import { AuthorCard } from '@/components/AuthorCard/AuthorCard';
-import { CollectionCard } from '@/components/CollectionCard/CollectionCard';
-import type { Quiz, Author, Collection } from '@/api/types';
+import type { Collection, Author, Test } from '@/api/types';
 import {
-  getFeaturedQuizzes,
-  getDiscoverQuizzes,
-  getTrendingQuizzes,
-  getRecommendedQuizzes,
-  searchQuizzes,
-} from '@/api/quiz';
+  getCollections,
+  getRecommendedCollections,
+  globalSearch,
+} from '@/api/collections';
 import { getTopAuthors } from '@/api/authors';
-import { getCollections } from '@/api/collections';
 import './HomePage.css';
 
 export const HomePage: FC = () => {
