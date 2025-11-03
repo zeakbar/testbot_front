@@ -35,7 +35,7 @@ export const HomePage: FC = () => {
         setAllCollections(all);
         setTopAuthors(authors);
       } catch (error) {
-        console.error('Failed to load home page data:', error);
+        // Expected error when backend is unavailable, mock data will be used
       } finally {
         setIsLoading(false);
       }
