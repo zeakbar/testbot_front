@@ -95,22 +95,16 @@
 }
 
 .home-featured-cards {
-  display: flex;
+  display: grid;
+  grid-auto-columns: 40px;
+  grid-auto-flow: column;
   gap: 8px;
   padding: 12px 16px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  margin: 0 -16px;
-  padding-left: calc(16px + 8px);
-  padding-right: calc(16px + 8px);
-}
-
-.home-featured-cards::-webkit-scrollbar {
-  display: none;
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .home-featured-avatar {
-  flex-shrink: 0;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -132,42 +126,31 @@
 
 /* Authors Scroll */
 .home-authors-scroll {
-  display: flex;
+  display: grid;
+  grid-auto-columns: minmax(120px, 1fr);
+  grid-auto-flow: column;
   gap: 8px;
   padding: 12px 16px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  margin: 0 -16px;
-  padding-left: calc(16px + 8px);
-  padding-right: calc(16px + 8px);
-}
-
-.home-authors-scroll::-webkit-scrollbar {
-  display: none;
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .home-authors-scroll > * {
-  flex-shrink: 0;
+  min-width: 0;
 }
 
 /* Collections Navigation */
 .home-collections-nav {
-  display: flex;
+  display: grid;
+  grid-auto-columns: 52px;
+  grid-auto-flow: column;
   gap: 12px;
   padding: 12px 16px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  margin: 0 -16px;
-  padding-left: calc(16px + 12px);
-  padding-right: calc(16px + 12px);
-}
-
-.home-collections-nav::-webkit-scrollbar {
-  display: none;
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .home-collections-icon {
-  flex-shrink: 0;
   width: 52px;
   height: 52px;
   border-radius: 12px;
