@@ -1,0 +1,103 @@
+import type { FC } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Page } from '@/components/Page';
+import { ItemCard } from '@/components/ItemCard/ItemCard';
+import { SectionHeader } from '@/components/SectionHeader/SectionHeader';
+import { getCollectionById, getSetsByCollection } from '@/api/collections';
+import type { Collection, Set } from '@/api/types';
+import './CollectionDetailPage.css';
+
+export const CollectionDetailPage: FC = () => {
+  const { collectionId } = useParams<{ collectionId: string }>();
+  const navigate = useNavigate();
+  const [collection, setCollection] = useState<Collection | null>(null);
+  const [sets, setSets] = useState<Set[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (!collectionId) return;
+      try {
+        const [collectionData, setsData] = await Promise.all([
+          getCollectionById(collectionId),
+          getSetsByCollection(collectionId),
+        ]);
+        setCollection(collectionData);
+        setSets(setsData);
+      } catch (error) {
+        // Expected error when backend is unavailable, mock data will be used
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, [collectionId]);
+
+  if (isLoading) {
+    return (
+      <Page back>
+        <div className="collection-detail-loading">Yuklanmoqda...</div>
+      </Page>
+    );
+  }
+
+  if (!collection) {
+    return (
+      <Page back>
+        <div className="collection-detail-error">Collection topilmadi</div>
+      </Page>
+    );
+  }
+
+  return (
+    <Page back>
+      <div className="collection-detail-page">
+        {/* Header */}
+        <div className="collection-detail-header">
+          <div className="collection-detail-image">
+            <span className="collection-detail-emoji">{collection.image}</span>
+          </div>
+          <div className="collection-detail-info">
+            <h1 className="collection-detail-title">{collection.title}</h1>
+            <p className="collection-detail-description">
+              {collection.description}
+            </p>
+            <p className="collection-detail-stats">
+              {collection.sets_count} Sets • {sets.length} Total Tests
+            </p>
+          </div>
+        </div>
+
+        {/* Sets Grid */}
+        {sets.length > 0 && (
+          <div className="collection-detail-section">
+            <SectionHeader
+              title="Sets in this Collection"
+              onViewAll={undefined}
+            />
+            <div className="collection-detail-grid">
+              {sets.map((set) => (
+                <ItemCard
+                  key={set.id}
+                  item={set}
+                  type="set"
+                  onClick={() => navigate(`/set/${set.id}`)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {sets.length === 0 && (
+          <div className="collection-detail-empty">
+            <p>Bu collectionda hozircha Sets yo'q</p>
+          </div>
+        )}
+
+        <div className="collection-detail-bottom-space"></div>
+      </div>
+    </Page>
+  );
+};

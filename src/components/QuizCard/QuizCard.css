@@ -1,0 +1,129 @@
+.quiz-card {
+  background: var(--color-bg-primary);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.quiz-card:hover,
+.quiz-card:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  outline: none;
+}
+
+.quiz-card-image {
+  position: relative;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-secondary);
+  overflow: hidden;
+}
+
+.quiz-card-easy .quiz-card-image {
+  background: linear-gradient(135deg, #A5D6A7 0%, #81C784 100%);
+}
+
+.quiz-card-medium .quiz-card-image {
+  background: var(--gradient-primary);
+}
+
+.quiz-card-hard .quiz-card-image {
+  background: linear-gradient(135deg, #EF9A9A 0%, #EF5350 100%);
+}
+
+.quiz-card-emoji {
+  font-size: 48px;
+  line-height: 1;
+}
+
+.quiz-card-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--color-secondary);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.quiz-card-content {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.quiz-card-title {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.3;
+}
+
+.quiz-card-description {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.3;
+  flex-grow: 1;
+}
+
+.quiz-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.quiz-card-author-avatar {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quiz-card-author-name {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 480px) {
+  .quiz-card {
+    border-radius: 10px;
+  }
+
+  .quiz-card-image {
+    height: 100px;
+  }
+
+  .quiz-card-emoji {
+    font-size: 40px;
+  }
+
+  .quiz-card-content {
+    padding: 10px;
+  }
+
+  .quiz-card-title {
+    font-size: 13px;
+  }
+
+  .quiz-card-description {
+    font-size: 11px;
+  }
+}
