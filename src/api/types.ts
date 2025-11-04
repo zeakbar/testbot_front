@@ -81,6 +81,14 @@ export interface Collection {
   sets: Set[];
 }
 
+/* Attempt Detail Model */
+export interface AttemptDetail {
+  attempt_number: number;
+  score: number;
+  time_spent_minutes: number;
+  completed_at: string;
+}
+
 /* Progress/Tracking Models */
 export interface TestProgress {
   test_id: string;
@@ -89,6 +97,7 @@ export interface TestProgress {
   best_score: number;
   average_score: number;
   completed_at?: string;
+  attempt_details?: AttemptDetail[];
 }
 
 export interface SetProgress {
