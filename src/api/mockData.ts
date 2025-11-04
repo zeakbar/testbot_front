@@ -1,4 +1,4 @@
-import type { Author, Collection, Set, Test, Question, TestProgress, SetProgress } from './types';
+import type { Author, Collection, Set, Test, Question, TestProgress, SetProgress, AttemptDetail } from './types';
 
 export const mockAuthors: Author[] = [
   { id: '1', name: 'Rayhon', avatar: '👩‍🏫', rating: 4.8 },
