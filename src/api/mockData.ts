@@ -171,6 +171,26 @@ export const mockTestProgress: TestProgress[] = [
     best_score: 85,
     average_score: 75,
     completed_at: new Date().toISOString(),
+    attempt_details: [
+      {
+        attempt_number: 1,
+        score: 65,
+        time_spent_minutes: 10,
+        completed_at: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        attempt_number: 2,
+        score: 75,
+        time_spent_minutes: 8,
+        completed_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        attempt_number: 3,
+        score: 85,
+        time_spent_minutes: 6,
+        completed_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+    ],
   },
   {
     test_id: 'test2',
@@ -178,6 +198,14 @@ export const mockTestProgress: TestProgress[] = [
     time_spent_minutes: 15,
     best_score: 92,
     average_score: 92,
+    attempt_details: [
+      {
+        attempt_number: 1,
+        score: 92,
+        time_spent_minutes: 15,
+        completed_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+    ],
   },
 ];
 
