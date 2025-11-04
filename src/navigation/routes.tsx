@@ -10,6 +10,7 @@ import { CollectionDetailPage } from '@/pages/CollectionDetailPage/CollectionDet
 import { SetDetailPage } from '@/pages/SetDetailPage/SetDetailPage';
 import { TestDetailPage } from '@/pages/TestDetailPage/TestDetailPage';
 import { QuestionDetailPage } from '@/pages/QuestionDetailPage/QuestionDetailPage';
+import { QuestionOwnerPage } from '@/pages/QuestionOwnerPage/QuestionOwnerPage';
 
 interface Route {
   path: string;
@@ -29,4 +30,5 @@ export const routes: Route[] = [
   { path: '/set/:setId', Component: SetDetailPage },
   { path: '/test/:testId', Component: TestDetailPage },
   { path: '/test/:testId/question/:questionIndex', Component: QuestionDetailPage },
+  { path: '/test/:testId/question/:questionIndex/info', Component: QuestionOwnerPage },
 ];
