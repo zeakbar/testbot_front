@@ -20,11 +20,12 @@ export const AuthorCard: FC<AuthorCardProps> = ({ author, onClick }) => {
         }
       }}
     >
-      <div className="author-card-avatar">{author.avatar}</div>
-      <h4 className="author-card-name">{author.name}</h4>
+      <div className="author-card-avatar">
+        {author.full_name.charAt(0).toUpperCase()}
+      </div>
+      <h4 className="author-card-name">{author.full_name}</h4>
       <div className="author-card-rating">
-        <span className="author-card-rating-star">⭐</span>
-        <span className="author-card-rating-value">{author.rating}</span>
+        <span className="author-card-rating-value">@{author.username || 'user'}</span>
       </div>
     </div>
   );
