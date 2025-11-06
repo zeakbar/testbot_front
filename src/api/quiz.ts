@@ -1,109 +1,46 @@
-import type { Quiz, SearchResult } from './types';
-import { mockQuizzes, searchMockData } from './mockData';
+import type { Test } from './types';
 import { apiClient } from './client';
 
 /**
- * Get featured/promoted quizzes for home page
+ * Get featured/promoted tests for home page
  */
-export async function getFeaturedQuizzes(): Promise<Quiz[]> {
-  try {
-    return await apiClient.get<Quiz[]>('/quiz/featured/');
-  } catch {
-    // Fallback to mock data for now
-    return mockQuizzes.slice(0, 2);
-  }
+export async function getFeaturedTests(): Promise<Test[]> {
+  return apiClient.get<Test[]>('/testss/featured/');
 }
 
 /**
- * Get discover quizzes (discover section on home page)
+ * Get discover tests (discover section on home page)
  */
-export async function getDiscoverQuizzes(): Promise<Quiz[]> {
-  try {
-    return await apiClient.get<Quiz[]>('/quiz/discover/');
-  } catch {
-    // Fallback to mock data
-    return mockQuizzes.slice(0, 4);
-  }
+export async function getDiscoverTests(): Promise<Test[]> {
+  return apiClient.get<Test[]>('/testss/discover/');
 }
 
 /**
- * Get trending quizzes
+ * Get trending tests
  */
-export async function getTrendingQuizzes(): Promise<Quiz[]> {
-  try {
-    return await apiClient.get<Quiz[]>('/quiz/trending/');
-  } catch {
-    // Fallback to mock data
-    return mockQuizzes.filter((q) => q.badge === 'trending');
-  }
+export async function getTrendingTests(): Promise<Test[]> {
+  return apiClient.get<Test[]>('/testss/trending/');
 }
 
 /**
- * Get recommended quizzes for user
+ * Get recommended tests for user
  */
-export async function getRecommendedQuizzes(): Promise<Quiz[]> {
-  try {
-    return await apiClient.get<Quiz[]>('/quiz/recommended/');
-  } catch {
-    // Fallback to mock data
-    return mockQuizzes.slice(0, 2);
-  }
+export async function getRecommendedTests(): Promise<Test[]> {
+  return apiClient.get<Test[]>('/testss/recommended/');
 }
 
 /**
- * Search quizzes by query
+ * Get single test by ID
  */
-export async function searchQuizzes(query: string): Promise<SearchResult> {
-  try {
-    return await apiClient.get<SearchResult>(`/quiz/search/?q=${encodeURIComponent(query)}`);
-  } catch {
-    // Fallback to mock search
-    const results = searchMockData(query);
-    return {
-      quizzes: results,
-      total: results.length,
-    };
-  }
+export async function getTestById(id: string): Promise<Test> {
+  return apiClient.get<Test>(`/testss/${id}/`);
 }
 
 /**
- * Get single quiz by ID
+ * Get tests by difficulty level
  */
-export async function getQuizById(id: string): Promise<Quiz> {
-  try {
-    return await apiClient.get<Quiz>(`/quiz/${id}/`);
-  } catch {
-    // Fallback to mock data
-    const quiz = mockQuizzes.find((q) => q.id === id);
-    if (!quiz) {
-      throw new Error('Quiz not found');
-    }
-    return quiz;
-  }
-}
-
-/**
- * Get quizzes by category
- */
-export async function getQuizzesByCategory(category: string): Promise<Quiz[]> {
-  try {
-    return await apiClient.get<Quiz[]>(`/quiz/category/${category}/`);
-  } catch {
-    // Fallback to mock data
-    return mockQuizzes.filter((q) => q.category === category);
-  }
-}
-
-/**
- * Get quizzes by difficulty level
- */
-export async function getQuizzesByDifficulty(
+export async function getTestsByDifficulty(
   difficulty: 'easy' | 'medium' | 'hard'
-): Promise<Quiz[]> {
-  try {
-    return await apiClient.get<Quiz[]>(`/quiz/difficulty/${difficulty}/`);
-  } catch {
-    // Fallback to mock data
-    return mockQuizzes.filter((q) => q.difficulty === difficulty);
-  }
+): Promise<Test[]> {
+  return apiClient.get<Test[]>(`/testss/difficulty/${difficulty}/`);
 }
