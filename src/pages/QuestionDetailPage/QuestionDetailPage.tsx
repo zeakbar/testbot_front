@@ -164,17 +164,17 @@ export const QuestionDetailPage: FC = () => {
             disabled={currentIndex === 0}
             type="button"
           >
-            ← Previous
+            ← Orqaga
           </button>
 
           {!answered ? (
             <button
               className="question-detail-submit-btn"
               onClick={() => setAnswered(true)}
-              disabled={!selectedAnswer}
+              disabled={selectedOptionId === null}
               type="button"
             >
-              Submit Answer
+              Javob berish
             </button>
           ) : (
             <button
@@ -182,7 +182,7 @@ export const QuestionDetailPage: FC = () => {
               onClick={handleNext}
               type="button"
             >
-              {currentIndex === test.questions.length - 1 ? 'Finish' : 'Next'} →
+              {currentIndex === (test?.questions?.length || 1) - 1 ? 'Yakunlash' : 'Keyingi'} →
             </button>
           )}
         </div>
