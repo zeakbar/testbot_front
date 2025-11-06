@@ -38,17 +38,6 @@ export const TestDetailPage: FC = () => {
     }
   };
 
-  const getScoreColor = (score: number): string => {
-    if (score >= 80) return 'score-excellent';
-    if (score >= 60) return 'score-good';
-    return 'score-needs-improvement';
-  };
-
-  const getScorePercentageColor = (score: number): string => {
-    if (score >= 80) return '#4CAF50';
-    if (score >= 60) return '#2196F3';
-    return '#FF9800';
-  };
 
   if (isLoading) {
     return (
