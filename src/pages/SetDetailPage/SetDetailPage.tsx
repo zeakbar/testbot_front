@@ -4,36 +4,46 @@ import { useEffect, useState } from 'react';
 import { Page } from '@/components/Page';
 import { QuizCard } from '@/components/QuizCard/QuizCard';
 import { SectionHeader } from '@/components/SectionHeader/SectionHeader';
-import { getSetById, getTestsBySet } from '@/api/collections';
-import type { Set, Test } from '@/api/types';
+import { getCategoryById, loadMoreTests } from '@/api/collections';
+import type { Category, Test } from '@/api/types';
 import './SetDetailPage.css';
 
 export const SetDetailPage: FC = () => {
-  const { setId } = useParams<{ setId: string }>();
+  const { categoryId } = useParams<{ categoryId: string }>();
   const navigate = useNavigate();
-  const [set, setSet] = useState<Set | null>(null);
+  const [category, setCategory] = useState<Category | null>(null);
   const [tests, setTests] = useState<Test[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
-      if (!setId) return;
+      if (!categoryId) return;
       try {
-        const [setData, testsData] = await Promise.all([
-          getSetById(setId),
-          getTestsBySet(setId),
-        ]);
-        setSet(setData);
-        setTests(testsData);
+        const categoryData = await getCategoryById(parseInt(categoryId, 10));
+        setCategory(categoryData);
+        setTests(categoryData.tests.results);
+        setNextPageUrl(categoryData.tests.next);
       } catch (error) {
-        // Expected error when backend is unavailable, mock data will be used
+        console.error('Error loading category:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
     loadData();
-  }, [setId]);
+  }, [categoryId]);
+
+  const handleLoadMore = async () => {
+    if (!nextPageUrl) return;
+    try {
+      const response = await loadMoreTests(nextPageUrl);
+      setTests((prev) => [...prev, ...response.results]);
+      setNextPageUrl(response.next);
+    } catch (error) {
+      console.error('Error loading more tests:', error);
+    }
+  };
 
   if (isLoading) {
     return (
