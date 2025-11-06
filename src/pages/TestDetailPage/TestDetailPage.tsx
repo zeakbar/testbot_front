@@ -72,25 +72,26 @@ export const TestDetailPage: FC = () => {
         {/* Header */}
         <div className="test-detail-header">
           <div className="test-detail-image">
-            <span className="test-detail-emoji">{test.image}</span>
-            {test.badge && <div className="test-detail-badge">{test.badge}</div>}
+            <span className="test-detail-emoji">📝</span>
           </div>
           <div className="test-detail-info">
-            <h1 className="test-detail-title">{test.title}</h1>
+            <h1 className="test-detail-title">{test.topic}</h1>
             <p className="test-detail-author">
-              {test.author.avatar} {test.author.name}
+              {test.author.full_name}
             </p>
           </div>
         </div>
 
         {/* Description */}
         <div className="test-detail-description-section">
-          <h3 className="test-detail-section-title">About This Test</h3>
-          <p className="test-detail-description">{test.description}</p>
+          <h3 className="test-detail-section-title">Test haqida</h3>
+          {test.description && (
+            <p className="test-detail-description">{test.description}</p>
+          )}
           <div className="test-detail-meta">
-            <span>Questions: {test.questions_count}</span>
-            <span>Duration: {test.duration_minutes} mins</span>
-            <span>Difficulty: {test.difficulty}</span>
+            <span>Savollar: {test.total_questions}</span>
+            <span>Qiymati: {test.open_period} kun</span>
+            <span>Darajasi: {test.difficulty_level}</span>
           </div>
         </div>
 
