@@ -82,21 +82,21 @@ export const SearchPage: FC = () => {
             </div>
           ) : (
             <div className="search-page-results">
-              {/* Collections Section */}
-              {collections.length > 0 && (
+              {/* Fields Section */}
+              {fields.length > 0 && (
                 <div className="search-page-section">
                   <SectionHeader
-                    title={`To'plamlar (${collections.length})`}
+                    title={`Sohalar (${fields.length})`}
                     onViewAll={undefined}
                   />
                   <div className="search-page-grid">
-                    {collections.map((collection) => (
+                    {fields.map((field) => (
                       <ItemCard
-                        key={collection.id}
-                        item={collection}
-                        type="collection"
+                        key={field.id}
+                        item={field}
+                        type="field"
                         onClick={() =>
-                          navigate(`/collection/${collection.id}`)
+                          navigate(`/field/${field.id}`)
                         }
                       />
                     ))}
@@ -104,27 +104,27 @@ export const SearchPage: FC = () => {
                 </div>
               )}
 
-              {/* Sets Section */}
-              {sets.length > 0 && (
+              {/* Categories Section */}
+              {categories.length > 0 && (
                 <div className="search-page-section">
                   <SectionHeader
-                    title={`Sets (${sets.length})`}
+                    title={`Kategoriyalar (${categories.length})`}
                     onViewAll={undefined}
                   />
                   <div className="search-page-grid">
-                    {sets.map((set) => (
+                    {categories.map((category) => (
                       <ItemCard
-                        key={set.id}
-                        item={set}
-                        type="set"
-                        onClick={() => navigate(`/set/${set.id}`)}
+                        key={category.id}
+                        item={category}
+                        type="category"
+                        onClick={() => navigate(`/category/${category.id}`)}
                       />
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* Tests/Quizzes Section */}
+              {/* Tests Section */}
               {tests.length > 0 && (
                 <div className="search-page-section">
                   <SectionHeader
@@ -136,9 +136,13 @@ export const SearchPage: FC = () => {
                       <QuizCard
                         key={test.id}
                         quiz={{
-                          ...test,
-                          category: 'test',
-                        } as any}
+                          id: test.id,
+                          title: test.topic,
+                          description: test.description,
+                          image: '',
+                          difficulty: test.difficulty_level,
+                          questions_count: test.total_questions,
+                        }}
                         onClick={() => navigate(`/test/${test.id}`)}
                       />
                     ))}
@@ -154,7 +158,7 @@ export const SearchPage: FC = () => {
               Qidiruv boshlangsini
             </h2>
             <p className="search-page-welcome-description">
-              To'plamlar, Setlar va Testlarni qidiring
+              Sohalar, Kategoriyalar va Testlarni qidiring
             </p>
           </div>
         )}
