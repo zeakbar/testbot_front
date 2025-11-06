@@ -40,10 +40,10 @@ export const CollectionDetailPage: FC = () => {
     );
   }
 
-  if (!collection) {
+  if (!field) {
     return (
       <Page back>
-        <div className="collection-detail-error">Collection topilmadi</div>
+        <div className="collection-detail-error">Soha topilmadi</div>
       </Page>
     );
   }
@@ -54,42 +54,48 @@ export const CollectionDetailPage: FC = () => {
         {/* Header */}
         <div className="collection-detail-header">
           <div className="collection-detail-image">
-            <span className="collection-detail-emoji">{collection.image}</span>
+            {field.image && field.image.startsWith('http') ? (
+              <img src={field.image} alt={field.name} className="field-image" />
+            ) : (
+              <span className="collection-detail-emoji">{field.image}</span>
+            )}
           </div>
           <div className="collection-detail-info">
-            <h1 className="collection-detail-title">{collection.title}</h1>
-            <p className="collection-detail-description">
-              {collection.description}
-            </p>
+            <h1 className="collection-detail-title">{field.name}</h1>
+            {field.description && (
+              <p className="collection-detail-description">
+                {field.description}
+              </p>
+            )}
             <p className="collection-detail-stats">
-              {collection.sets_count} Sets • {sets.length} Total Tests
+              {categories.length} Kategoriyalar
             </p>
           </div>
         </div>
 
-        {/* Sets Grid */}
-        {sets.length > 0 && (
+        {/* Categories Grid */}
+        {categories.length > 0 && (
           <div className="collection-detail-section">
             <SectionHeader
-              title="Sets in this Collection"
+              title="Kategoriyalar"
               onViewAll={undefined}
             />
             <div className="collection-detail-grid">
-              {sets.map((set) => (
+              {categories.map((category) => (
                 <ItemCard
-                  key={set.id}
-                  item={set}
-                  type="set"
-                  onClick={() => navigate(`/set/${set.id}`)}
+                  key={category.id}
+                  item={category}
+                  type="category"
+                  onClick={() => navigate(`/category/${category.id}`)}
                 />
               ))}
             </div>
           </div>
         )}
 
-        {sets.length === 0 && (
+        {categories.length === 0 && (
           <div className="collection-detail-empty">
-            <p>Bu collectionda hozircha Sets yo'q</p>
+            <p>Bu sohada hozircha kategoriyalar yo'q</p>
           </div>
         )}
 
