@@ -4,36 +4,33 @@ import { useEffect, useState } from 'react';
 import { Page } from '@/components/Page';
 import { ItemCard } from '@/components/ItemCard/ItemCard';
 import { SectionHeader } from '@/components/SectionHeader/SectionHeader';
-import { getCollectionById, getSetsByCollection } from '@/api/collections';
-import type { Collection, Set } from '@/api/types';
+import { getFieldById } from '@/api/collections';
+import type { Field, Category } from '@/api/types';
 import './CollectionDetailPage.css';
 
 export const CollectionDetailPage: FC = () => {
-  const { collectionId } = useParams<{ collectionId: string }>();
+  const { fieldId } = useParams<{ fieldId: string }>();
   const navigate = useNavigate();
-  const [collection, setCollection] = useState<Collection | null>(null);
-  const [sets, setSets] = useState<Set[]>([]);
+  const [field, setField] = useState<Field | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
-      if (!collectionId) return;
+      if (!fieldId) return;
       try {
-        const [collectionData, setsData] = await Promise.all([
-          getCollectionById(collectionId),
-          getSetsByCollection(collectionId),
-        ]);
-        setCollection(collectionData);
-        setSets(setsData);
+        const fieldData = await getFieldById(parseInt(fieldId, 10));
+        setField(fieldData);
+        setCategories(fieldData.categories || []);
       } catch (error) {
-        // Expected error when backend is unavailable, mock data will be used
+        console.error('Error loading field:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
     loadData();
-  }, [collectionId]);
+  }, [fieldId]);
 
   if (isLoading) {
     return (
