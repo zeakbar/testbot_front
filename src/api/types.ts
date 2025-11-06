@@ -6,7 +6,7 @@ export interface User {
   language: string;
   created: string;
   balance: number;
-  is_verified: boolean;
+  is_verified?: boolean;
 }
 
 /* Auth Responses */
@@ -23,99 +23,87 @@ export interface TokenPayload {
   exp: number;
 }
 
-/* Question Types */
-export type QuestionType = 'quiz' | 'true_false' | 'fill_gap' | 'type_answer' | 'audio' | 'slider' | 'checkbox' | 'say_word';
+/* Option Model */
+export interface Option {
+  id: number;
+  text: string;
+  is_correct: boolean;
+  order: number;
+  question: number;
+}
 
 /* Question Model */
 export interface Question {
-  id: string;
-  type: QuestionType;
+  id: number;
+  test: number;
   question: string;
-  image?: string;
-  audio?: string;
-  options?: string[];
-  correct_answer: string | string[];
-  explanation?: string;
-  difficulty: 'easy' | 'medium' | 'hard';
+  image?: string | null;
+  is_active: boolean;
+  ai_generated: boolean;
+  explanation: string;
+  options: Option[];
+}
+
+/* Pagination Wrapper */
+export interface PaginatedResponse<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
 }
 
 /* Test/Quiz Model */
 export interface Test {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  questions_count: number;
-  duration_minutes: number;
-  difficulty: 'easy' | 'medium' | 'hard';
-  author: Author;
+  id: number;
+  author: User;
+  topic: string;
+  language: string;
+  difficulty_level: 'easy' | 'medium' | 'hard';
+  target_num_questions: number;
+  created: string;
+  updated: string;
+  total_questions: number;
+  generated_questions: number;
+  mannual_questions: number;
   is_public: boolean;
-  created_at: string;
-  badge?: string;
-  questions: Question[];
+  creation_method: 'ai' | 'manual';
+  open_period: number;
+  description?: string | null;
+  questions?: Question[];
+  category?: {
+    name: string;
+  };
 }
 
-/* Set Model */
-export interface Set {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  tests_count: number;
-  collection_id: string;
-  is_public: boolean;
-  created_at: string;
-  tests: Test[];
-}
-
-/* Collection/To'plam Model */
-export interface Collection {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  sets_count: number;
-  is_public: boolean;
-  created_at: string;
-  badge?: string;
-  sets: Set[];
-}
-
-/* Attempt Detail Model */
-export interface AttemptDetail {
-  attempt_number: number;
-  score: number;
-  time_spent_minutes: number;
-  completed_at: string;
-}
-
-/* Progress/Tracking Models */
-export interface TestProgress {
-  test_id: string;
-  attempts: number;
-  time_spent_minutes: number;
-  best_score: number;
-  average_score: number;
-  completed_at?: string;
-  attempt_details?: AttemptDetail[];
-}
-
-export interface SetProgress {
-  set_id: string;
-  tests_solved: number;
-  overall_time_spent_minutes: number;
-  tests_to_finish: number;
-  overall_best_score: number;
-  completed_at?: string;
-}
-
-/* Author Model */
-export interface Author {
-  id: string;
+/* Category Model */
+export interface Category {
+  id: number;
   name: string;
-  avatar: string;
-  rating: number;
+  description: string;
+  image: string;
+  icon: string;
+  icon_color: string;
+  z_index: number;
+  user_addable: boolean;
+  test_ordering: string;
+  field: number;
+  tests: PaginatedResponse<Test>;
 }
+
+/* Field Model */
+export interface Field {
+  id: number;
+  name: string;
+  description?: string;
+  image: string;
+  z_index: number;
+  created: string;
+  categories_count?: number;
+  categories?: Category[];
+}
+
+/* Author Model (alias for User) */
+export interface Author extends User {}
 
 /* API Request/Response Wrappers */
 export interface ApiResponse<T> {
@@ -126,7 +114,7 @@ export interface ApiResponse<T> {
 
 export interface SearchResult {
   tests: Test[];
-  sets: Set[];
-  collections: Collection[];
+  categories: Category[];
+  fields: Field[];
   total: number;
 }
