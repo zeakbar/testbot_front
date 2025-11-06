@@ -11,7 +11,7 @@ export const QuestionDetailPage: FC = () => {
   const navigate = useNavigate();
   const [test, setTest] = useState<Test | null>(null);
   const [question, setQuestion] = useState<Question | null>(null);
-  const [selectedAnswer, setSelectedAnswer] = useState<string | string[] | null>(null);
+  const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [answered, setAnswered] = useState(false);
 
@@ -21,13 +21,13 @@ export const QuestionDetailPage: FC = () => {
     const loadData = async () => {
       if (!testId) return;
       try {
-        const testData = await getTestById(testId);
+        const testData = await getTestById(parseInt(testId, 10));
         setTest(testData);
         if (testData.questions && testData.questions[currentIndex]) {
           setQuestion(testData.questions[currentIndex]);
         }
       } catch (error) {
-        // Expected error when backend is unavailable, mock data will be used
+        console.error('Error loading test:', error);
       } finally {
         setIsLoading(false);
       }
