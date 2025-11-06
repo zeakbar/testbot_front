@@ -53,10 +53,10 @@ export const SetDetailPage: FC = () => {
     );
   }
 
-  if (!set) {
+  if (!category) {
     return (
       <Page back>
-        <div className="set-detail-error">Set topilmadi</div>
+        <div className="set-detail-error">Kategoriya topilmadi</div>
       </Page>
     );
   }
@@ -67,13 +67,19 @@ export const SetDetailPage: FC = () => {
         {/* Header */}
         <div className="set-detail-header">
           <div className="set-detail-image">
-            <span className="set-detail-emoji">{set.image}</span>
+            {category.image && category.image.startsWith('http') ? (
+              <img src={category.image} alt={category.name} className="category-image" />
+            ) : (
+              <span className="set-detail-emoji">{category.image}</span>
+            )}
           </div>
           <div className="set-detail-info">
-            <h1 className="set-detail-title">{set.title}</h1>
-            <p className="set-detail-description">{set.description}</p>
+            <h1 className="set-detail-title">{category.name}</h1>
+            {category.description && (
+              <p className="set-detail-description">{category.description}</p>
+            )}
             <p className="set-detail-stats">
-              {set.tests_count} Tests
+              {category.tests.count} Testlar
             </p>
           </div>
         </div>
@@ -82,7 +88,7 @@ export const SetDetailPage: FC = () => {
         {tests.length > 0 && (
           <div className="set-detail-section">
             <SectionHeader
-              title="Tests in this Set"
+              title="Testlar"
               onViewAll={undefined}
             />
             <div className="set-detail-grid">
@@ -90,8 +96,12 @@ export const SetDetailPage: FC = () => {
                 <QuizCard
                   key={test.id}
                   quiz={{
-                    ...test,
-                    category: 'test',
+                    id: test.id,
+                    title: test.topic,
+                    description: test.description || '',
+                    image: '',
+                    difficulty: test.difficulty_level,
+                    questions_count: test.total_questions,
                   } as any}
                   onClick={() => navigate(`/test/${test.id}`)}
                 />
@@ -100,9 +110,22 @@ export const SetDetailPage: FC = () => {
           </div>
         )}
 
+        {/* Load More Button */}
+        {nextPageUrl && (
+          <div className="set-detail-load-more">
+            <button
+              onClick={handleLoadMore}
+              className="set-detail-load-more-btn"
+              type="button"
+            >
+              Yana yuklash
+            </button>
+          </div>
+        )}
+
         {tests.length === 0 && (
           <div className="set-detail-empty">
-            <p>Bu setda hozircha Tests yo'q</p>
+            <p>Bu kategoriyada hozircha testlar yo'q</p>
           </div>
         )}
 
