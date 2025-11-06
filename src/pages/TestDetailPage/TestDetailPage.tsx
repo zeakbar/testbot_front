@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 import { Page } from '@/components/Page';
 import { PlayModeModal, type PlayMode } from '@/components/PlayModeModal/PlayModeModal';
 import { getTestById } from '@/api/collections';
-import type { Test, TestProgress } from '@/api/types';
-import { mockTestProgress } from '@/api/mockData';
+import type { Test } from '@/api/types';
 import './TestDetailPage.css';
 
 export const TestDetailPage: FC = () => {
