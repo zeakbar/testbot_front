@@ -84,20 +84,20 @@ export const HomePage: FC = () => {
               </div>
             </div>
 
-            {/* Recommended Collections */}
-            {recommendedCollections.length > 0 && (
+            {/* Featured Fields */}
+            {featuredFields.length > 0 && (
               <div className="home-section">
                 <SectionHeader
                   title="Sizga tavsiya etiladi"
-                  onViewAll={() => console.log('View all recommended')}
+                  onViewAll={() => console.log('View all fields')}
                 />
                 <div className="home-grid-2">
-                  {recommendedCollections.map((collection) => (
+                  {featuredFields.map((field) => (
                     <ItemCard
-                      key={collection.id}
-                      item={collection}
-                      type="collection"
-                      onClick={() => navigate(`/collection/${collection.id}`)}
+                      key={field.id}
+                      item={field}
+                      type="field"
+                      onClick={() => navigate(`/field/${field.id}`)}
                     />
                   ))}
                 </div>
@@ -114,34 +114,38 @@ export const HomePage: FC = () => {
                 <div className="home-authors-scroll">
                   {topAuthors.map((author) => (
                     <AuthorCard
-                      key={author.id}
+                      key={author.user_id}
                       author={author}
-                      onClick={() => console.log('Author clicked:', author.id)}
+                      onClick={() => console.log('Author clicked:', author.user_id)}
                     />
                   ))}
                 </div>
               </div>
             )}
 
-            {/* All Collections Navigation */}
-            {allCollections.length > 0 && (
+            {/* All Fields Navigation */}
+            {allFields.length > 0 && (
               <div className="home-section">
                 <SectionHeader
-                  title="To'plamlar"
-                  onViewAll={() => console.log('View all collections')}
+                  title="Sohalar"
+                  onViewAll={() => console.log('View all fields')}
                 />
                 <div className="home-collections-nav">
-                  {allCollections.map((collection) => (
+                  {allFields.map((field) => (
                     <button
-                      key={collection.id}
+                      key={field.id}
                       className="home-collections-icon"
                       onClick={() =>
-                        navigate(`/collection/${collection.id}`)
+                        navigate(`/field/${field.id}`)
                       }
-                      title={collection.title}
+                      title={field.name}
                       type="button"
                     >
-                      {collection.image}
+                      <img
+                        src={field.image}
+                        alt={field.name}
+                        className="field-nav-image"
+                      />
                     </button>
                   ))}
                 </div>
