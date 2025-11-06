@@ -6,36 +6,34 @@ import { SearchBar } from '@/components/SearchBar/SearchBar';
 import { SectionHeader } from '@/components/SectionHeader/SectionHeader';
 import { ItemCard } from '@/components/ItemCard/ItemCard';
 import { AuthorCard } from '@/components/AuthorCard/AuthorCard';
-import type { Collection, Author, Test } from '@/api/types';
+import type { Field, Author } from '@/api/types';
 import {
-  getCollections,
-  getRecommendedCollections,
-  globalSearch,
+  getFields,
+  getCategoriesByField,
 } from '@/api/collections';
 import { getTopAuthors } from '@/api/authors';
 import './HomePage.css';
 
 export const HomePage: FC = () => {
   const navigate = useNavigate();
-  const [recommendedCollections, setRecommendedCollections] = useState<Collection[]>([]);
-  const [allCollections, setAllCollections] = useState<Collection[]>([]);
+  const [featuredFields, setFeaturedFields] = useState<Field[]>([]);
+  const [allFields, setAllFields] = useState<Field[]>([]);
   const [topAuthors, setTopAuthors] = useState<Author[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [recommended, all, authors] = await Promise.all([
-          getRecommendedCollections(),
-          getCollections(),
+        const [fields, authors] = await Promise.all([
+          getFields(),
           getTopAuthors(),
         ]);
 
-        setRecommendedCollections(recommended);
-        setAllCollections(all);
+        setFeaturedFields(fields.slice(0, 2));
+        setAllFields(fields);
         setTopAuthors(authors);
       } catch (error) {
-        // Expected error when backend is unavailable, mock data will be used
+        console.error('Error loading home page data:', error);
       } finally {
         setIsLoading(false);
       }
