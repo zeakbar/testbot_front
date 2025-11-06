@@ -7,7 +7,7 @@ import { SectionHeader } from '@/components/SectionHeader/SectionHeader';
 import { QuizCard } from '@/components/QuizCard/QuizCard';
 import { ItemCard } from '@/components/ItemCard/ItemCard';
 import { globalSearch } from '@/api/collections';
-import type { Test, Set, Collection } from '@/api/types';
+import type { Test, Category, Field } from '@/api/types';
 import './SearchPage.css';
 
 export const SearchPage: FC = () => {
@@ -17,8 +17,8 @@ export const SearchPage: FC = () => {
 
   const [query, setQuery] = useState(initialQuery);
   const [tests, setTests] = useState<Test[]>([]);
-  const [sets, setSets] = useState<Set[]>([]);
-  const [collections, setCollections] = useState<Collection[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [fields, setFields] = useState<Field[]>([]);
   const [isLoading, setIsLoading] = useState(!!initialQuery);
   const [hasSearched, setHasSearched] = useState(!!initialQuery);
 
@@ -32,8 +32,8 @@ export const SearchPage: FC = () => {
     setQuery(searchQuery);
     if (!searchQuery.trim()) {
       setTests([]);
-      setSets([]);
-      setCollections([]);
+      setCategories([]);
+      setFields([]);
       setHasSearched(false);
       return;
     }
@@ -43,19 +43,19 @@ export const SearchPage: FC = () => {
     try {
       const results = await globalSearch(searchQuery);
       setTests(results.tests || []);
-      setSets(results.sets || []);
-      setCollections(results.collections || []);
+      setCategories(results.categories || []);
+      setFields(results.fields || []);
     } catch (error) {
-      // Expected error when backend is unavailable
+      console.error('Search error:', error);
       setTests([]);
-      setSets([]);
-      setCollections([]);
+      setCategories([]);
+      setFields([]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const totalResults = tests.length + sets.length + collections.length;
+  const totalResults = tests.length + categories.length + fields.length;
 
   return (
     <Page back={false}>
