@@ -11,7 +11,6 @@ export const TestDetailPage: FC = () => {
   const { testId } = useParams<{ testId: string }>();
   const navigate = useNavigate();
   const [test, setTest] = useState<Test | null>(null);
-  const [progress, setProgress] = useState<TestProgress | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isPlayModalOpen, setIsPlayModalOpen] = useState(false);
 
@@ -19,13 +18,10 @@ export const TestDetailPage: FC = () => {
     const loadData = async () => {
       if (!testId) return;
       try {
-        const testData = await getTestById(testId);
+        const testData = await getTestById(parseInt(testId, 10));
         setTest(testData);
-
-        const userProgress = mockTestProgress.find((p) => p.test_id === testId);
-        setProgress(userProgress || null);
       } catch (error) {
-        // Expected error when backend is unavailable, mock data will be used
+        console.error('Error loading test:', error);
       } finally {
         setIsLoading(false);
       }
