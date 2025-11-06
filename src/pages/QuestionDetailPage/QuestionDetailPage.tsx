@@ -52,24 +52,15 @@ export const QuestionDetailPage: FC = () => {
     );
   }
 
-  const handleAnswer = (answer: string) => {
-    setSelectedAnswer(answer);
-    setAnswered(true);
-  };
-
-  const handleCheckboxChange = (option: string) => {
-    const current = Array.isArray(selectedAnswer) ? selectedAnswer : [];
-    const updated = current.includes(option)
-      ? current.filter((a) => a !== option)
-      : [...current, option];
-    setSelectedAnswer(updated);
+  const handleSelectOption = (optionId: number) => {
+    setSelectedOptionId(optionId);
   };
 
   const handleNext = () => {
-    if (currentIndex < test.questions.length - 1) {
+    if (currentIndex < (test?.questions?.length || 0) - 1) {
       navigate(`/test/${testId}/question/${currentIndex + 1}`);
       setAnswered(false);
-      setSelectedAnswer(null);
+      setSelectedOptionId(null);
     } else {
       navigate(`/test/${testId}`);
     }
@@ -79,14 +70,12 @@ export const QuestionDetailPage: FC = () => {
     if (currentIndex > 0) {
       navigate(`/test/${testId}/question/${currentIndex - 1}`);
       setAnswered(false);
-      setSelectedAnswer(null);
+      setSelectedOptionId(null);
     }
   };
 
-  const isCorrect =
-    question.type === 'checkbox'
-      ? JSON.stringify(selectedAnswer?.sort()) === JSON.stringify(JSON.parse(question.correct_answer as string).sort())
-      : selectedAnswer === question.correct_answer;
+  const selectedOption = question?.options.find((opt) => opt.id === selectedOptionId);
+  const isCorrect = selectedOption?.is_correct || false;
 
   return (
     <Page back>
