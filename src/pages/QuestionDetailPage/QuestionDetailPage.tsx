@@ -11,7 +11,7 @@ export const QuestionDetailPage: FC = () => {
   const navigate = useNavigate();
   const [test, setTest] = useState<Test | null>(null);
   const [question, setQuestion] = useState<Question | null>(null);
-  const [selectedAnswer, setSelectedAnswer] = useState<string | string[] | null>(null);
+  const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [answered, setAnswered] = useState(false);
 
@@ -21,13 +21,13 @@ export const QuestionDetailPage: FC = () => {
     const loadData = async () => {
       if (!testId) return;
       try {
-        const testData = await getTestById(testId);
+        const testData = await getTestById(parseInt(testId, 10));
         setTest(testData);
         if (testData.questions && testData.questions[currentIndex]) {
           setQuestion(testData.questions[currentIndex]);
         }
       } catch (error) {
-        // Expected error when backend is unavailable, mock data will be used
+        console.error('Error loading test:', error);
       } finally {
         setIsLoading(false);
       }
@@ -52,24 +52,15 @@ export const QuestionDetailPage: FC = () => {
     );
   }
 
-  const handleAnswer = (answer: string) => {
-    setSelectedAnswer(answer);
-    setAnswered(true);
-  };
-
-  const handleCheckboxChange = (option: string) => {
-    const current = Array.isArray(selectedAnswer) ? selectedAnswer : [];
-    const updated = current.includes(option)
-      ? current.filter((a) => a !== option)
-      : [...current, option];
-    setSelectedAnswer(updated);
+  const handleSelectOption = (optionId: number) => {
+    setSelectedOptionId(optionId);
   };
 
   const handleNext = () => {
-    if (currentIndex < test.questions.length - 1) {
+    if (currentIndex < (test?.questions?.length || 0) - 1) {
       navigate(`/test/${testId}/question/${currentIndex + 1}`);
       setAnswered(false);
-      setSelectedAnswer(null);
+      setSelectedOptionId(null);
     } else {
       navigate(`/test/${testId}`);
     }
@@ -79,14 +70,12 @@ export const QuestionDetailPage: FC = () => {
     if (currentIndex > 0) {
       navigate(`/test/${testId}/question/${currentIndex - 1}`);
       setAnswered(false);
-      setSelectedAnswer(null);
+      setSelectedOptionId(null);
     }
   };
 
-  const isCorrect =
-    question.type === 'checkbox'
-      ? JSON.stringify(selectedAnswer?.sort()) === JSON.stringify(JSON.parse(question.correct_answer as string).sort())
-      : selectedAnswer === question.correct_answer;
+  const selectedOption = question?.options.find((opt) => opt.id === selectedOptionId);
+  const isCorrect = selectedOption?.is_correct || false;
 
   return (
     <Page back>
@@ -97,12 +86,12 @@ export const QuestionDetailPage: FC = () => {
             <div
               className="question-detail-progress-fill"
               style={{
-                width: `${((currentIndex + 1) / test.questions.length) * 100}%`,
+                width: `${((currentIndex + 1) / (test?.questions?.length || 1)) * 100}%`,
               }}
             ></div>
           </div>
           <p className="question-detail-progress-text">
-            Question {currentIndex + 1} of {test.questions.length}
+            Savol {currentIndex + 1} / {test?.questions?.length || 1}
           </p>
         </div>
 
@@ -115,127 +104,38 @@ export const QuestionDetailPage: FC = () => {
               </div>
             )}
 
-            {question.audio && (
-              <div className="question-detail-audio">
-                <audio controls>
-                  <source src={question.audio} type="audio/mpeg" />
-                </audio>
-              </div>
-            )}
-
             <h2 className="question-detail-title">{question.question}</h2>
 
             {/* Answer Options */}
             <div className="question-detail-options">
-              {question.type === 'quiz' && question.options && (
-                <div className="question-detail-option-group">
-                  {question.options.map((option) => (
-                    <button
-                      key={option}
-                      className={`question-detail-option ${
-                        selectedAnswer === option ? 'selected' : ''
-                      } ${answered && option === question.correct_answer ? 'correct' : ''} ${
-                        answered &&
-                        selectedAnswer === option &&
-                        option !== question.correct_answer
-                          ? 'incorrect'
-                          : ''
-                      }`}
-                      onClick={() => handleAnswer(option)}
-                      type="button"
-                      disabled={answered}
-                    >
-                      <span className="question-detail-option-radio"></span>
-                      <span className="question-detail-option-text">{option}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {question.type === 'true_false' && (
-                <div className="question-detail-option-group">
-                  {['true', 'false'].map((option) => (
-                    <button
-                      key={option}
-                      className={`question-detail-option ${
-                        selectedAnswer === option ? 'selected' : ''
-                      } ${answered && option === question.correct_answer ? 'correct' : ''} ${
-                        answered &&
-                        selectedAnswer === option &&
-                        option !== question.correct_answer
-                          ? 'incorrect'
-                          : ''
-                      }`}
-                      onClick={() => handleAnswer(option)}
-                      type="button"
-                      disabled={answered}
-                    >
-                      <span className="question-detail-option-radio"></span>
-                      <span className="question-detail-option-text">
-                        {option === 'true' ? 'True' : 'False'}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {question.type === 'checkbox' && question.options && (
-                <div className="question-detail-option-group">
-                  {question.options.map((option) => (
-                    <button
-                      key={option}
-                      className={`question-detail-checkbox ${
-                        Array.isArray(selectedAnswer) && selectedAnswer.includes(option)
-                          ? 'selected'
-                          : ''
-                      }`}
-                      onClick={() => handleCheckboxChange(option)}
-                      type="button"
-                      disabled={answered}
-                    >
-                      <span className="question-detail-checkbox-box"></span>
-                      <span className="question-detail-option-text">{option}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {(question.type === 'type_answer' ||
-                question.type === 'fill_gap' ||
-                question.type === 'say_word') && (
-                <input
-                  type="text"
-                  className="question-detail-input"
-                  placeholder="Type your answer..."
-                  value={selectedAnswer || ''}
-                  onChange={(e) => setSelectedAnswer(e.target.value)}
-                  disabled={answered}
-                />
-              )}
-
-              {question.type === 'slider' && question.options && (
-                <div className="question-detail-slider-group">
-                  {question.options.map((option) => (
-                    <button
-                      key={option}
-                      className={`question-detail-slider-btn ${
-                        selectedAnswer === option ? 'selected' : ''
-                      }`}
-                      onClick={() => handleAnswer(option)}
-                      type="button"
-                      disabled={answered}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-              )}
+              <div className="question-detail-option-group">
+                {question.options.map((option) => (
+                  <button
+                    key={option.id}
+                    className={`question-detail-option ${
+                      selectedOptionId === option.id ? 'selected' : ''
+                    } ${answered && option.is_correct ? 'correct' : ''} ${
+                      answered &&
+                      selectedOptionId === option.id &&
+                      !option.is_correct
+                        ? 'incorrect'
+                        : ''
+                    }`}
+                    onClick={() => handleSelectOption(option.id)}
+                    type="button"
+                    disabled={answered}
+                  >
+                    <span className="question-detail-option-radio"></span>
+                    <span className="question-detail-option-text">{option.text}</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Explanation */}
             {answered && question.explanation && (
               <div className="question-detail-explanation">
-                <h4 className="question-detail-explanation-title">Explanation</h4>
+                <h4 className="question-detail-explanation-title">Izoh</h4>
                 <p className="question-detail-explanation-text">
                   {question.explanation}
                 </p>
@@ -244,13 +144,13 @@ export const QuestionDetailPage: FC = () => {
 
             {answered && isCorrect && (
               <div className="question-detail-feedback correct">
-                ✓ Correct! Great job!
+                ✓ To'g'ri! Ajoyib!
               </div>
             )}
 
             {answered && !isCorrect && (
               <div className="question-detail-feedback incorrect">
-                ✗ Incorrect. The correct answer is: {question.correct_answer}
+                ✗ Noto'g'ri. To'g'ri javob: {question.options.find((opt) => opt.is_correct)?.text}
               </div>
             )}
           </div>
@@ -264,17 +164,17 @@ export const QuestionDetailPage: FC = () => {
             disabled={currentIndex === 0}
             type="button"
           >
-            ← Previous
+            ← Orqaga
           </button>
 
           {!answered ? (
             <button
               className="question-detail-submit-btn"
               onClick={() => setAnswered(true)}
-              disabled={!selectedAnswer}
+              disabled={selectedOptionId === null}
               type="button"
             >
-              Submit Answer
+              Javob berish
             </button>
           ) : (
             <button
@@ -282,7 +182,7 @@ export const QuestionDetailPage: FC = () => {
               onClick={handleNext}
               type="button"
             >
-              {currentIndex === test.questions.length - 1 ? 'Finish' : 'Next'} →
+              {currentIndex === (test?.questions?.length || 1) - 1 ? 'Yakunlash' : 'Keyingi'} →
             </button>
           )}
         </div>

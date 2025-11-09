@@ -4,36 +4,33 @@ import { useEffect, useState } from 'react';
 import { Page } from '@/components/Page';
 import { ItemCard } from '@/components/ItemCard/ItemCard';
 import { SectionHeader } from '@/components/SectionHeader/SectionHeader';
-import { getCollectionById, getSetsByCollection } from '@/api/collections';
-import type { Collection, Set } from '@/api/types';
+import { getFieldById } from '@/api/collections';
+import type { Field, Category } from '@/api/types';
 import './CollectionDetailPage.css';
 
 export const CollectionDetailPage: FC = () => {
-  const { collectionId } = useParams<{ collectionId: string }>();
+  const { fieldId } = useParams<{ fieldId: string }>();
   const navigate = useNavigate();
-  const [collection, setCollection] = useState<Collection | null>(null);
-  const [sets, setSets] = useState<Set[]>([]);
+  const [field, setField] = useState<Field | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
-      if (!collectionId) return;
+      if (!fieldId) return;
       try {
-        const [collectionData, setsData] = await Promise.all([
-          getCollectionById(collectionId),
-          getSetsByCollection(collectionId),
-        ]);
-        setCollection(collectionData);
-        setSets(setsData);
+        const fieldData = await getFieldById(parseInt(fieldId, 10));
+        setField(fieldData);
+        setCategories(fieldData.categories || []);
       } catch (error) {
-        // Expected error when backend is unavailable, mock data will be used
+        console.error('Error loading field:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
     loadData();
-  }, [collectionId]);
+  }, [fieldId]);
 
   if (isLoading) {
     return (
@@ -43,10 +40,10 @@ export const CollectionDetailPage: FC = () => {
     );
   }
 
-  if (!collection) {
+  if (!field) {
     return (
       <Page back>
-        <div className="collection-detail-error">Collection topilmadi</div>
+        <div className="collection-detail-error">Soha topilmadi</div>
       </Page>
     );
   }
@@ -57,42 +54,48 @@ export const CollectionDetailPage: FC = () => {
         {/* Header */}
         <div className="collection-detail-header">
           <div className="collection-detail-image">
-            <span className="collection-detail-emoji">{collection.image}</span>
+            {field.image && field.image.startsWith('http') ? (
+              <img src={field.image} alt={field.name} className="field-image" />
+            ) : (
+              <span className="collection-detail-emoji">{field.image}</span>
+            )}
           </div>
           <div className="collection-detail-info">
-            <h1 className="collection-detail-title">{collection.title}</h1>
-            <p className="collection-detail-description">
-              {collection.description}
-            </p>
+            <h1 className="collection-detail-title">{field.name}</h1>
+            {field.description && (
+              <p className="collection-detail-description">
+                {field.description}
+              </p>
+            )}
             <p className="collection-detail-stats">
-              {collection.sets_count} Sets • {sets.length} Total Tests
+              {categories.length} Kategoriyalar
             </p>
           </div>
         </div>
 
-        {/* Sets Grid */}
-        {sets.length > 0 && (
+        {/* Categories Grid */}
+        {categories.length > 0 && (
           <div className="collection-detail-section">
             <SectionHeader
-              title="Sets in this Collection"
+              title="Kategoriyalar"
               onViewAll={undefined}
             />
             <div className="collection-detail-grid">
-              {sets.map((set) => (
+              {categories.map((category) => (
                 <ItemCard
-                  key={set.id}
-                  item={set}
-                  type="set"
-                  onClick={() => navigate(`/set/${set.id}`)}
+                  key={category.id}
+                  item={category}
+                  type="category"
+                  onClick={() => navigate(`/category/${category.id}`)}
                 />
               ))}
             </div>
           </div>
         )}
 
-        {sets.length === 0 && (
+        {categories.length === 0 && (
           <div className="collection-detail-empty">
-            <p>Bu collectionda hozircha Sets yo'q</p>
+            <p>Bu sohada hozircha kategoriyalar yo'q</p>
           </div>
         )}
 

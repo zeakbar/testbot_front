@@ -1,0 +1,72 @@
+.dev-token-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.dev-token-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 32px 24px;
+  max-width: 320px;
+  width: 90%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.dev-token-modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--primary, #9C27B0);
+}
+
+.dev-token-modal-description {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 24px 0;
+}
+
+.dev-token-modal-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.dev-token-modal-input:focus {
+  outline: none;
+  border-color: var(--primary, #9C27B0);
+}
+
+.dev-token-modal-button {
+  width: 100%;
+  padding: 12px 16px;
+  background-color: var(--primary, #9C27B0);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.dev-token-modal-button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.dev-token-modal-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -1,16 +1,22 @@
 import type { FC } from 'react';
-import type { Collection, Set } from '@/api/types';
+import type { Field, Category } from '@/api/types';
 import './ItemCard.css';
 
 interface ItemCardProps {
-  item: Collection | Set;
+  item: Field | Category;
   onClick?: () => void;
-  type: 'collection' | 'set';
+  type: 'field' | 'category';
 }
 
 export const ItemCard: FC<ItemCardProps> = ({ item, onClick, type }) => {
-  const count = type === 'collection' ? (item as Collection).sets_count : (item as Set).tests_count;
-  const countLabel = type === 'collection' ? 'Sets' : 'Tests';
+  const isField = type === 'field';
+  const title = isField ? (item as Field).name : (item as Category).name;
+  const description = item.description;
+  const image = item.image;
+  const count = isField ? (item as Field).categories_count : (item as Category).tests.count;
+  const countLabel = isField ? 'Kategoriyalar' : 'Testlar';
+
+  const isImageUrl = image && (image.startsWith('http') || image.startsWith('/'));
 
   return (
     <div
@@ -25,13 +31,16 @@ export const ItemCard: FC<ItemCardProps> = ({ item, onClick, type }) => {
       }}
     >
       <div className="item-card-image">
-        <span className="item-card-emoji">{item.image}</span>
-        {item.badge && <div className="item-card-badge">{item.badge}</div>}
+        {isImageUrl ? (
+          <img src={image} alt={title} className="item-card-image-url" />
+        ) : (
+          <span className="item-card-emoji">{image}</span>
+        )}
       </div>
       <div className="item-card-content">
-        <h3 className="item-card-title">{item.title}</h3>
-        {item.description && (
-          <p className="item-card-description">{item.description}</p>
+        <h3 className="item-card-title">{title}</h3>
+        {description && (
+          <p className="item-card-description">{description}</p>
         )}
         <p className="item-card-meta">
           {count} {countLabel}

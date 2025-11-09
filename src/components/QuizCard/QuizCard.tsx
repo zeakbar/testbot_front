@@ -1,9 +1,21 @@
 import type { FC } from 'react';
-import type { Quiz } from '@/api/types';
 import './QuizCard.css';
 
+interface QuizCardData {
+  id: number | string;
+  title: string;
+  description?: string | null;
+  image?: string;
+  difficulty?: string;
+  questions_count?: number;
+  author?: {
+    full_name?: string;
+    username?: string;
+  };
+}
+
 interface QuizCardProps {
-  quiz: Quiz;
+  quiz: QuizCardData;
   onClick?: () => void;
 }
 
@@ -16,7 +28,7 @@ export const QuizCard: FC<QuizCardProps> = ({ quiz, onClick }) => {
 
   return (
     <div
-      className={`quiz-card ${difficultyColors[quiz.difficulty] || ''}`}
+      className={`quiz-card ${difficultyColors[quiz.difficulty || ''] || ''}`}
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -27,16 +39,18 @@ export const QuizCard: FC<QuizCardProps> = ({ quiz, onClick }) => {
       }}
     >
       <div className="quiz-card-image">
-        <span className="quiz-card-emoji">{quiz.image}</span>
-        {quiz.badge && <div className="quiz-card-badge">{quiz.badge}</div>}
+        <span className="quiz-card-emoji">{quiz.image || '📝'}</span>
       </div>
       <div className="quiz-card-content">
         <h3 className="quiz-card-title">{quiz.title}</h3>
-        <p className="quiz-card-description">{quiz.description}</p>
-        <div className="quiz-card-meta">
-          <span className="quiz-card-author-avatar">{quiz.author.avatar}</span>
-          <span className="quiz-card-author-name">{quiz.author.name}</span>
-        </div>
+        {quiz.description && (
+          <p className="quiz-card-description">{quiz.description}</p>
+        )}
+        {quiz.questions_count && (
+          <p className="quiz-card-meta">
+            {quiz.questions_count} savollar
+          </p>
+        )}
       </div>
     </div>
   );

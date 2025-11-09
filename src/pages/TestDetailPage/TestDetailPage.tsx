@@ -4,15 +4,13 @@ import { useEffect, useState } from 'react';
 import { Page } from '@/components/Page';
 import { PlayModeModal, type PlayMode } from '@/components/PlayModeModal/PlayModeModal';
 import { getTestById } from '@/api/collections';
-import type { Test, TestProgress } from '@/api/types';
-import { mockTestProgress } from '@/api/mockData';
+import type { Test } from '@/api/types';
 import './TestDetailPage.css';
 
 export const TestDetailPage: FC = () => {
   const { testId } = useParams<{ testId: string }>();
   const navigate = useNavigate();
   const [test, setTest] = useState<Test | null>(null);
-  const [progress, setProgress] = useState<TestProgress | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isPlayModalOpen, setIsPlayModalOpen] = useState(false);
 
@@ -20,13 +18,10 @@ export const TestDetailPage: FC = () => {
     const loadData = async () => {
       if (!testId) return;
       try {
-        const testData = await getTestById(testId);
+        const testData = await getTestById(parseInt(testId, 10));
         setTest(testData);
-
-        const userProgress = mockTestProgress.find((p) => p.test_id === testId);
-        setProgress(userProgress || null);
       } catch (error) {
-        // Expected error when backend is unavailable, mock data will be used
+        console.error('Error loading test:', error);
       } finally {
         setIsLoading(false);
       }
@@ -43,17 +38,6 @@ export const TestDetailPage: FC = () => {
     }
   };
 
-  const getScoreColor = (score: number): string => {
-    if (score >= 80) return 'score-excellent';
-    if (score >= 60) return 'score-good';
-    return 'score-needs-improvement';
-  };
-
-  const getScorePercentageColor = (score: number): string => {
-    if (score >= 80) return '#4CAF50';
-    if (score >= 60) return '#2196F3';
-    return '#FF9800';
-  };
 
   if (isLoading) {
     return (
@@ -77,25 +61,26 @@ export const TestDetailPage: FC = () => {
         {/* Header */}
         <div className="test-detail-header">
           <div className="test-detail-image">
-            <span className="test-detail-emoji">{test.image}</span>
-            {test.badge && <div className="test-detail-badge">{test.badge}</div>}
+            <span className="test-detail-emoji">📝</span>
           </div>
           <div className="test-detail-info">
-            <h1 className="test-detail-title">{test.title}</h1>
+            <h1 className="test-detail-title">{test.topic}</h1>
             <p className="test-detail-author">
-              {test.author.avatar} {test.author.name}
+              {test.author.full_name}
             </p>
           </div>
         </div>
 
         {/* Description */}
         <div className="test-detail-description-section">
-          <h3 className="test-detail-section-title">About This Test</h3>
-          <p className="test-detail-description">{test.description}</p>
+          <h3 className="test-detail-section-title">Test haqida</h3>
+          {test.description && (
+            <p className="test-detail-description">{test.description}</p>
+          )}
           <div className="test-detail-meta">
-            <span>Questions: {test.questions_count}</span>
-            <span>Duration: {test.duration_minutes} mins</span>
-            <span>Difficulty: {test.difficulty}</span>
+            <span>Savollar: {test.total_questions}</span>
+            <span>Qiymati: {test.open_period} kun</span>
+            <span>Darajasi: {test.difficulty_level}</span>
           </div>
         </div>
 
@@ -117,69 +102,11 @@ export const TestDetailPage: FC = () => {
           </button>
         </div>
 
-        {/* Attempts History */}
-        {progress && progress.attempt_details && progress.attempt_details.length > 0 && (
-          <div className="test-detail-attempts-section">
-            <h3 className="test-detail-section-title">Your Attempts</h3>
-
-            {/* Overall Stats Card */}
-            <div className="test-detail-stats-card">
-              <div className="test-detail-stat">
-                <span className="test-detail-stat-label">Attempts</span>
-                <span className="test-detail-stat-value">{progress.attempts}</span>
-              </div>
-              <div className="test-detail-stat">
-                <span className="test-detail-stat-label">Best Score</span>
-                <span className="test-detail-stat-value">{progress.best_score}%</span>
-              </div>
-              <div className="test-detail-stat">
-                <span className="test-detail-stat-label">Average</span>
-                <span className="test-detail-stat-value">{progress.average_score}%</span>
-              </div>
-              <div className="test-detail-stat">
-                <span className="test-detail-stat-label">Time</span>
-                <span className="test-detail-stat-value">{progress.time_spent_minutes}m</span>
-              </div>
-            </div>
-
-            {/* Attempts List */}
-            <div className="test-detail-attempts-list">
-              {progress.attempt_details.map((attempt) => (
-                <div
-                  key={attempt.attempt_number}
-                  className={`test-detail-attempt-item ${getScoreColor(attempt.score)}`}
-                >
-                  <div className="test-detail-attempt-header">
-                    <span className="test-detail-attempt-number">
-                      Attempt {attempt.attempt_number}
-                    </span>
-                    <span className="test-detail-attempt-date">
-                      {new Date(attempt.completed_at).toLocaleDateString()}
-                    </span>
-                  </div>
-
-                  {/* Score Bar */}
-                  <div className="test-detail-attempt-score-wrapper">
-                    <div className="test-detail-attempt-bar-container">
-                      <div
-                        className="test-detail-attempt-bar-fill"
-                        style={{
-                          width: `${attempt.score}%`,
-                          backgroundColor: getScorePercentageColor(attempt.score),
-                        }}
-                      ></div>
-                    </div>
-                    <span className="test-detail-attempt-score-text">
-                      {attempt.score}%
-                    </span>
-                  </div>
-
-                  <span className="test-detail-attempt-time">
-                    ⏱️ {attempt.time_spent_minutes} mins
-                  </span>
-                </div>
-              ))}
-            </div>
+        {/* Test Info */}
+        {test.category && (
+          <div className="test-detail-category-section">
+            <h3 className="test-detail-section-title">Kategoriya</h3>
+            <p className="test-detail-category">{test.category.name}</p>
           </div>
         )}
 
