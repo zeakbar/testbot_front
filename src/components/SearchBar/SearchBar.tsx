@@ -19,11 +19,9 @@ export const SearchBar: FC<SearchBarProps> = ({
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      setQuery(value);
-      onSearch(value);
+      setQuery(e.target.value);
     },
-    [onSearch]
+    []
   );
 
   const handleFocus = () => {
@@ -38,9 +36,16 @@ export const SearchBar: FC<SearchBarProps> = ({
     onSearch('');
   }, [onSearch]);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && query.trim()) {
+  const handleSearch = useCallback(() => {
+    if (query.trim()) {
       navigate(`/search?q=${encodeURIComponent(query)}`);
+      onSearch(query);
+    }
+  }, [query, navigate, onSearch]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
     }
   };
 
@@ -61,7 +66,7 @@ export const SearchBar: FC<SearchBarProps> = ({
           onKeyDown={handleKeyDown}
           aria-label="Search quizzes"
         />
-        {query && (
+        {query ? (
           <button
             className="search-bar-clear"
             onClick={handleClear}
@@ -70,6 +75,8 @@ export const SearchBar: FC<SearchBarProps> = ({
           >
             ✕
           </button>
+        ) : (
+          <span className="search-bar-spacer" />
         )}
       </div>
     </div>

@@ -1,0 +1,363 @@
+.solved-test-page {
+  background: var(--color-bg-secondary);
+  min-height: 100vh;
+  padding: 16px;
+  padding-bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Header */
+.solved-test-header {
+  text-align: center;
+  padding: 12px 0;
+}
+
+.solved-test-header-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.5px;
+}
+
+/* Percentage Circle */
+.solved-test-percentage-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.solved-test-percentage-circle {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.solved-test-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.solved-test-circle-bg {
+  opacity: 0.1;
+}
+
+.solved-test-circle-progress {
+  transition: stroke-dasharray 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 2px 8px rgba(156, 39, 176, 0.2));
+}
+
+.solved-test-percentage-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  z-index: 1;
+}
+
+.solved-test-percentage-value {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.solved-test-percentage-label {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+/* Stats */
+.solved-test-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 0;
+}
+
+.solved-test-stat {
+  background: var(--color-bg-primary);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.solved-test-stat-label {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  text-align: center;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.solved-test-stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-align: center;
+}
+
+.solved-test-stat-value.correct {
+  color: var(--color-success);
+}
+
+/* Section */
+.solved-test-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.solved-test-section-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+/* Answers */
+.solved-test-answers {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.solved-test-answer {
+  background: var(--color-bg-primary);
+  border-radius: 12px;
+  padding: 12px;
+  border-left: 4px solid var(--color-border);
+  transition: all 0.2s;
+}
+
+.solved-test-answer.correct {
+  border-left-color: var(--color-success);
+}
+
+.solved-test-answer.incorrect {
+  border-left-color: var(--color-danger);
+}
+
+.solved-test-answer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+
+.solved-test-answer-number {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+}
+
+.solved-test-answer-status {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.solved-test-answer-status.correct {
+  background: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.solved-test-answer-status.incorrect {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+}
+
+.solved-test-answer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.solved-test-answer-question {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.5;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.solved-test-answer-text {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  line-height: 1.5;
+}
+
+.solved-test-answer-label {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  display: block;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+.solved-test-answer-points {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+/* Action Buttons */
+.solved-test-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.solved-test-btn {
+  padding: 12px 16px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.solved-test-btn-primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+.solved-test-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
+}
+
+.solved-test-btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Loading and Error */
+.solved-test-loading,
+.solved-test-error {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.solved-test-error {
+  color: var(--color-danger);
+}
+
+/* Bottom spacing */
+.solved-test-bottom-space {
+  height: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .solved-test-page {
+    padding: 12px;
+  }
+
+  .solved-test-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .solved-test-stat {
+    padding: 12px;
+  }
+
+  .solved-test-percentage-circle {
+    width: 180px;
+    height: 180px;
+  }
+
+  .solved-test-percentage-value {
+    font-size: 42px;
+  }
+}
+
+@media (max-width: 480px) {
+  .solved-test-page {
+    padding: 12px;
+    padding-bottom: 90px;
+  }
+
+  .solved-test-header-title {
+    font-size: 20px;
+  }
+
+  .solved-test-percentage-circle {
+    width: 160px;
+    height: 160px;
+  }
+
+  .solved-test-percentage-value {
+    font-size: 36px;
+  }
+
+  .solved-test-percentage-label {
+    font-size: 12px;
+  }
+
+  .solved-test-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .solved-test-stat {
+    padding: 10px;
+  }
+
+  .solved-test-stat-label {
+    font-size: 11px;
+  }
+
+  .solved-test-stat-value {
+    font-size: 16px;
+  }
+
+  .solved-test-section-title {
+    font-size: 14px;
+  }
+
+  .solved-test-answer {
+    padding: 10px;
+  }
+
+  .solved-test-answer-text {
+    font-size: 13px;
+  }
+
+  .solved-test-btn {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+}

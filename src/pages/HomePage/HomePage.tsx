@@ -4,36 +4,31 @@ import { useNavigate } from 'react-router-dom';
 import { Page } from '@/components/Page';
 import { SearchBar } from '@/components/SearchBar/SearchBar';
 import { SectionHeader } from '@/components/SectionHeader/SectionHeader';
+import { BannerCarousel } from '@/components/BannerCarousel/BannerCarousel';
+import { HorizontalScroll } from '@/components/HorizontalScroll/HorizontalScroll';
 import { ItemCard } from '@/components/ItemCard/ItemCard';
-import { AuthorCard } from '@/components/AuthorCard/AuthorCard';
-import type { Field, Author } from '@/api/types';
-import {
-  getFields,
-  getCategoriesByField,
-} from '@/api/collections';
-import { getTopAuthors } from '@/api/authors';
+import { TestCardHorizontal } from '@/components/TestCardHorizontal/TestCardHorizontal';
+import { getHomeData } from '@/api/home';
+import type { Banner, Field, Category, Test } from '@/api/types';
 import './HomePage.css';
 
 export const HomePage: FC = () => {
   const navigate = useNavigate();
-  const [featuredFields, setFeaturedFields] = useState<Field[]>([]);
-  const [allFields, setAllFields] = useState<Field[]>([]);
-  const [topAuthors, setTopAuthors] = useState<Author[]>([]);
+  const [banners, setBanners] = useState<Banner[]>([]);
+  const [fields, setFields] = useState<Field[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [tests, setTests] = useState<Test[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [fields, authors] = await Promise.all([
-          getFields(),
-          getTopAuthors(),
-        ]);
-
-        setFeaturedFields(fields.slice(0, 2));
-        setAllFields(fields);
-        setTopAuthors(authors);
+        const data = await getHomeData();
+        setBanners(data.banners);
+        setFields(data.fields);
+        setCategories(data.categories);
+        setTests(data.tests);
       } catch (error) {
-        console.error('Error loading home page data:', error);
       } finally {
         setIsLoading(false);
       }
@@ -67,86 +62,82 @@ export const HomePage: FC = () => {
           <div className="home-loading">Yuklanmoqda...</div>
         ) : (
           <>
-            {/* Featured Banner */}
-            <div className="home-section">
-              <div className="home-featured-container">
-                <div className="home-featured-text">
-                  <p className="home-featured-subtitle">
-                    Bosh sahifa
-                  </p>
-                  <h2 className="home-featured-title">
-                    O'zingni tekshir
-                  </h2>
-                </div>
-                <button className="home-featured-button">
-                  Boshlash
-                </button>
-              </div>
-            </div>
+            {/* Banner Carousel */}
+            {banners.length > 0 && <BannerCarousel banners={banners} />}
 
-            {/* Featured Fields */}
-            {featuredFields.length > 0 && (
-              <div className="home-section">
-                <SectionHeader
-                  title="Sizga tavsiya etiladi"
-                  onViewAll={() => console.log('View all fields')}
-                />
-                <div className="home-grid-2">
-                  {featuredFields.map((field) => (
-                    <ItemCard
-                      key={field.id}
-                      item={field}
-                      type="field"
-                      onClick={() => navigate(`/field/${field.id}`)}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Top Authors Section */}
-            {topAuthors.length > 0 && (
-              <div className="home-section">
-                <SectionHeader
-                  title="Top Muallif"
-                  onViewAll={() => console.log('View all authors')}
-                />
-                <div className="home-authors-scroll">
-                  {topAuthors.map((author) => (
-                    <AuthorCard
-                      key={author.user_id}
-                      author={author}
-                      onClick={() => console.log('Author clicked:', author.user_id)}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* All Fields Navigation */}
-            {allFields.length > 0 && (
+            {/* Fields Section */}
+            {fields.length > 0 && (
               <div className="home-section">
                 <SectionHeader
                   title="Sohalar"
-                  onViewAll={() => console.log('View all fields')}
+                  onViewAll={() => navigate('/library')}
                 />
-                <div className="home-collections-nav">
-                  {allFields.map((field) => (
-                    <button
+                <HorizontalScroll className="home-fields-scroll">
+                  {fields.map((field) => (
+                    <div
                       key={field.id}
-                      className="home-collections-icon"
-                      onClick={() =>
-                        navigate(`/field/${field.id}`)
-                      }
-                      title={field.name}
-                      type="button"
+                      className="home-field-item"
+                      onClick={() => navigate(`/field/${field.id}`)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          navigate(`/field/${field.id}`);
+                        }
+                      }}
                     >
-                      <img
-                        src={field.image}
-                        alt={field.name}
-                        className="field-nav-image"
+                      <div className="home-field-image">
+                        <img
+                          src={field.image}
+                          alt={field.name}
+                          className="field-image"
+                        />
+                      </div>
+                      <p className="home-field-name">{field.name}</p>
+                    </div>
+                  ))}
+                </HorizontalScroll>
+              </div>
+            )}
+
+            {/* Categories Section */}
+            {categories.length > 0 && (
+              <div className="home-section">
+                <SectionHeader
+                  title="Aniq fanlar"
+                  onViewAll={() => navigate('/categories')}
+                />
+                <HorizontalScroll className="home-categories-scroll">
+                  {categories.map((category) => (
+                    <div
+                      key={category.id}
+                      className="home-category-item"
+                    >
+                      <ItemCard
+                        item={category}
+                        type="category"
+                        onClick={() => navigate(`/category/${category.id}`)}
                       />
-                    </button>
+                    </div>
+                  ))}
+                </HorizontalScroll>
+              </div>
+            )}
+
+            {/* Tests Section */}
+            {tests.length > 0 && (
+              <div className="home-section">
+                <SectionHeader
+                  title="Eng so'nggi testlar"
+                  onViewAll={() => navigate('/all-tests')}
+                />
+                <div className="home-tests-list">
+                  {tests.map((test) => (
+                    <TestCardHorizontal
+                      key={test.id}
+                      test={test}
+                      onClick={() => navigate(`/test/${test.id}`)}
+                    />
                   ))}
                 </div>
               </div>

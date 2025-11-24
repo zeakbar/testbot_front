@@ -1,12 +1,5 @@
 import type { Author, Collection, Set, Test, Question, TestProgress, SetProgress, AttemptDetail } from './types';
 
-export const mockAuthors: Author[] = [
-  { id: '1', name: 'Rayhon', avatar: '👩‍🏫', rating: 4.8 },
-  { id: '2', name: 'Wilhard', avatar: '👨‍💼', rating: 4.7 },
-  { id: '3', name: 'Hannah', avatar: '👩‍💻', rating: 4.9 },
-  { id: '4', name: 'Geoffroy', avatar: '👨‍🎓', rating: 4.6 },
-];
-
 export const mockQuestions: Question[] = [
   {
     id: 'q1',

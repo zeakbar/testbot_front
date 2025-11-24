@@ -1,6 +1,6 @@
 import type { PropsWithChildren, FC } from 'react';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { useRawInitData } from '@tma.js/sdk-react';
+import { useRawInitData, retrieveLaunchParams } from '@tma.js/sdk-react';
 import { authService } from '@/api/auth';
 import { apiClient } from '@/api/client';
 import type { User } from '@/api/types';
@@ -23,42 +23,17 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [showTokenModal, setShowTokenModal] = useState(false);
   const initData = useRawInitData();
 
-  useEffect(() => {
-    const initializeAuth = async () => {
-      setIsLoading(true);
-      try {
-        // Check for stored token
-        const storedToken = apiClient.getToken();
-
-        if (import.meta.env.DEV) {
-          // In dev mode, show token modal if no token is stored
-          if (!storedToken) {
-            setShowTokenModal(true);
-            setIsLoading(false);
-            return;
-          }
-          // Token exists, allow access
-          setIsLoading(false);
-        } else {
-          // In production, require authentication
-          if (!storedToken) {
-            setShowTokenModal(true);
-            setIsLoading(false);
-            return;
-          }
-          // Token exists, allow access
-          setIsLoading(false);
-        }
-      } catch (error) {
-        if (!import.meta.env.DEV) {
-          setShowTokenModal(true);
-        }
-        setIsLoading(false);
-      }
-    };
-
-    initializeAuth();
-  }, []);
+  const login = async (initDataString: string) => {
+    setIsLoading(true);
+    try {
+      const authResponse = await authService.loginWithTelegram(initDataString);
+      setUser(authResponse.user);
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleTokenSubmit = (token: string) => {
     apiClient.setToken(token);
@@ -66,17 +41,78 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     setIsLoading(false);
   };
 
-  const login = async (initData: string) => {
-    setIsLoading(true);
-    try {
-      const authResponse = await authService.loginWithTelegram(initData);
-      setUser(authResponse.user);
-    } catch (error) {
-      console.error('Login failed:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  useEffect(() => {
+    const initializeAuth = async () => {
+      setIsLoading(true);
+      try {
+        const storedToken = apiClient.getToken();
+        const isDev = import.meta.env.VITE_DEV === 'true' || import.meta.env.VITE_DEV === true;
+
+        // Try to get initData from hook or launch params
+        let actualInitData = initData;
+        if (!actualInitData) {
+          try {
+            const launchParams = retrieveLaunchParams();
+            actualInitData = launchParams.initData;
+          } catch {
+            // Could not retrieve initData from launch params
+          }
+        }
+
+        if (isDev) {
+          // In debug mode, try to authenticate with initData if available
+          if (actualInitData && typeof actualInitData === 'string') {
+            try {
+              await login(actualInitData);
+              return;
+            } catch (error) {
+              // Fall back to token modal
+              setShowTokenModal(true);
+              setIsLoading(false);
+              return;
+            }
+          }
+
+          // No initData available, show token modal
+          if (!storedToken) {
+            setShowTokenModal(true);
+            setIsLoading(false);
+            return;
+          }
+
+          // Token exists, allow access
+          setIsLoading(false);
+        } else {
+          // In production mode, require authentication via initData
+          if (actualInitData && typeof actualInitData === 'string') {
+            try {
+              await login(actualInitData);
+              return;
+            } catch (error) {
+              setShowTokenModal(true);
+              setIsLoading(false);
+              return;
+            }
+          }
+
+          // Fallback to stored token
+          if (!storedToken) {
+            setShowTokenModal(true);
+            setIsLoading(false);
+            return;
+          }
+
+          // Token exists, allow access
+          setIsLoading(false);
+        }
+      } catch (error) {
+        setShowTokenModal(true);
+        setIsLoading(false);
+      }
+    };
+
+    initializeAuth();
+  }, [initData]);
 
   const logout = () => {
     authService.logout();

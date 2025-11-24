@@ -1,0 +1,55 @@
+.owner-attempts-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.owner-attempts-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+  padding: 0 12px;
+  gap: 0;
+}
+
+.owner-attempts-tab {
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+  position: relative;
+}
+
+.owner-attempts-tab:active {
+  color: var(--color-primary);
+}
+
+.owner-attempts-tab-active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+@media (min-width: 480px) {
+  .owner-attempts-tabs {
+    padding: 0 20px;
+  }
+
+  .owner-attempts-tab {
+    padding: 14px 20px;
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 768px) {
+  .owner-attempts-tabs {
+    padding: 0 24px;
+  }
+
+  .owner-attempts-tab {
+    padding: 16px 24px;
+  }
+}

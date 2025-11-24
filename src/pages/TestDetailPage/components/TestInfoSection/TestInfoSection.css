@@ -1,0 +1,36 @@
+.test-info-section {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.test-info-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.test-info-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+.test-info-description {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.6;
+}
+
+@media (min-width: 768px) {
+  .test-info-section {
+    padding: 14px;
+  }
+
+  .test-info-title {
+    font-size: 16px;
+  }
+}

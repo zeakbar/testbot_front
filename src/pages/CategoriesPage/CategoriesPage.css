@@ -1,0 +1,119 @@
+.categories-page {
+  background: var(--color-bg-secondary);
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+/* Header */
+.categories-header {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  padding: 20px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.categories-title {
+  margin: 0;
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+/* Grid Layout */
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  padding: 16px;
+}
+
+.categories-item {
+  cursor: pointer;
+}
+
+/* Loading State */
+.categories-loading,
+.categories-loading-more {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 16px;
+}
+
+/* Empty State */
+.categories-empty,
+.categories-error {
+  padding: 40px 16px;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.categories-error {
+  color: var(--color-error, #d32f2f);
+}
+
+/* Observer for infinite scroll */
+.categories-observer {
+  height: 20px;
+  margin: 20px 0;
+}
+
+/* Bottom spacing */
+.categories-bottom-space {
+  height: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .categories-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .categories-header {
+    padding: 16px 12px;
+  }
+
+  .categories-title {
+    font-size: 22px;
+  }
+
+  .categories-loading,
+  .categories-loading-more,
+  .categories-empty,
+  .categories-error {
+    padding: 30px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .categories-page {
+    padding-bottom: 70px;
+  }
+
+  .categories-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .categories-header {
+    padding: 14px 12px;
+  }
+
+  .categories-title {
+    font-size: 20px;
+  }
+
+  .categories-loading,
+  .categories-loading-more,
+  .categories-empty,
+  .categories-error {
+    padding: 30px 12px;
+    font-size: 13px;
+  }
+}

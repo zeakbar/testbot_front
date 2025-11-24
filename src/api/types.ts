@@ -11,7 +11,11 @@ export interface User {
 
 /* Auth Responses */
 export interface AuthResponse {
-  access_token: string;
+  success: boolean;
+  access: string;
+  refresh: string;
+  token_type: string;
+  expires_in: number;
   user: User;
 }
 
@@ -69,10 +73,9 @@ export interface Test {
   creation_method: 'ai' | 'manual';
   open_period: number;
   description?: string | null;
+  image?: string | null;
   questions?: Question[];
-  category?: {
-    name: string;
-  };
+  category?: Category;
 }
 
 /* Category Model */
@@ -87,7 +90,9 @@ export interface Category {
   user_addable: boolean;
   test_ordering: string;
   field: number;
-  tests: PaginatedResponse<Test>;
+  tests?: PaginatedResponse<Test>;
+  tests_count?: number;
+  
 }
 
 /* Field Model */
@@ -112,9 +117,72 @@ export interface ApiResponse<T> {
   error?: string;
 }
 
+/* Banner Model */
+export interface Banner {
+  id: number;
+  name: string;
+  image: string;
+  link: string;
+  z_index: number;
+}
+
 export interface SearchResult {
   tests: Test[];
   categories: Category[];
   fields: Field[];
   total: number;
+}
+
+/* Overall Statistics for Test */
+export interface OverallStats {
+  times_played: number;
+  total_answers: number;
+  total_correct: number;
+  avg_percentage: number;
+  avg_points: number;
+  total_time_seconds: number;
+  fastest_time_seconds: number;
+  slowest_time_seconds: number;
+}
+
+/* Solved Test Item (for list display) */
+export interface SolvedTestItem {
+  id: number;
+  correct_answers: number;
+  incorrect_answers: number;
+  percentage: number;
+  points: number;
+  time_taken: number;
+  created: string;
+  type: 'indvidual_web' | string;
+  quiz: null | number;
+  user_id?: number;
+}
+
+/* Recommended Test Card */
+export interface RecommendedTest {
+  id: number;
+  topic: string;
+  difficulty_level: 'easy' | 'medium' | 'hard';
+  target_num_questions: number;
+  image: string;
+  category: {
+    id: number;
+    name: string;
+  };
+  author: {
+    id: number;
+    username: string;
+    full_name: string;
+  };
+  created: string;
+}
+
+/* Complete Test Detail Page Response */
+export interface TestDetailPageResponse {
+  test: Test;
+  is_owner: boolean;
+  overall_stats: OverallStats;
+  solved_tests: SolvedTestItem[];
+  recommended_tests: RecommendedTest[];
 }

@@ -1,0 +1,173 @@
+import type { FC } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Page } from '@/components/Page';
+import { getSolvedTestDetail, type SolvedTestDetail } from '@/api/solvedTests';
+import { FiArrowRight } from 'react-icons/fi';
+import './SolvedTestDetailPage.css';
+
+export const SolvedTestDetailPage: FC = () => {
+  const { solvedTestId } = useParams<{ solvedTestId: string }>();
+  const navigate = useNavigate();
+  const [solvedTest, setSolvedTest] = useState<SolvedTestDetail | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (!solvedTestId) return;
+      try {
+        const data = await getSolvedTestDetail(parseInt(solvedTestId, 10));
+        setSolvedTest(data);
+        setError(null);
+      } catch (err) {
+        console.error('Error loading solved test:', err);
+        setError('Natija yuklanishida xato');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, [solvedTestId]);
+
+  if (isLoading) {
+    return (
+      <Page back>
+        <div className="solved-test-loading">Yuklanmoqda...</div>
+      </Page>
+    );
+  }
+
+  if (error || !solvedTest) {
+    return (
+      <Page back>
+        <div className="solved-test-error">{error || 'Natija topilmadi'}</div>
+      </Page>
+    );
+  }
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}m ${secs}s`;
+  };
+
+  return (
+    <Page back>
+      <div className="solved-test-page">
+        {/* Header */}
+        <div className="solved-test-header">
+          <h1 className="solved-test-header-title">Test Natijasi</h1>
+        </div>
+
+        {/* Percentage Circle */}
+        <div className="solved-test-percentage-container">
+          <div className="solved-test-percentage-circle">
+            <svg viewBox="0 0 200 200" className="solved-test-svg">
+              <circle
+                className="solved-test-circle-bg"
+                cx="100"
+                cy="100"
+                r="95"
+                fill="none"
+                strokeWidth="10"
+                stroke="var(--color-border)"
+              />
+              <circle
+                className="solved-test-circle-progress"
+                cx="100"
+                cy="100"
+                r="95"
+                fill="none"
+                strokeWidth="10"
+                stroke="var(--color-primary)"
+                strokeDasharray={`${((solvedTest.percentage / 100) * 597).toFixed(2)} 597`}
+                strokeLinecap="round"
+              />
+            </svg>
+            <div className="solved-test-percentage-text">
+              <span className="solved-test-percentage-value">{solvedTest.percentage}%</span>
+              <span className="solved-test-percentage-label">
+                {solvedTest.percentage >= 70
+                  ? 'A\'lo'
+                  : solvedTest.percentage >= 50
+                    ? 'Yaxshi'
+                    : solvedTest.percentage >= 30
+                      ? 'O\'rtacha'
+                      : 'Zaif'}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div className="solved-test-stats">
+          <div className="solved-test-stat">
+            <div className="solved-test-stat-label">To'g'ri javoblar</div>
+            <div className="solved-test-stat-value correct">
+              {solvedTest.correct_answers}/{solvedTest.total_questions}
+            </div>
+          </div>
+          <div className="solved-test-stat">
+            <div className="solved-test-stat-label">Vaqt</div>
+            <div className="solved-test-stat-value">{formatTime(solvedTest.time_taken)}</div>
+          </div>
+          <div className="solved-test-stat">
+            <div className="solved-test-stat-label">Ballar</div>
+            <div className="solved-test-stat-value">{solvedTest.total_points}</div>
+          </div>
+        </div>
+
+        {/* Details */}
+        <div className="solved-test-section">
+          <h2 className="solved-test-section-title">Javoblar tafsili</h2>
+          <div className="solved-test-answers">
+            {solvedTest.answers.map((answer, index) => {
+              const answerQuestion = (answer as any).question?.question || (answer as any).question_text || '';
+              const answerText = (answer as any).option?.text || (answer as any).your_answer || '';
+              const answerId = (answer as any).id || index;
+              const maxPoints = solvedTest.total_points / solvedTest.total_questions;
+
+              return (
+                <div key={answerId} className="solved-test-answer">
+                  <div className="solved-test-answer-header">
+                    <span className="solved-test-answer-number">
+                      Savol {index + 1}
+                    </span>
+                    <span className={`solved-test-answer-status ${answer.is_true ? 'correct' : 'incorrect'}`}>
+                      {answer.is_true ? '✓ To\'g\'ri' : '✗ Noto\'g\'ri'}
+                    </span>
+                  </div>
+                  <div className="solved-test-answer-content">
+                    {answerQuestion && (
+                      <p className="solved-test-answer-question">{answerQuestion}</p>
+                    )}
+                    <p className="solved-test-answer-text">
+                      <span className="solved-test-answer-label">Sizning javob:</span> {answerText}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="solved-test-actions">
+          <button
+            className="solved-test-btn solved-test-btn-primary"
+            onClick={() => navigate('/library')}
+            type="button"
+          >
+            Kutubxonaga qaytish
+            <FiArrowRight size={20} />
+          </button>
+        </div>
+
+        {/* Bottom spacing */}
+        <div className="solved-test-bottom-space"></div>
+      </div>
+    </Page>
+  );
+};

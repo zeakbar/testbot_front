@@ -1,6 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV
-  ? 'http://localhost:8000/api/v1'
-  : 'https://api.ilmoq.uz/api/v1');
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 class ApiClient {
   private token: string | null = null;
@@ -125,10 +123,21 @@ class ApiClient {
     const contentType = response.headers.get('content-type');
     let data: unknown;
 
-    if (contentType?.includes('application/json')) {
-      data = await response.json();
-    } else {
-      data = await response.text();
+    try {
+      if (contentType?.includes('application/json')) {
+        data = await response.json();
+      } else {
+        data = await response.text();
+      }
+    } catch (error) {
+      if (!response.ok) {
+        if (response.status === 401) {
+          this.clearToken();
+          window.location.href = '/#/';
+        }
+        throw new Error(`HTTP ${response.status}`);
+      }
+      throw error;
     }
 
     if (!response.ok) {

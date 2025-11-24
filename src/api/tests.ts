@@ -1,4 +1,4 @@
-import type { Test, Question } from './types';
+import type { Test, Question, TestDetailPageResponse } from './types';
 import { apiClient } from './client';
 
 /**
@@ -12,7 +12,14 @@ export async function getTests(page: number = 1, pageSize: number = 10) {
  * Get test by ID with questions and options
  */
 export async function getTestById(id: number): Promise<Test> {
-  return apiClient.get<Test>(`/testss/${id}/`);
+  return apiClient.get<Test>(`/testss/${id}/lean/`);
+}
+
+/**
+ * Get test detail page with overall stats, solved tests, and recommended tests
+ */
+export async function getTestDetailPage(id: number): Promise<TestDetailPageResponse> {
+  return apiClient.get<TestDetailPageResponse>(`/testss/${id}/`);
 }
 
 /**

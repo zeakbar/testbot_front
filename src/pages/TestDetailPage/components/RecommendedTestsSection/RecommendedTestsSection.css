@@ -1,0 +1,47 @@
+.recommended-tests-section {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.recommended-tests-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+.recommended-tests-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recommended-tests-item {
+  width: 100%;
+}
+
+@media (min-width: 480px) {
+  .recommended-tests-section {
+    padding: 14px;
+  }
+
+  .recommended-tests-list {
+    gap: 12px;
+  }
+}
+
+@media (min-width: 768px) {
+  .recommended-tests-section {
+    padding: 16px;
+  }
+
+  .recommended-tests-section-title {
+    font-size: 18px;
+  }
+
+  .recommended-tests-list {
+    gap: 12px;
+  }
+}

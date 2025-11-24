@@ -39,7 +39,8 @@
   color: var(--color-text-tertiary);
 }
 
-.search-bar-clear {
+.search-bar-clear,
+.search-bar-submit {
   flex-shrink: 0;
   width: 24px;
   height: 24px;
@@ -57,10 +58,19 @@
 }
 
 .search-bar-clear:hover,
-.search-bar-clear:focus-visible {
+.search-bar-clear:focus-visible,
+.search-bar-submit:hover,
+.search-bar-submit:focus-visible {
   background: var(--color-text-tertiary);
   color: white;
   outline: none;
+}
+
+.search-bar-submit:disabled {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 @media (max-width: 480px) {

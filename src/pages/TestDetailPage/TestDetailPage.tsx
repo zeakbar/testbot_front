@@ -1,27 +1,61 @@
-import type { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import { Page } from '@/components/Page';
 import { PlayModeModal, type PlayMode } from '@/components/PlayModeModal/PlayModeModal';
-import { getTestById } from '@/api/collections';
-import type { Test } from '@/api/types';
+import { getTestDetailPage } from '@/api/collections';
+import type { Category, Test, OverallStats, SolvedTestItem, RecommendedTest, TestDetailPageResponse } from '@/api/types';
+import { TestHeader } from './components/TestHeader/TestHeader';
+import { TestActionBar } from './components/TestActionBar/TestActionBar';
+import { TestInfoSection } from './components/TestInfoSection/TestInfoSection';
+import { OverallStatsCard } from './components/OverallStatsCard/OverallStatsCard';
+import { NextTestCard } from './components/NextTestCard/NextTestCard';
+import { SolvedTestsList } from './components/SolvedTestsList/SolvedTestsList';
+import { RecommendedTestsSection } from './components/RecommendedTestsSection/RecommendedTestsSection';
 import './TestDetailPage.css';
+
+interface TestDetailData {
+  test: Test;
+  category?: Category;
+  isOwner: boolean;
+  overallStats: OverallStats;
+  solvedTests: SolvedTestItem[];
+  recommendedTests: RecommendedTest[];
+}
 
 export const TestDetailPage: FC = () => {
   const { testId } = useParams<{ testId: string }>();
   const navigate = useNavigate();
-  const [test, setTest] = useState<Test | null>(null);
+  const [data, setData] = useState<TestDetailData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [isPlayModalOpen, setIsPlayModalOpen] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
-      if (!testId) return;
+      if (!testId) {
+        setError('Test ID is required');
+        setIsLoading(false);
+        return;
+      }
+
       try {
-        const testData = await getTestById(parseInt(testId, 10));
-        setTest(testData);
-      } catch (error) {
-        console.error('Error loading test:', error);
+        setIsLoading(true);
+        const testIdNum = parseInt(testId, 10);
+        const response: TestDetailPageResponse = await getTestDetailPage(testIdNum);
+
+        setData({
+          test: response.test,
+          category: response.test.category as Category | undefined,
+          isOwner: response.is_owner,
+          overallStats: response.overall_stats,
+          solvedTests: response.solved_tests,
+          recommendedTests: response.recommended_tests,
+        });
+        setError(null);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Failed to load test details';
+        setError(errorMessage);
+        console.error('Error loading test:', err);
       } finally {
         setIsLoading(false);
       }
@@ -32,88 +66,78 @@ export const TestDetailPage: FC = () => {
 
   const handlePlayModeSelect = (mode: PlayMode) => {
     setIsPlayModalOpen(false);
-    
+
     if (mode === 'web') {
       navigate(`/test/${testId}/question/0`);
     }
   };
 
-
   if (isLoading) {
     return (
       <Page back>
-        <div className="test-detail-loading">Yuklanmoqda...</div>
+        <div className="test-detail-page-loading">Loading test details...</div>
       </Page>
     );
   }
 
-  if (!test) {
+  if (error || !data) {
     return (
       <Page back>
-        <div className="test-detail-error">Test topilmadi</div>
+        <div className="test-detail-page-error">
+          <p>{error || 'Test not found'}</p>
+          <button
+            className="test-detail-page-error-button"
+            onClick={() => window.location.reload()}
+            type="button"
+          >
+            Try Again
+          </button>
+        </div>
       </Page>
     );
   }
+
+  const { test, category, isOwner, overallStats, solvedTests, recommendedTests } = data;
 
   return (
     <Page back>
       <div className="test-detail-page">
-        {/* Header */}
-        <div className="test-detail-header">
-          <div className="test-detail-image">
-            <span className="test-detail-emoji">📝</span>
-          </div>
-          <div className="test-detail-info">
-            <h1 className="test-detail-title">{test.topic}</h1>
-            <p className="test-detail-author">
-              {test.author.full_name}
-            </p>
-          </div>
+        <TestHeader test={test} category={category} />
+
+        <TestActionBar
+          testId={parseInt(testId || '0', 10)}
+          isOwner={isOwner}
+          onStartTest={() => setIsPlayModalOpen(true)}
+          onEdit={() => {
+            navigate(`/test/${testId}/edit`);
+          }}
+        />
+
+        <TestInfoSection test={test} category={category} />
+
+        <OverallStatsCard stats={overallStats} />
+
+        <div className="test-detail-page-section-divider" />
+
+        <NextTestCard currentTestId={parseInt(testId || '0', 10)} />
+
+        <div className="test-detail-page-section-divider" />
+
+        <div className="test-detail-page-attempts-section">
+          <h2 className="test-detail-page-section-title">My Attempts</h2>
+          <SolvedTestsList solvedTests={solvedTests} isLoading={false} />
         </div>
 
-        {/* Description */}
-        <div className="test-detail-description-section">
-          <h3 className="test-detail-section-title">Test haqida</h3>
-          {test.description && (
-            <p className="test-detail-description">{test.description}</p>
-          )}
-          <div className="test-detail-meta">
-            <span>Savollar: {test.total_questions}</span>
-            <span>Qiymati: {test.open_period} kun</span>
-            <span>Darajasi: {test.difficulty_level}</span>
-          </div>
-        </div>
-
-        {/* Action Buttons - Play Mode Selection */}
-        <div className="test-detail-actions">
-          <button
-            className="test-detail-btn test-detail-btn-primary"
-            onClick={() => setIsPlayModalOpen(true)}
-            type="button"
-          >
-            Start Test
-          </button>
-          <button
-            className="test-detail-btn test-detail-btn-secondary"
-            onClick={() => setIsPlayModalOpen(true)}
-            type="button"
-          >
-            Choose Mode
-          </button>
-        </div>
-
-        {/* Test Info */}
-        {test.category && (
-          <div className="test-detail-category-section">
-            <h3 className="test-detail-section-title">Kategoriya</h3>
-            <p className="test-detail-category">{test.category.name}</p>
-          </div>
+        {recommendedTests.length > 0 && (
+          <>
+            <div className="test-detail-page-section-divider" />
+            <RecommendedTestsSection recommendedTests={recommendedTests} />
+          </>
         )}
 
-        <div className="test-detail-bottom-space"></div>
+        <div className="test-detail-page-bottom-space" />
       </div>
 
-      {/* Play Mode Modal */}
       <PlayModeModal
         isOpen={isPlayModalOpen}
         testId={testId || ''}

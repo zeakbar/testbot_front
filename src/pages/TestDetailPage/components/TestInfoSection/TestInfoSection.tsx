@@ -1,0 +1,21 @@
+import { FC } from 'react';
+import type { Test, Category } from '@/api/types';
+import './TestInfoSection.css';
+
+interface TestInfoSectionProps {
+  test: Test;
+  category?: Category;
+}
+
+export const TestInfoSection: FC<TestInfoSectionProps> = ({ test, category }) => {
+  return (
+    <div className="test-info-section">
+      {test.description && (
+        <div className="test-info-block">
+          <h3 className="test-info-title">Description</h3>
+          <p className="test-info-description">{test.description}</p>
+        </div>
+      )}
+    </div>
+  );
+};

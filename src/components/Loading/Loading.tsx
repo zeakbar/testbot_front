@@ -5,7 +5,7 @@ interface LoadingProps {
   message?: string;
 }
 
-export const Loading: FC<LoadingProps> = ({ message = 'جاري التحميل...' }) => {
+export const Loading: FC<LoadingProps> = ({ message = 'Loading' }) => {
   return (
     <div className="loading-overlay">
       <div className="loading-container">

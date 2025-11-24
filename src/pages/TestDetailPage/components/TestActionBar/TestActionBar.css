@@ -1,0 +1,60 @@
+.test-action-bar {
+  padding: 12px;
+  display: flex;
+  gap: 10px;
+  background: var(--color-bg-primary);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.test-action-button {
+  flex: 1;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.test-action-button-primary {
+  background: var(--color-primary);
+  color: var(--color-text-light);
+}
+
+.test-action-button-primary:active {
+  background: var(--color-primary-dark);
+  transform: scale(0.98);
+}
+
+.test-action-button-secondary {
+  background: var(--color-border);
+  color: var(--color-text-primary);
+  min-width: 40px;
+  padding: 10px;
+  flex: 0;
+}
+
+.test-action-button-secondary:active {
+  background: #e5e7eb;
+}
+
+@media (min-width: 768px) {
+  .test-action-bar {
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .test-action-button {
+    padding: 14px 20px;
+    font-size: 16px;
+  }
+}

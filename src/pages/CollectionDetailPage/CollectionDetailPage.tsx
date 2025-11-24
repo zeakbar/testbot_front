@@ -51,15 +51,18 @@ export const CollectionDetailPage: FC = () => {
   return (
     <Page back>
       <div className="collection-detail-page">
-        {/* Header */}
+        {/* Header with Image Background */}
         <div className="collection-detail-header">
-          <div className="collection-detail-image">
-            {field.image && field.image.startsWith('http') ? (
-              <img src={field.image} alt={field.name} className="field-image" />
-            ) : (
+          {field.image && field.image.startsWith('http') ? (
+            <div className="collection-detail-image-background">
+              <img src={field.image} alt={field.name} className="field-image-bg" />
+              <div className="collection-detail-fade-overlay"></div>
+            </div>
+          ) : (
+            <div className="collection-detail-image-background collection-detail-image-background-emoji">
               <span className="collection-detail-emoji">{field.image}</span>
-            )}
-          </div>
+            </div>
+          )}
           <div className="collection-detail-info">
             <h1 className="collection-detail-title">{field.name}</h1>
             {field.description && (
@@ -68,7 +71,7 @@ export const CollectionDetailPage: FC = () => {
               </p>
             )}
             <p className="collection-detail-stats">
-              {categories.length} Kategoriyalar
+              {categories.length} ta kategoriya
             </p>
           </div>
         </div>
@@ -76,10 +79,10 @@ export const CollectionDetailPage: FC = () => {
         {/* Categories Grid */}
         {categories.length > 0 && (
           <div className="collection-detail-section">
-            <SectionHeader
+            {/* <SectionHeader
               title="Kategoriyalar"
               onViewAll={undefined}
-            />
+            /> */}
             <div className="collection-detail-grid">
               {categories.map((category) => (
                 <ItemCard

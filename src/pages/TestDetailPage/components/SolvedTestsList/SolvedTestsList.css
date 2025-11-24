@@ -1,0 +1,45 @@
+.solved-tests-list {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.solved-tests-list-items {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.solved-tests-list-empty {
+  padding: 40px 16px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.solved-tests-list-empty p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+@media (min-width: 480px) {
+  .solved-tests-list {
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .solved-tests-list-items {
+    gap: 14px;
+  }
+}
+
+@media (min-width: 768px) {
+  .solved-tests-list {
+    padding: 24px;
+  }
+
+  .solved-tests-list-items {
+    gap: 16px;
+  }
+}

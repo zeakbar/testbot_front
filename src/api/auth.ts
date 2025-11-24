@@ -8,15 +8,23 @@ export class AuthService {
    * Backend verifies the signature using bot token
    */
   public async loginWithTelegram(initData: string): Promise<AuthResponse> {
-    const response = await apiClient.post<AuthResponse>('/auth/login/', {
-      init_data: initData,
-    });
-
-    if (response.access_token) {
-      apiClient.setToken(response.access_token);
+    if (!initData || typeof initData !== 'string') {
+      throw new Error('Invalid initData: must be a non-empty string');
     }
 
-    return response;
+    try {
+      const response = await apiClient.post<AuthResponse>('/auth/login/', {
+        init_data: initData,
+      });
+
+      if (response.access) {
+        apiClient.setToken(response.access);
+      }
+
+      return response;
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**
@@ -69,8 +77,8 @@ export class AuthService {
    */
   public async refreshToken(): Promise<AuthResponse> {
     const response = await apiClient.post<AuthResponse>('/auth/refresh/', {});
-    if (response.access_token) {
-      apiClient.setToken(response.access_token);
+    if (response.access) {
+      apiClient.setToken(response.access);
     }
     return response;
   }
