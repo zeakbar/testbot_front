@@ -3,7 +3,14 @@
   padding-bottom: 80px;
 }
 
-.question-owner-loading,
+.question-owner-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 16px;
+  min-height: 200px;
+}
+
 .question-owner-error {
   text-align: center;
   padding: 40px 16px;

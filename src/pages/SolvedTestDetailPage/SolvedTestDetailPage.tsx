@@ -1,9 +1,12 @@
 import type { FC } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { miniApp } from '@tma.js/sdk-react';
 import { Page } from '@/components/Page';
+import { PageHeader } from '@/components/PageHeader/PageHeader';
+import { Loading } from '@/components/Loading/Loading';
 import { getSolvedTestDetail, type SolvedTestDetail } from '@/api/solvedTests';
-import { FiArrowRight } from 'react-icons/fi';
+import { FiHome, FiRefreshCw, FiX } from 'react-icons/fi';
 import './SolvedTestDetailPage.css';
 
 export const SolvedTestDetailPage: FC = () => {
@@ -31,10 +34,26 @@ export const SolvedTestDetailPage: FC = () => {
     loadData();
   }, [solvedTestId]);
 
+  const handleCloseApp = () => {
+    miniApp.close();
+  };
+
+  const handleRedoTest = () => {
+    if (solvedTest?.test) {
+      navigate(`/test/${solvedTest.test}`);
+    }
+  };
+
+  const handleGoHome = () => {
+    navigate('/');
+  };
+
   if (isLoading) {
     return (
       <Page back>
-        <div className="solved-test-loading">Yuklanmoqda...</div>
+        <div className="solved-test-loading">
+          <Loading message="Yuklanmoqda..." />
+        </div>
       </Page>
     );
   }
@@ -55,11 +74,8 @@ export const SolvedTestDetailPage: FC = () => {
 
   return (
     <Page back>
+      <PageHeader title="Test Natijasi" />
       <div className="solved-test-page">
-        {/* Header */}
-        <div className="solved-test-header">
-          <h1 className="solved-test-header-title">Test Natijasi</h1>
-        </div>
 
         {/* Percentage Circle */}
         <div className="solved-test-percentage-container">
@@ -157,11 +173,38 @@ export const SolvedTestDetailPage: FC = () => {
         <div className="solved-test-actions">
           <button
             className="solved-test-btn solved-test-btn-primary"
-            onClick={() => navigate('/library')}
+            onClick={handleGoHome}
             type="button"
+            title="Go to Home"
           >
-            Kutubxonaga qaytish
-            <FiArrowRight size={20} />
+            <span className="solved-test-btn-icon">
+              <FiHome size={20} />
+            </span>
+            <span>Home</span>
+          </button>
+
+          <button
+            className="solved-test-btn solved-test-btn-secondary"
+            onClick={handleRedoTest}
+            type="button"
+            title="Redo Test"
+          >
+            <span className="solved-test-btn-icon">
+              <FiRefreshCw size={20} />
+            </span>
+            <span>Redo</span>
+          </button>
+
+          <button
+            className="solved-test-btn solved-test-btn-danger"
+            onClick={handleCloseApp}
+            type="button"
+            title="Close App"
+          >
+            <span className="solved-test-btn-icon">
+              <FiX size={20} />
+            </span>
+            <span>Close</span>
           </button>
         </div>
 

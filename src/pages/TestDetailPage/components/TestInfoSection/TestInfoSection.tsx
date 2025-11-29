@@ -12,7 +12,6 @@ export const TestInfoSection: FC<TestInfoSectionProps> = ({ test, category }) =>
     <div className="test-info-section">
       {test.description && (
         <div className="test-info-block">
-          <h3 className="test-info-title">Description</h3>
           <p className="test-info-description">{test.description}</p>
         </div>
       )}

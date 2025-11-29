@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Page } from '@/components/Page';
+import { Loading } from '@/components/Loading/Loading';
 import { PlayModeModal, type PlayMode } from '@/components/PlayModeModal/PlayModeModal';
 import { getTestDetailPage } from '@/api/collections';
 import type { Category, Test, OverallStats, SolvedTestItem, RecommendedTest, TestDetailPageResponse } from '@/api/types';
@@ -8,7 +9,7 @@ import { TestHeader } from './components/TestHeader/TestHeader';
 import { TestActionBar } from './components/TestActionBar/TestActionBar';
 import { TestInfoSection } from './components/TestInfoSection/TestInfoSection';
 import { OverallStatsCard } from './components/OverallStatsCard/OverallStatsCard';
-import { NextTestCard } from './components/NextTestCard/NextTestCard';
+// import { NextTestCard } from './components/NextTestCard/NextTestCard';
 import { SolvedTestsList } from './components/SolvedTestsList/SolvedTestsList';
 import { RecommendedTestsSection } from './components/RecommendedTestsSection/RecommendedTestsSection';
 import './TestDetailPage.css';
@@ -75,7 +76,9 @@ export const TestDetailPage: FC = () => {
   if (isLoading) {
     return (
       <Page back>
-        <div className="test-detail-page-loading">Loading test details...</div>
+        <div className="test-detail-page-loading">
+          <Loading message="Yuklanmoqda..." />
+        </div>
       </Page>
     );
   }
@@ -84,7 +87,7 @@ export const TestDetailPage: FC = () => {
     return (
       <Page back>
         <div className="test-detail-page-error">
-          <p>{error || 'Test not found'}</p>
+          <p>{error || 'Test Topilmadi...'}</p>
           <button
             className="test-detail-page-error-button"
             onClick={() => window.location.reload()}
@@ -104,6 +107,8 @@ export const TestDetailPage: FC = () => {
       <div className="test-detail-page">
         <TestHeader test={test} category={category} />
 
+        <TestInfoSection test={test} category={category} />
+        
         <TestActionBar
           testId={parseInt(testId || '0', 10)}
           isOwner={isOwner}
@@ -113,18 +118,17 @@ export const TestDetailPage: FC = () => {
           }}
         />
 
-        <TestInfoSection test={test} category={category} />
 
         <OverallStatsCard stats={overallStats} />
 
         <div className="test-detail-page-section-divider" />
 
-        <NextTestCard currentTestId={parseInt(testId || '0', 10)} />
+        {/* <NextTestCard currentTestId={parseInt(testId || '0', 10)} /> */}
 
         <div className="test-detail-page-section-divider" />
 
         <div className="test-detail-page-attempts-section">
-          <h2 className="test-detail-page-section-title">My Attempts</h2>
+          <h2 className="test-detail-page-section-title">Mening urinishlarim</h2>
           <SolvedTestsList solvedTests={solvedTests} isLoading={false} />
         </div>
 

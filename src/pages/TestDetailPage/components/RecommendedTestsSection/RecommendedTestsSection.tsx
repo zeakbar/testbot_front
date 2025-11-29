@@ -23,7 +23,7 @@ export const RecommendedTestsSection: FC<RecommendedTestsSectionProps> = ({
 
   return (
     <div className="recommended-tests-section">
-      <h2 className="recommended-tests-section-title">Recommended for You</h2>
+      <h2 className="recommended-tests-section-title">Tavsiya qilamiz</h2>
 
       <div className="recommended-tests-list">
         {recommendedTests.map((test) => (

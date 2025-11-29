@@ -41,7 +41,7 @@
 }
 
 .search-tab:hover {
-  background: var(--color-bg-tertiary);
+  background: var(--color-primary-light);
 }
 
 .search-tab-active {
@@ -228,10 +228,11 @@
 
 /* Loading */
 .search-page-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 60px 20px;
-  text-align: center;
-  color: var(--color-text-secondary);
-  font-size: 14px;
+  min-height: 200px;
 }
 
 .search-page-bottom-space {

@@ -127,7 +127,14 @@
   font-size: 14px;
 }
 
-.set-detail-loading,
+.set-detail-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  min-height: 200px;
+}
+
 .set-detail-error {
   padding: 40px 20px;
   text-align: center;
@@ -165,7 +172,7 @@
   height: 20px;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 400px) {
   .set-detail-header {
     aspect-ratio: 2.5 / 1;
     margin-bottom: 10px;

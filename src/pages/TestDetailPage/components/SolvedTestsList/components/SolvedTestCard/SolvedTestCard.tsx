@@ -57,25 +57,25 @@ export const SolvedTestCard: FC<SolvedTestCardProps> = ({ solvedTest, onViewDeta
 
       <div className="solved-test-card-content">
         <div className="solved-test-card-row">
-          <span className="solved-test-card-label">Answers</span>
+          <span className="solved-test-card-label">Javoblar</span>
           <span className="solved-test-card-value">
             {solvedTest.correct_answers}/{solvedTest.correct_answers + solvedTest.incorrect_answers}
           </span>
         </div>
 
         <div className="solved-test-card-row">
-          <span className="solved-test-card-label">Points</span>
+          <span className="solved-test-card-label">Ballar</span>
           <span className="solved-test-card-value">{solvedTest.points}</span>
         </div>
 
         <div className="solved-test-card-row">
-          <span className="solved-test-card-label">Time</span>
+          <span className="solved-test-card-label">Vaqt</span>
           <span className="solved-test-card-value">{formatTime(solvedTest.time_taken)}</span>
         </div>
       </div>
 
       <div className="solved-test-card-footer">
-        <span className="solved-test-card-action">View Results</span>
+        <span className="solved-test-card-action">To'liq natijani ko'rish</span>
         <FiChevronRight size={18} />
       </div>
     </div>

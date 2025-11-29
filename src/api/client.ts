@@ -1,10 +1,24 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
+type OnTokenRecoveredCallback = () => void;
+
 class ApiClient {
   private token: string | null = null;
+  private initData: string | null = null;
+  private isRefreshing = false;
+  private refreshQueue: Array<() => void> = [];
+  private onTokenRecovered: OnTokenRecoveredCallback | null = null;
 
   constructor() {
     this.token = this.getStoredToken();
+  }
+
+  public setInitData(initData: string | null): void {
+    this.initData = initData;
+  }
+
+  public setOnTokenRecovered(callback: OnTokenRecoveredCallback): void {
+    this.onTokenRecovered = callback;
   }
 
   private getStoredToken(): string | null {
@@ -54,7 +68,7 @@ class ApiClient {
   }
 
   public async get<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    try {
+    return this.requestWithRetry(async () => {
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'GET',
         headers: this.buildHeaders(),
@@ -62,9 +76,7 @@ class ApiClient {
       });
 
       return this.handleResponse<T>(response);
-    } catch (error) {
-      throw error;
-    }
+    });
   }
 
   public async post<T>(
@@ -72,7 +84,7 @@ class ApiClient {
     body?: unknown,
     options?: RequestInit
   ): Promise<T> {
-    try {
+    return this.requestWithRetry(async () => {
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'POST',
         headers: this.buildHeaders(),
@@ -81,9 +93,7 @@ class ApiClient {
       });
 
       return this.handleResponse<T>(response);
-    } catch (error) {
-      throw error;
-    }
+    });
   }
 
   public async put<T>(
@@ -91,7 +101,7 @@ class ApiClient {
     body?: unknown,
     options?: RequestInit
   ): Promise<T> {
-    try {
+    return this.requestWithRetry(async () => {
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'PUT',
         headers: this.buildHeaders(),
@@ -100,13 +110,11 @@ class ApiClient {
       });
 
       return this.handleResponse<T>(response);
-    } catch (error) {
-      throw error;
-    }
+    });
   }
 
   public async delete<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    try {
+    return this.requestWithRetry(async () => {
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'DELETE',
         headers: this.buildHeaders(),
@@ -114,7 +122,27 @@ class ApiClient {
       });
 
       return this.handleResponse<T>(response);
+    });
+  }
+
+  private async requestWithRetry<T>(
+    request: () => Promise<T>
+  ): Promise<T> {
+    try {
+      return await request();
     } catch (error) {
+      // If we're refreshing, wait for it to complete
+      if (this.isRefreshing) {
+        await new Promise((resolve) => {
+          this.refreshQueue.push(resolve);
+        });
+        // Retry the request after refresh
+        try {
+          return await request();
+        } catch (retryError) {
+          throw retryError;
+        }
+      }
       throw error;
     }
   }
@@ -132,8 +160,7 @@ class ApiClient {
     } catch (error) {
       if (!response.ok) {
         if (response.status === 401) {
-          this.clearToken();
-          window.location.href = '/#/';
+          await this.handleTokenExpired();
         }
         throw new Error(`HTTP ${response.status}`);
       }
@@ -142,8 +169,7 @@ class ApiClient {
 
     if (!response.ok) {
       if (response.status === 401) {
-        this.clearToken();
-        window.location.href = '/#/';
+        await this.handleTokenExpired();
       }
       throw new Error(
         typeof data === 'object' && data !== null && 'error' in data
@@ -153,6 +179,57 @@ class ApiClient {
     }
 
     return data as T;
+  }
+
+  private async handleTokenExpired(): Promise<void> {
+    if (this.isRefreshing) {
+      // Already refreshing, wait for it
+      return;
+    }
+
+    this.isRefreshing = true;
+
+    try {
+      if (!this.initData) {
+        this.clearToken();
+        window.location.href = '/#/';
+        return;
+      }
+
+      // Send login request with raw initData
+      const response = await fetch(`${API_BASE_URL}/auth/login/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          init_data: this.initData,
+        }),
+      });
+
+      const data = await response.json() as Record<string, unknown>;
+
+      if (response.ok && data.access) {
+        // New token acquired, update it
+        this.setToken(data.access as string);
+        // Notify that token was recovered
+        if (this.onTokenRecovered) {
+          this.onTokenRecovered();
+        }
+        // Execute all queued requests
+        this.refreshQueue.forEach((resolve) => resolve());
+      } else {
+        // Login failed, clear token and redirect
+        this.clearToken();
+        window.location.href = '/#/';
+      }
+    } catch (error) {
+      this.clearToken();
+      window.location.href = '/#/';
+    } finally {
+      this.refreshQueue = [];
+      this.isRefreshing = false;
+    }
   }
 }
 

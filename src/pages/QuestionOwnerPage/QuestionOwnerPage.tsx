@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Page } from '@/components/Page';
+import { Loading } from '@/components/Loading/Loading';
 import { getTestById } from '@/api/collections';
 import type { Test, Question } from '@/api/types';
 import './QuestionOwnerPage.css';
@@ -53,7 +54,9 @@ export const QuestionOwnerPage: FC = () => {
   if (isLoading) {
     return (
       <Page back>
-        <div className="question-owner-loading">Yuklanmoqda...</div>
+        <div className="question-owner-loading">
+          <Loading message="Yuklanmoqda..." />
+        </div>
       </Page>
     );
   }

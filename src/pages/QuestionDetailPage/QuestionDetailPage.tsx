@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState, useCallback } from 'react';
 import { Page } from '@/components/Page';
+import { Loading } from '@/components/Loading/Loading';
 import { getTestById } from '@/api/collections';
 import { startTest, submitAnswer, getSolvedTestDetail } from '@/api/solvedTests';
 import { soundSystem } from '@/utils/soundSystem';
@@ -188,7 +189,9 @@ export const QuestionDetailPage: FC = () => {
   if (isLoading) {
     return (
       <Page back={false}>
-        <div className="question-detail-loading">Yuklanmoqda...</div>
+        <div className="question-detail-loading">
+          <Loading message="Yuklanmoqda..." />
+        </div>
       </Page>
     );
   }

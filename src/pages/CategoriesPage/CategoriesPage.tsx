@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Page } from '@/components/Page';
+import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { ItemCard } from '@/components/ItemCard/ItemCard';
 import { Loading } from '@/components/Loading/Loading';
 import { apiClient } from '@/api/client';
@@ -74,15 +75,12 @@ export const CategoriesPage: FC = () => {
   return (
     <Page back={true}>
       <div className="categories-page">
-        {/* Header */}
-        <div className="categories-header">
-          <h1 className="categories-title">Aniq fanlar</h1>
-        </div>
+        <PageHeader title="Aniq fanlar" />
 
         {/* Content */}
         {isLoading ? (
           <div className="categories-loading">
-            <Loading />
+            <Loading message="Yuklanmoqda..." />
           </div>
         ) : error ? (
           <div className="categories-error">
@@ -112,7 +110,7 @@ export const CategoriesPage: FC = () => {
             {/* Loading more indicator */}
             {isLoadingMore && (
               <div className="categories-loading-more">
-                <Loading />
+                <Loading message="Yuklanmoqda..." />
               </div>
             )}
           </>

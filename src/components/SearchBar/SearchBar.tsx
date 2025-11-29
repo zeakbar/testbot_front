@@ -10,7 +10,7 @@ interface SearchBarProps {
 
 export const SearchBar: FC<SearchBarProps> = ({
   onSearch,
-  placeholder = 'Viktorina qidirish...',
+  placeholder = 'Testlar qidirish...',
 }) => {
   const [query, setQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);

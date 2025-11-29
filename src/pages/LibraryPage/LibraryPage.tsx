@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Page } from '@/components/Page';
+import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { ItemCard } from '@/components/ItemCard/ItemCard';
 import { Loading } from '@/components/Loading/Loading';
 import { apiClient } from '@/api/client';
@@ -74,15 +75,12 @@ export const LibraryPage: FC = () => {
   return (
     <Page back={false}>
       <div className="library-page">
-        {/* Header */}
-        <div className="library-header">
-          <h1 className="library-title">Kutubxona</h1>
-        </div>
+        <PageHeader title="Kutubxona" />
 
         {/* Content */}
         {isLoading ? (
           <div className="library-loading">
-            <Loading />
+            <Loading message="Yuklanmoqda..." />
           </div>
         ) : error ? (
           <div className="library-error">
@@ -112,7 +110,7 @@ export const LibraryPage: FC = () => {
             {/* Loading more indicator */}
             {isLoadingMore && (
               <div className="library-loading-more">
-                <Loading />
+                <Loading message="Yuklanmoqda..." />
               </div>
             )}
           </>

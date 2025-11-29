@@ -2,12 +2,14 @@ import type { FC } from 'react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Page } from '@/components/Page';
+import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { SearchBar } from '@/components/SearchBar/SearchBar';
 import { SectionHeader } from '@/components/SectionHeader/SectionHeader';
 import { BannerCarousel } from '@/components/BannerCarousel/BannerCarousel';
 import { HorizontalScroll } from '@/components/HorizontalScroll/HorizontalScroll';
 import { ItemCard } from '@/components/ItemCard/ItemCard';
 import { TestCardHorizontal } from '@/components/TestCardHorizontal/TestCardHorizontal';
+import { Loading } from '@/components/Loading/Loading';
 import { getHomeData } from '@/api/home';
 import type { Banner, Field, Category, Test } from '@/api/types';
 import './HomePage.css';
@@ -46,20 +48,19 @@ export const HomePage: FC = () => {
   return (
     <Page back={false}>
       <div className="home-page">
-        {/* Header with Logo */}
-        <div className="home-header">
-          <div className="home-header-content">
-            <span className="home-logo-icon">Q</span>
-            <h1 className="home-logo-text">ilmoq</h1>
-          </div>
-        </div>
+        <PageHeader
+          image="/assets/home-logo.png"
+          variant="special"
+        />
 
         {/* Search Bar */}
         <SearchBar onSearch={handleSearch} />
 
         {/* Main Content */}
         {isLoading ? (
-          <div className="home-loading">Yuklanmoqda...</div>
+          <div className="home-loading">
+            <Loading message="Yuklanmoqda..." />
+          </div>
         ) : (
           <>
             {/* Banner Carousel */}
@@ -129,7 +130,7 @@ export const HomePage: FC = () => {
               <div className="home-section">
                 <SectionHeader
                   title="Eng so'nggi testlar"
-                  onViewAll={() => navigate('/all-tests')}
+                  onViewAll={() => navigate('/library')}
                 />
                 <div className="home-tests-list">
                   {tests.map((test) => (

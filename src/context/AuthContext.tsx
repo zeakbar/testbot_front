@@ -5,7 +5,6 @@ import { authService } from '@/api/auth';
 import { apiClient } from '@/api/client';
 import type { User } from '@/api/types';
 import { Loading } from '@/components/Loading/Loading';
-import { DevTokenModal } from '@/components/DevTokenModal/DevTokenModal';
 
 interface AuthContextType {
   user: User | null;
@@ -20,7 +19,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [showTokenModal, setShowTokenModal] = useState(false);
   const initData = useRawInitData();
 
   const login = async (initDataString: string) => {
@@ -35,18 +33,11 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   };
 
-  const handleTokenSubmit = (token: string) => {
-    apiClient.setToken(token);
-    setShowTokenModal(false);
-    setIsLoading(false);
-  };
-
   useEffect(() => {
     const initializeAuth = async () => {
       setIsLoading(true);
       try {
         const storedToken = apiClient.getToken();
-        const isDev = import.meta.env.VITE_DEV === 'true' || import.meta.env.VITE_DEV === true;
 
         // Try to get initData from hook or launch params
         let actualInitData = initData;
@@ -59,54 +50,37 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           }
         }
 
-        if (isDev) {
-          // In debug mode, try to authenticate with initData if available
-          if (actualInitData && typeof actualInitData === 'string') {
-            try {
-              await login(actualInitData);
-              return;
-            } catch (error) {
-              // Fall back to token modal
-              setShowTokenModal(true);
-              setIsLoading(false);
-              return;
-            }
-          }
-
-          // No initData available, show token modal
-          if (!storedToken) {
-            setShowTokenModal(true);
-            setIsLoading(false);
-            return;
-          }
-
-          // Token exists, allow access
-          setIsLoading(false);
-        } else {
-          // In production mode, require authentication via initData
-          if (actualInitData && typeof actualInitData === 'string') {
-            try {
-              await login(actualInitData);
-              return;
-            } catch (error) {
-              setShowTokenModal(true);
-              setIsLoading(false);
-              return;
-            }
-          }
-
-          // Fallback to stored token
-          if (!storedToken) {
-            setShowTokenModal(true);
-            setIsLoading(false);
-            return;
-          }
-
-          // Token exists, allow access
-          setIsLoading(false);
+        // Store initData in API client for seamless 401 recovery
+        if (actualInitData && typeof actualInitData === 'string') {
+          apiClient.setInitData(actualInitData);
         }
+
+        // When token is recovered from 401, allow app to continue
+        apiClient.setOnTokenRecovered(() => {
+          setIsLoading(false);
+        });
+
+        // Try to authenticate with initData
+        if (actualInitData && typeof actualInitData === 'string') {
+          try {
+            await login(actualInitData);
+            return;
+          } catch (error) {
+            // If login failed, can't proceed without valid initData
+            setIsLoading(false);
+            return;
+          }
+        }
+
+        // If we have a stored token, allow access
+        if (storedToken) {
+          setIsLoading(false);
+          return;
+        }
+
+        // No initData and no stored token - cannot proceed
+        setIsLoading(false);
       } catch (error) {
-        setShowTokenModal(true);
         setIsLoading(false);
       }
     };
@@ -118,7 +92,6 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     authService.logout();
     apiClient.clearToken();
     setUser(null);
-    setShowTokenModal(true);
   };
 
   const value: AuthContextType = {
@@ -131,10 +104,6 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
   if (isLoading) {
     return <Loading message="Ilovani yuklanmoqda..." />;
-  }
-
-  if (showTokenModal) {
-    return <DevTokenModal onSubmit={handleTokenSubmit} />;
   }
 
   return (

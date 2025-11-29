@@ -4,42 +4,6 @@
   padding-bottom: 80px;
 }
 
-/* Header */
-.home-header {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-  padding: 20px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.home-header-content {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.home-logo-icon {
-  width: 32px;
-  height: 32px;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 700;
-  font-size: 14px;
-}
-
-.home-logo-text {
-  margin: 0;
-  color: white;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-
 /* Sections */
 .home-section {
   padding: 16px 0;
@@ -251,7 +215,14 @@
 }
 
 /* Loading and Empty States */
-.home-loading,
+.home-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 16px;
+  min-height: 200px;
+}
+
 .home-empty-message {
   padding: 40px 16px;
   text-align: center;

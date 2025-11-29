@@ -592,7 +592,14 @@
   }
 }
 
-.question-detail-loading,
+.question-detail-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  min-height: 200px;
+}
+
 .question-detail-error {
   padding: 40px 20px;
   text-align: center;

@@ -2,10 +2,12 @@ import type { FC } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Page } from '@/components/Page';
+import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { SearchBar } from '@/components/SearchBar/SearchBar';
 import { SectionHeader } from '@/components/SectionHeader/SectionHeader';
 import { TestCardHorizontal } from '@/components/TestCardHorizontal/TestCardHorizontal';
 import { ItemCard } from '@/components/ItemCard/ItemCard';
+import { Loading } from '@/components/Loading/Loading';
 import { globalSearch } from '@/api/collections';
 import type { Test, Category, Field } from '@/api/types';
 import './SearchPage.css';
@@ -155,9 +157,11 @@ export const SearchPage: FC = () => {
   return (
     <Page back={false}>
       <div className="search-page">
+        <PageHeader title="Qidiruv" />
+
         <SearchBar
           onSearch={handleSearch}
-          placeholder="Viktorina, Set yoki To'plamni qidirish..."
+          placeholder="Ingliz Tili"
         />
 
         {hasSearched ? (
@@ -193,7 +197,9 @@ export const SearchPage: FC = () => {
             )}
 
             {isLoading ? (
-              <div className="search-page-loading">Qidirilmoqda...</div>
+              <div className="search-page-loading">
+                <Loading message="Qidirilmoqda..." />
+              </div>
             ) : filteredTotal === 0 ? (
               <div className="search-page-empty">
                 <div className="search-page-empty-icon">🔍</div>
@@ -304,9 +310,9 @@ export const SearchPage: FC = () => {
         ) : (
           <div className="search-page-welcome">
             <div className="search-page-welcome-icon">🎓</div>
-            <h2 className="search-page-welcome-title">Qidiruv boshlangsini</h2>
+            <h2 className="search-page-welcome-title">Qidiruvni boshlash</h2>
             <p className="search-page-welcome-description">
-              Sohalar, To'plamlar va Testlarni qidiring
+              Sohalar, To'plamlar va Testlarni qidiring...
             </p>
           </div>
         )}

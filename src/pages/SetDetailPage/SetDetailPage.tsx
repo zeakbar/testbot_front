@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Page } from '@/components/Page';
 import { TestCardHorizontal } from '@/components/TestCardHorizontal/TestCardHorizontal';
+import { Loading } from '@/components/Loading/Loading';
 import { getCategoryById, loadMoreTests } from '@/api/collections';
 import type { Category, Test } from '@/api/types';
 import './SetDetailPage.css';
@@ -74,7 +75,9 @@ export const SetDetailPage: FC = () => {
   if (isLoading) {
     return (
       <Page back>
-        <div className="set-detail-loading">Yuklanmoqda...</div>
+        <div className="set-detail-loading">
+          <Loading message="Yuklanmoqda..." />
+        </div>
       </Page>
     );
   }
@@ -146,10 +149,6 @@ export const SetDetailPage: FC = () => {
           <div className="set-detail-empty">
             <p>Bu kategoriyada hozircha testlar yo'q</p>
           </div>
-        )}
-
-        {isLoading && (
-          <div className="set-detail-loading">Yuklanmoqda...</div>
         )}
 
         <div className="set-detail-bottom-space"></div>

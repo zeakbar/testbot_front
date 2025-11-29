@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { FiEdit } from 'react-icons/fi';
+import { FiEdit, FiChevronDown } from 'react-icons/fi';
 import './TestActionBar.css';
 
 interface TestActionBarProps {
@@ -21,8 +21,11 @@ export const TestActionBar: FC<TestActionBarProps> = ({
         className="test-action-button test-action-button-primary"
         onClick={onStartTest}
         type="button"
+        aria-haspopup="true"
+        title="Start test"
       >
-        Start Test
+        <span>Testni boshlash</span>
+        <FiChevronDown size={16} className="dropdown-icon" />
       </button>
 
       {isOwner && (

@@ -127,7 +127,14 @@
   font-size: 14px;
 }
 
-.collection-detail-loading,
+.collection-detail-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  min-height: 200px;
+}
+
 .collection-detail-error {
   padding: 40px 20px;
   text-align: center;

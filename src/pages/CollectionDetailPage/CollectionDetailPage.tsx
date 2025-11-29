@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Page } from '@/components/Page';
 import { ItemCard } from '@/components/ItemCard/ItemCard';
 import { SectionHeader } from '@/components/SectionHeader/SectionHeader';
+import { Loading } from '@/components/Loading/Loading';
 import { getFieldById } from '@/api/collections';
 import type { Field, Category } from '@/api/types';
 import './CollectionDetailPage.css';
@@ -35,7 +36,9 @@ export const CollectionDetailPage: FC = () => {
   if (isLoading) {
     return (
       <Page back>
-        <div className="collection-detail-loading">Yuklanmoqda...</div>
+        <div className="collection-detail-loading">
+          <Loading message="Yuklanmoqda..." />
+        </div>
       </Page>
     );
   }
