@@ -12,7 +12,7 @@ import { globalSearch } from '@/api/collections';
 import type { Test, Category, Field } from '@/api/types';
 import './SearchPage.css';
 
-type TabType = 'tests' | 'categories' | 'fields';
+type TabType = 'all' | 'tests' | 'categories' | 'fields';
 
 interface RecentSearch {
   query: string;
@@ -133,7 +133,7 @@ export const SearchPage: FC = () => {
     setRecentSearches([]);
   };
 
-  const totalResults = tests.length + categories.length + fields.length;
+  // const _totalResults = tests.length + categories.length + fields.length;
 
   const getFilteredResults = () => {
     switch (activeTab) {

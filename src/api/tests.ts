@@ -1,11 +1,11 @@
-import type { Test, Question, TestDetailPageResponse } from './types';
+import type { Test, Question, TestDetailPageResponse, PaginatedResponse } from './types';
 import { apiClient } from './client';
 
 /**
  * Get all tests with pagination
  */
 export async function getTests(page: number = 1, pageSize: number = 10) {
-  return apiClient.get(`/testss/?page=${page}&page_size=${pageSize}`);
+  return apiClient.get<PaginatedResponse<Test>>(`/testss/?page=${page}&page_size=${pageSize}`);
 }
 
 /**
@@ -27,4 +27,11 @@ export async function getTestDetailPage(id: number): Promise<TestDetailPageRespo
  */
 export async function getQuestionById(id: number): Promise<Question> {
   return apiClient.get<Question>(`/questions/${id}/`);
+}
+
+/**
+ * Get current user's tests with pagination
+ */
+export async function getMyTests(page: number = 1, pageSize: number = 10): Promise<PaginatedResponse<Test>> {
+  return apiClient.get<PaginatedResponse<Test>>(`/testss/my-tests/?page=${page}&page_size=${pageSize}`);
 }

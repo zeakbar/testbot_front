@@ -1,10 +1,10 @@
 import type { FC } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { Page } from '@/components/Page';
 import { Loading } from '@/components/Loading/Loading';
 import { getTestById } from '@/api/collections';
-import { startTest, submitAnswer, getSolvedTestDetail } from '@/api/solvedTests';
+import { startTest, submitAnswer} from '@/api/solvedTests';
 import { soundSystem } from '@/utils/soundSystem';
 import type { Test, Question } from '@/api/types';
 import './QuestionDetailPage.css';
@@ -58,7 +58,7 @@ export const QuestionDetailPage: FC = () => {
   const [isExitModalOpen, setIsExitModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [solvedTestId, setSolvedTestId] = useState<number | null>(null);
-  const [testStartTime] = useState<string>(new Date().toISOString());
+  // const [testStartTime] = useState<string>(new Date().toISOString());
 
   const currentIndex = parseInt(questionIndex || '0', 10);
   const testIdNum = parseInt(testId || '0', 10);

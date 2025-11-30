@@ -1,6 +1,12 @@
 import type { FC } from 'react';
-import type { Collection } from '@/api/types';
 import './CollectionCard.css';
+
+interface Collection {
+  image: string;
+  badge?: string;
+  title: string;
+  quizzes_count: number;
+}
 
 interface CollectionCardProps {
   collection: Collection;

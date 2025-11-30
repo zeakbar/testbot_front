@@ -44,7 +44,9 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         if (!actualInitData) {
           try {
             const launchParams = retrieveLaunchParams();
-            actualInitData = launchParams.initData;
+            if (typeof launchParams.initData === 'string') {
+              actualInitData = launchParams.initData;
+            }
           } catch {
             // Could not retrieve initData from launch params
           }

@@ -36,7 +36,7 @@ export const QuestionOwnerPage: FC = () => {
     const loadData = async () => {
       if (!testId) return;
       try {
-        const testData = await getTestById(testId);
+        const testData = await getTestById(parseInt(testId, 10));
         setTest(testData);
         if (testData.questions && testData.questions[currentIndex]) {
           setQuestion(testData.questions[currentIndex]);
@@ -99,7 +99,7 @@ export const QuestionOwnerPage: FC = () => {
               onClick={() => navigate(`/test/${testId}`)}
               type="button"
             >
-              {test.title}
+              {test.topic}
             </button>
             <span className="question-owner-breadcrumb-separator">/</span>
             <span className="question-owner-breadcrumb-current">Question {currentIndex + 1}</span>
@@ -110,7 +110,6 @@ export const QuestionOwnerPage: FC = () => {
         <div className="question-owner-card">
           <div className="question-owner-title-section">
             <h1 className="question-owner-title">{question.question}</h1>
-            <span className="question-owner-type-badge">{question.type.replace(/_/g, ' ')}</span>
           </div>
 
           {question.image && (
@@ -119,35 +118,18 @@ export const QuestionOwnerPage: FC = () => {
             </div>
           )}
 
-          {question.audio && (
-            <div className="question-owner-audio">
-              <audio controls>
-                <source src={question.audio} type="audio/mpeg" />
-              </audio>
-            </div>
-          )}
-
           {question.options && question.options.length > 0 && (
             <div className="question-owner-options">
               <h3 className="question-owner-options-title">Options</h3>
               <div className="question-owner-options-list">
                 {question.options.map((option) => (
-                  <div key={option} className="question-owner-option-item">
-                    <span className="question-owner-option-text">{option}</span>
+                  <div key={option.id} className="question-owner-option-item">
+                    <span className="question-owner-option-text">{option.text}</span>
                   </div>
                 ))}
               </div>
             </div>
           )}
-
-          <div className="question-owner-correct-answer">
-            <h3 className="question-owner-correct-answer-title">Correct Answer</h3>
-            <div className="question-owner-correct-answer-value">
-              {Array.isArray(question.correct_answer)
-                ? question.correct_answer.join(', ')
-                : question.correct_answer}
-            </div>
-          </div>
 
           {question.explanation && (
             <div className="question-owner-explanation">

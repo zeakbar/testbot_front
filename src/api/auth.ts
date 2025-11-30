@@ -1,4 +1,4 @@
-import type { AuthResponse, User } from './types';
+import type { AuthResponse, User, UserProfileResponse } from './types';
 import { apiClient } from './client';
 
 export class AuthService {
@@ -43,7 +43,7 @@ export class AuthService {
 
     try {
       const payload = this.parseJwt(token);
-      return payload as User;
+      return payload as unknown as User;
     } catch {
       return null;
     }
@@ -81,6 +81,13 @@ export class AuthService {
       apiClient.setToken(response.access);
     }
     return response;
+  }
+
+  /**
+   * Get current user's full profile with stats
+   */
+  public async getCurrentUserProfile(): Promise<UserProfileResponse> {
+    return apiClient.get<UserProfileResponse>('/users/me/');
   }
 }
 

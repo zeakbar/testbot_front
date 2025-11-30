@@ -10,7 +10,6 @@ interface TestActionBarProps {
 }
 
 export const TestActionBar: FC<TestActionBarProps> = ({
-  testId,
   isOwner,
   onStartTest,
   onEdit,

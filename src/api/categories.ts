@@ -30,7 +30,7 @@ export async function getTestsByCategory(
   const category = await apiClient.get<Category>(
     `/categories/${categoryId}/?page=${page}&page_size=${pageSize}`
   );
-  return category.tests;
+  return category.tests || { count: 0, next: null, previous: null, results: [] };
 }
 
 /**

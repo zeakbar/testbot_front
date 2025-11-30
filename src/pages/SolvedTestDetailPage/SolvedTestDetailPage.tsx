@@ -143,7 +143,6 @@ export const SolvedTestDetailPage: FC = () => {
               const answerQuestion = (answer as any).question?.question || (answer as any).question_text || '';
               const answerText = (answer as any).option?.text || (answer as any).your_answer || '';
               const answerId = (answer as any).id || index;
-              const maxPoints = solvedTest.total_points / solvedTest.total_questions;
 
               return (
                 <div key={answerId} className="solved-test-answer">

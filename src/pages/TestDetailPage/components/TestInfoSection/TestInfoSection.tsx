@@ -7,7 +7,7 @@ interface TestInfoSectionProps {
   category?: Category;
 }
 
-export const TestInfoSection: FC<TestInfoSectionProps> = ({ test, category }) => {
+export const TestInfoSection: FC<TestInfoSectionProps> = ({ test }) => {
   return (
     <div className="test-info-section">
       {test.description && (

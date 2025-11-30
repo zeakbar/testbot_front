@@ -21,7 +21,7 @@ class SoundSystem {
       this.sounds[key] = new Howl({
         src: [path],
         volume: 0.5,
-        onloaderror: (id, error) => {
+        onloaderror: (_id: unknown, error: unknown) => {
           console.warn(`Failed to load sound: ${key}`, error);
         },
       });

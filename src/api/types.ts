@@ -19,6 +19,20 @@ export interface AuthResponse {
   user: User;
 }
 
+/* User Profile Stats */
+export interface UserStats {
+  solved_tests: number;
+  hosted_tests: number;
+  created_tests: number;
+}
+
+/* User Profile Response */
+export interface UserProfileResponse {
+  success: boolean;
+  user: User;
+  stats: UserStats;
+}
+
 export interface TokenPayload {
   user_id: number;
   full_name: string;

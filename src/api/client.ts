@@ -6,7 +6,7 @@ class ApiClient {
   private token: string | null = null;
   private initData: string | null = null;
   private isRefreshing = false;
-  private refreshQueue: Array<() => void> = [];
+  private refreshQueue: Array<(value?: void) => void> = [];
   private onTokenRecovered: OnTokenRecoveredCallback | null = null;
 
   constructor() {
