@@ -26,6 +26,8 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     try {
       const authResponse = await authService.loginWithTelegram(initDataString);
       setUser(authResponse.user);
+      // Ensure API client has the correct user_id for token storage
+      apiClient.setCurrentUserId(authResponse.user.user_id);
     } catch (error) {
       throw error;
     } finally {
@@ -37,8 +39,6 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     const initializeAuth = async () => {
       setIsLoading(true);
       try {
-        const storedToken = apiClient.getToken();
-
         // Try to get initData from hook or launch params
         let actualInitData = initData;
         if (!actualInitData) {
@@ -55,12 +55,24 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         // Store initData in API client for seamless 401 recovery
         if (actualInitData && typeof actualInitData === 'string') {
           apiClient.setInitData(actualInitData);
+
+          // Extract user_id from initData to load correct token for this user
+          try {
+            const initDataObj = parseInitData(actualInitData);
+            if (initDataObj?.id) {
+              apiClient.setCurrentUserId(initDataObj.id);
+            }
+          } catch {
+            // Could not parse initData, continue anyway
+          }
         }
 
         // When token is recovered from 401, allow app to continue
         apiClient.setOnTokenRecovered(() => {
           setIsLoading(false);
         });
+
+        const storedToken = apiClient.getToken();
 
         // Try to authenticate with initData
         if (actualInitData && typeof actualInitData === 'string') {
@@ -74,7 +86,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
           }
         }
 
-        // If we have a stored token, allow access
+        // If we have a stored token for current user, allow access
         if (storedToken) {
           setIsLoading(false);
           return;
@@ -89,6 +101,24 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
     initializeAuth();
   }, [initData]);
+
+  /**
+   * Parse initData to extract user information
+   */
+  const parseInitData = (
+    initDataStr: string
+  ): { id?: number; [key: string]: unknown } | null => {
+    try {
+      const params = new URLSearchParams(initDataStr);
+      const userParam = params.get('user');
+      if (userParam) {
+        return JSON.parse(userParam) as { id?: number; [key: string]: unknown };
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  };
 
   const logout = () => {
     authService.logout();

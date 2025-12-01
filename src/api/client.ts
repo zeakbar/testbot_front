@@ -4,6 +4,7 @@ type OnTokenRecoveredCallback = () => void;
 
 class ApiClient {
   private token: string | null = null;
+  private currentUserId: number | null = null;
   private initData: string | null = null;
   private isRefreshing = false;
   private refreshQueue: Array<(value?: void) => void> = [];
@@ -21,9 +22,58 @@ class ApiClient {
     this.onTokenRecovered = callback;
   }
 
+  /**
+   * Extract user_id from JWT token payload
+   */
+  private extractUserIdFromToken(token: string): number | null {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      const payload = JSON.parse(jsonPayload) as Record<string, unknown>;
+      return typeof payload.user_id === 'number' ? payload.user_id : null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Get storage key for user's token
+   */
+  private getTokenStorageKey(userId: number): string {
+    return `access_token_${userId}`;
+  }
+
+  /**
+   * Get stored token for a specific user
+   */
   private getStoredToken(): string | null {
     try {
-      return localStorage.getItem('access_token');
+      // If we have currentUserId, use it to get the token
+      if (this.currentUserId) {
+        const key = this.getTokenStorageKey(this.currentUserId);
+        return localStorage.getItem(key);
+      }
+
+      // Otherwise, try to migrate old single-token format if it exists
+      const oldToken = localStorage.getItem('access_token');
+      if (oldToken) {
+        const userId = this.extractUserIdFromToken(oldToken);
+        if (userId) {
+          this.currentUserId = userId;
+          const key = this.getTokenStorageKey(userId);
+          localStorage.setItem(key, oldToken);
+          localStorage.removeItem('access_token');
+          return oldToken;
+        }
+      }
+
+      return null;
     } catch {
       return null;
     }
@@ -31,11 +81,39 @@ class ApiClient {
 
   public setToken(token: string): void {
     this.token = token;
+
+    // Extract user_id from token to use as storage key
+    const userId = this.extractUserIdFromToken(token);
+    if (!userId) {
+      console.warn('Could not extract user_id from token');
+      return;
+    }
+
+    this.currentUserId = userId;
+
     try {
-      localStorage.setItem('access_token', token);
+      const key = this.getTokenStorageKey(userId);
+      localStorage.setItem(key, token);
+
+      // Clean up old single-key format if it exists
+      try {
+        localStorage.removeItem('access_token');
+      } catch {
+        // Ignore cleanup errors
+      }
     } catch {
       console.warn('Failed to store token in localStorage');
     }
+  }
+
+  public setCurrentUserId(userId: number): void {
+    this.currentUserId = userId;
+    // Try to load token for this user
+    this.token = this.getStoredToken();
+  }
+
+  public getCurrentUserId(): number | null {
+    return this.currentUserId;
   }
 
   public getToken(): string | null {
@@ -44,11 +122,21 @@ class ApiClient {
 
   public clearToken(): void {
     this.token = null;
+
     try {
-      localStorage.removeItem('access_token');
+      // Clear token for current user
+      if (this.currentUserId) {
+        const key = this.getTokenStorageKey(this.currentUserId);
+        localStorage.removeItem(key);
+      } else {
+        // Fallback: also try to remove old single-key format
+        localStorage.removeItem('access_token');
+      }
     } catch {
       console.warn('Failed to clear token from localStorage');
     }
+
+    this.currentUserId = null;
   }
 
   public isAuthenticated(): boolean {
@@ -196,7 +284,7 @@ class ApiClient {
         return;
       }
 
-      // Send login request with raw initData
+      // Send login request with raw initData to get new token
       const response = await fetch(`${API_BASE_URL}/auth/login/`, {
         method: 'POST',
         headers: {
@@ -209,9 +297,9 @@ class ApiClient {
 
       const data = await response.json() as Record<string, unknown>;
 
-      if (response.ok && data.access) {
-        // New token acquired, update it
-        this.setToken(data.access as string);
+      if (response.ok && typeof data.access === 'string') {
+        // New token acquired, update it with user_id based storage
+        this.setToken(data.access);
         // Notify that token was recovered
         if (this.onTokenRecovered) {
           this.onTokenRecovered();
