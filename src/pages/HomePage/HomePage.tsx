@@ -13,6 +13,7 @@ import { Loading } from '@/components/Loading/Loading';
 import { getHomeData } from '@/api/home';
 import type { Banner, Field, Category, Test } from '@/api/types';
 import './HomePage.css';
+import image from '@/assets/home-logo.png';
 
 export const HomePage: FC = () => {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ export const HomePage: FC = () => {
     <Page back={false}>
       <div className="home-page">
         <PageHeader
-          image="/assets/home-logo.png"
+          image={image}
           variant="special"
         />
 
