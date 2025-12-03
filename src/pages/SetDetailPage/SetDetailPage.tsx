@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react';
 import { Page } from '@/components/Page';
 import { TestCardHorizontal } from '@/components/TestCardHorizontal/TestCardHorizontal';
 import { Loading } from '@/components/Loading/Loading';
-import { getCategoryById, loadMoreTests } from '@/api/collections';
+import { getCategoryById } from '@/api/collections';
 import type { Category, Test } from '@/api/types';
 import './SetDetailPage.css';
+
+const PAGE_SIZE = 20;
 
 export const SetDetailPage: FC = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
@@ -15,41 +17,63 @@ export const SetDetailPage: FC = () => {
   const [tests, setTests] = useState<Test[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
       if (!categoryId) return;
       try {
         setIsLoading(true);
-        console.log('Loading category:', categoryId);
-        const categoryData = await getCategoryById(parseInt(categoryId, 10), 1, 10);
-        console.log('Category data received:', categoryData);
-        console.log('Tests data:', categoryData.tests);
+        console.log('🔄 Loading page 1 for category:', categoryId);
+        const categoryData = await getCategoryById(parseInt(categoryId, 10), 1, PAGE_SIZE);
+        console.log('✅ Page 1 loaded:', categoryData);
         setCategory(categoryData);
 
         // Handle both paginated and non-paginated responses
         let testsArray: Test[] = [];
-        let nextUrl: string | null = null;
+        let hasNext = false;
 
         if (categoryData.tests) {
+          console.log('📋 Tests structure:', categoryData.tests);
           if (Array.isArray(categoryData.tests)) {
             // If tests is a direct array
+            console.log('📊 Tests is array, length:', categoryData.tests.length);
             testsArray = categoryData.tests;
           } else if ('results' in categoryData.tests) {
             // If tests is a PaginatedResponse
+            console.log('🔗 Tests is paginated response');
+            console.log('   - results:', categoryData.tests.results?.length || 0);
+            console.log('   - count:', categoryData.tests.count);
+            console.log('   - next:', categoryData.tests.next);
+            console.log('   - previous:', categoryData.tests.previous);
             testsArray = categoryData.tests.results || [];
-            nextUrl = categoryData.tests.next || null;
           }
         }
 
+        // Check if there's a next page by trying to fetch page 2
+        // This works for both array and paginated responses
+        console.log('🔍 Checking if page 2 exists...');
+        try {
+          // const page2Data = await getCategoryById(parseInt(categoryId, 10), 2, PAGE_SIZE);
+          console.log('✅ Page 2 exists!');
+          hasNext = true;
+        } catch (error) {
+          // If page 2 fails (404 or invalid page), there's no next page
+          console.log('❌ Page 2 does not exist (error):', error);
+          hasNext = false;
+        }
+
+        console.log('📌 Final state - hasNext:', hasNext, ', tests:', testsArray.length);
         setTests(testsArray);
-        setNextPageUrl(nextUrl);
+        setHasNextPage(hasNext);
+        setCurrentPage(1);
       } catch (error) {
         console.error('Error loading category:', error);
         setCategory(null);
         setTests([]);
-        setNextPageUrl(null);
+        setHasNextPage(false);
+        setCurrentPage(1);
       } finally {
         setIsLoading(false);
       }
@@ -59,12 +83,26 @@ export const SetDetailPage: FC = () => {
   }, [categoryId]);
 
   const handleLoadMore = async () => {
-    if (!nextPageUrl) return;
+    if (!hasNextPage || !categoryId) return;
     try {
       setIsLoadingMore(true);
-      const response = await loadMoreTests(nextPageUrl);
-      setTests((prev) => [...prev, ...response.results]);
-      setNextPageUrl(response.next);
+      const nextPage = currentPage + 1;
+      const categoryData = await getCategoryById(parseInt(categoryId, 10), nextPage, PAGE_SIZE);
+
+      if (categoryData.tests && 'results' in categoryData.tests) {
+        const newTests = categoryData.tests.results || [];
+        setTests((prev) => [...prev, ...newTests]);
+        setCurrentPage(nextPage);
+
+        // Check if there's another page after this one
+        try {
+          await getCategoryById(parseInt(categoryId, 10), nextPage + 1, PAGE_SIZE);
+          setHasNextPage(true);
+        } catch {
+          // If next+1 page fails, there's no more pages
+          setHasNextPage(false);
+        }
+      }
     } catch (error) {
       console.error('Error loading more tests:', error);
     } finally {
@@ -132,16 +170,22 @@ export const SetDetailPage: FC = () => {
         )}
 
         {/* Load More Button */}
-        {nextPageUrl && (
+        {hasNextPage && !isLoadingMore && (
           <div className="set-detail-load-more">
             <button
               onClick={handleLoadMore}
               className="set-detail-load-more-btn"
               type="button"
-              disabled={isLoadingMore}
             >
-              {isLoadingMore ? 'Yuklanmoqda...' : 'Yana yuklash'}
+              Yana yuklash
             </button>
+          </div>
+        )}
+
+        {/* Loading More Indicator */}
+        {isLoadingMore && (
+          <div className="set-detail-loading-more">
+            <Loading message="Yuklanmoqda..." />
           </div>
         )}
 

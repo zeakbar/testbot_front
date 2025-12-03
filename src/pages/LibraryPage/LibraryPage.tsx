@@ -24,17 +24,17 @@ export const LibraryPage: FC = () => {
     } else {
       setIsLoadingMore(true);
     }
-    
+
     try {
-      const endpoint = url ? url.replace(import.meta.env.VITE_API_URL, '') : '/fields/';
+      const endpoint = url || '/fields/';
       const response = await apiClient.get<PaginatedResponse<Field>>(endpoint);
-      
+
       if (url) {
         setFields((prev) => [...prev, ...response.results]);
       } else {
         setFields(response.results);
       }
-      
+
       setNextUrl(response.next);
       setError(null);
     } catch (err) {

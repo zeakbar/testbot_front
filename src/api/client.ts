@@ -157,7 +157,16 @@ class ApiClient {
 
   public async get<T>(endpoint: string, options?: RequestInit): Promise<T> {
     return this.requestWithRetry(async () => {
-      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      // Handle full URLs directly (from pagination next/previous)
+      let url: string;
+      if (endpoint.startsWith('http://') || endpoint.startsWith('https://')) {
+        // Convert HTTP to HTTPS to avoid mixed content issues
+        url = endpoint.replace(/^http:/, 'https:');
+      } else {
+        url = `${API_BASE_URL}${endpoint}`;
+      }
+
+      const response = await fetch(url, {
         method: 'GET',
         headers: this.buildHeaders(),
         ...options,

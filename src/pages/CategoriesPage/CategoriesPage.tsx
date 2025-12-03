@@ -24,17 +24,17 @@ export const CategoriesPage: FC = () => {
     } else {
       setIsLoadingMore(true);
     }
-    
+
     try {
-      const endpoint = url ? url.replace(import.meta.env.VITE_API_URL, '') : '/categories/';
+      const endpoint = url || '/categories/';
       const response = await apiClient.get<PaginatedResponse<Category>>(endpoint);
-      
+
       if (url) {
         setCategories((prev) => [...prev, ...response.results]);
       } else {
         setCategories(response.results);
       }
-      
+
       setNextUrl(response.next);
       setError(null);
     } catch (err) {

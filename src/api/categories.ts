@@ -1,5 +1,6 @@
 import type { Category, Test, PaginatedResponse } from './types';
 import { apiClient } from './client';
+import { extractEndpoint } from './utils';
 
 /**
  * Get all categories
@@ -14,7 +15,7 @@ export async function getCategories(): Promise<Category[]> {
 export async function getCategoryById(
   id: number,
   page: number = 1,
-  pageSize: number = 10
+  pageSize: number = 20
 ): Promise<Category> {
   return apiClient.get<Category>(`/categories/${id}/?page=${page}&page_size=${pageSize}`);
 }
@@ -37,8 +38,6 @@ export async function getTestsByCategory(
  * Load next page of tests for a category
  */
 export async function loadMoreTests(url: string): Promise<PaginatedResponse<Test>> {
-  // Extract the relative path from full URL
-  const matches = url.match(/\/api\/v1(.+)/);
-  const endpoint = matches ? matches[1] : url;
+  const endpoint = extractEndpoint(url);
   return apiClient.get<PaginatedResponse<Test>>(endpoint);
 }
