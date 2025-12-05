@@ -25,48 +25,29 @@ export const SetDetailPage: FC = () => {
       if (!categoryId) return;
       try {
         setIsLoading(true);
-        console.log('🔄 Loading page 1 for category:', categoryId);
         const categoryData = await getCategoryById(parseInt(categoryId, 10), 1, PAGE_SIZE);
-        console.log('✅ Page 1 loaded:', categoryData);
         setCategory(categoryData);
 
         // Handle both paginated and non-paginated responses
         let testsArray: Test[] = [];
-        let hasNext = false;
 
         if (categoryData.tests) {
-          console.log('📋 Tests structure:', categoryData.tests);
           if (Array.isArray(categoryData.tests)) {
             // If tests is a direct array
-            console.log('📊 Tests is array, length:', categoryData.tests.length);
             testsArray = categoryData.tests;
           } else if ('results' in categoryData.tests) {
             // If tests is a PaginatedResponse
-            console.log('🔗 Tests is paginated response');
-            console.log('   - results:', categoryData.tests.results?.length || 0);
-            console.log('   - count:', categoryData.tests.count);
-            console.log('   - next:', categoryData.tests.next);
-            console.log('   - previous:', categoryData.tests.previous);
             testsArray = categoryData.tests.results || [];
           }
         }
 
-        // Check if there's a next page by trying to fetch page 2
-        // This works for both array and paginated responses
-        console.log('🔍 Checking if page 2 exists...');
-        try {
-          // const page2Data = await getCategoryById(parseInt(categoryId, 10), 2, PAGE_SIZE);
-          console.log('✅ Page 2 exists!');
-          hasNext = true;
-        } catch (error) {
-          // If page 2 fails (404 or invalid page), there's no next page
-          console.log('❌ Page 2 does not exist (error):', error);
-          hasNext = false;
-        }
+        // Determine if there's a next page using tests_count
+        const totalTests = categoryData.tests_count || testsArray.length;
+        const totalPages = Math.ceil(totalTests / PAGE_SIZE);
+        const hasNextPageCalc = 1 < totalPages;
 
-        console.log('📌 Final state - hasNext:', hasNext, ', tests:', testsArray.length);
         setTests(testsArray);
-        setHasNextPage(hasNext);
+        setHasNextPage(hasNextPageCalc);
         setCurrentPage(1);
       } catch (error) {
         console.error('Error loading category:', error);
@@ -89,22 +70,31 @@ export const SetDetailPage: FC = () => {
       const nextPage = currentPage + 1;
       const categoryData = await getCategoryById(parseInt(categoryId, 10), nextPage, PAGE_SIZE);
 
-      if (categoryData.tests && 'results' in categoryData.tests) {
-        const newTests = categoryData.tests.results || [];
+      let newTests: Test[] = [];
+
+      // Handle both array and paginated responses
+      if (categoryData.tests) {
+        if (Array.isArray(categoryData.tests)) {
+          newTests = categoryData.tests;
+        } else if ('results' in categoryData.tests) {
+          newTests = categoryData.tests.results || [];
+        }
+      }
+
+      // Append new tests to existing list
+      if (newTests.length > 0) {
         setTests((prev) => [...prev, ...newTests]);
         setCurrentPage(nextPage);
 
-        // Check if there's another page after this one
-        try {
-          await getCategoryById(parseInt(categoryId, 10), nextPage + 1, PAGE_SIZE);
-          setHasNextPage(true);
-        } catch {
-          // If next+1 page fails, there's no more pages
-          setHasNextPage(false);
-        }
+        // Determine if there's a next page using tests_count
+        const totalTests = categoryData.tests_count || tests.length + newTests.length;
+        const totalPages = Math.ceil(totalTests / PAGE_SIZE);
+        const hasAnotherPage = nextPage < totalPages;
+        setHasNextPage(hasAnotherPage);
       }
     } catch (error) {
       console.error('Error loading more tests:', error);
+      setHasNextPage(false);
     } finally {
       setIsLoadingMore(false);
     }
@@ -149,7 +139,7 @@ export const SetDetailPage: FC = () => {
               <p className="set-detail-description">{category.description}</p>
             )}
             <p className="set-detail-stats">
-              {category.tests_count && category.tests && 'count' in category.tests ? category.tests.count : tests.length} ta test
+              {category.tests_count || tests.length} ta test
             </p>
           </div>
         </div>
@@ -177,7 +167,7 @@ export const SetDetailPage: FC = () => {
               className="set-detail-load-more-btn"
               type="button"
             >
-              Yana yuklash
+              Ko'proq yuklash
             </button>
           </div>
         )}
