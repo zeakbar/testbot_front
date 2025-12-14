@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { miniApp } from '@tma.js/sdk-react';
 import { Page } from '@/components/Page';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
@@ -56,7 +56,7 @@ const creationOptions: CreationOption[] = [
 ];
 
 export const YaratishPage: FC = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
