@@ -1,0 +1,402 @@
+.leaderboard-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  background: var(--color-bg-primary);
+}
+
+.scoreboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
+  color: white;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.scoreboard-header {
+  padding: 20px 16px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.scoreboard-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  color: white;
+}
+
+.scoreboard-podium {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px 16px 24px;
+  min-height: 240px;
+  position: relative;
+}
+
+.podium-place {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  max-width: 100px;
+  position: relative;
+}
+
+.podium-place-2 {
+  order: 1;
+}
+
+.podium-place-1 {
+  order: 2;
+}
+
+.podium-place-3 {
+  order: 3;
+}
+
+.podium-avatar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.podium-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 28px;
+  color: white;
+  border: 3px solid white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.podium-avatar-text {
+  line-height: 1;
+}
+
+.podium-name {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+  line-height: 1.3;
+  min-height: 26px;
+}
+
+.podium-points {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 12px;
+  border-radius: 12px;
+  backdrop-filter: blur(4px);
+}
+
+.podium-answers {
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 2px 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+}
+
+.podium-medal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  margin-top: 8px;
+}
+
+.podium-rank-1 {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  width: 70px;
+  height: 70px;
+  font-size: 40px;
+  box-shadow: 0 8px 16px rgba(245, 158, 11, 0.4);
+}
+
+.podium-rank-2 {
+  background: linear-gradient(135deg, #c0c0c0 0%, #a0a0a0 100%);
+  font-size: 28px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.podium-rank-3 {
+  background: linear-gradient(135deg, #d2691e 0%, #a0522d 100%);
+  font-size: 28px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.scoreboard-remaining {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: white;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.remaining-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.2s ease;
+}
+
+.remaining-item:last-child {
+  border-bottom: none;
+}
+
+.remaining-item:active {
+  background: #f9fafb;
+}
+
+.remaining-rank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  font-weight: 700;
+  font-size: 16px;
+  color: #374151;
+}
+
+.remaining-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.remaining-avatar-text {
+  line-height: 1;
+}
+
+.remaining-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.remaining-name {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  color: #111827;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.remaining-username {
+  font-size: 12px;
+  margin: 0;
+  color: #9ca3af;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.remaining-score-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.remaining-points {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.remaining-answers {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+
+.leaderboard-empty {
+  padding: 40px 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%);
+  border-radius: 0;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.leaderboard-empty-message {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+@media (min-width: 480px) {
+  .scoreboard-header {
+    padding: 24px 20px;
+  }
+
+  .scoreboard-title {
+    font-size: 28px;
+  }
+
+  .scoreboard-podium {
+    padding: 40px 20px 32px;
+    gap: 16px;
+  }
+
+  .podium-avatar {
+    width: 72px;
+    height: 72px;
+    font-size: 32px;
+  }
+
+  .podium-name {
+    font-size: 14px;
+  }
+
+  .podium-points {
+    font-size: 15px;
+  }
+
+  .podium-answers {
+    font-size: 13px;
+  }
+
+  .remaining-item {
+    padding: 18px 20px;
+    gap: 16px;
+  }
+
+  .remaining-rank {
+    min-width: 40px;
+    font-size: 18px;
+  }
+
+  .remaining-avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+  }
+
+  .remaining-name {
+    font-size: 15px;
+  }
+
+  .remaining-points {
+    font-size: 18px;
+  }
+
+  .remaining-answers {
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 768px) {
+  .scoreboard-header {
+    padding: 28px 24px;
+  }
+
+  .scoreboard-title {
+    font-size: 32px;
+  }
+
+  .scoreboard-podium {
+    padding: 48px 24px 40px;
+    gap: 24px;
+    min-height: 280px;
+  }
+
+  .podium-place {
+    max-width: 120px;
+    gap: 20px;
+  }
+
+  .podium-avatar {
+    width: 80px;
+    height: 80px;
+    font-size: 36px;
+  }
+
+  .podium-name {
+    font-size: 16px;
+  }
+
+  .podium-points {
+    font-size: 16px;
+  }
+
+  .podium-answers {
+    font-size: 14px;
+  }
+
+  .podium-rank-1 {
+    width: 80px;
+    height: 80px;
+    font-size: 44px;
+  }
+
+  .remaining-item {
+    padding: 20px 24px;
+    gap: 20px;
+  }
+
+  .remaining-rank {
+    min-width: 44px;
+    font-size: 20px;
+  }
+
+  .remaining-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+
+  .remaining-name {
+    font-size: 16px;
+  }
+
+  .remaining-points {
+    font-size: 20px;
+  }
+
+  .remaining-answers {
+    font-size: 14px;
+  }
+}

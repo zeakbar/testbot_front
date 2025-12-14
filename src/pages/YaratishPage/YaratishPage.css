@@ -1,0 +1,299 @@
+.yaratish-page {
+  background: var(--color-bg-secondary);
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+.yaratish-container {
+  padding: 24px 16px;
+  max-width: 100%;
+}
+
+/* Intro Section */
+.yaratish-intro {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.yaratish-subtitle {
+  margin: 0 0 12px;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.5px;
+}
+
+.yaratish-description {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Grid Layout */
+.yaratish-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+/* Card Styles */
+.yaratish-card {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+.yaratish-card:hover:not(.yaratish-card-disabled) {
+  border-color: var(--color-primary);
+  box-shadow: 0 8px 24px rgba(156, 39, 176, 0.12);
+  transform: translateY(-4px);
+}
+
+.yaratish-card:focus-visible:not(.yaratish-card-disabled) {
+  border-color: var(--color-primary);
+  box-shadow: 0 8px 24px rgba(156, 39, 176, 0.12);
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.yaratish-card-disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Card Header */
+.yaratish-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.yaratish-card-icon {
+  font-size: 40px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Developing Badge */
+.yaratish-badge {
+  background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 12px;
+  text-align: center;
+  line-height: 1.2;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+
+/* Card Content */
+.yaratish-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-grow: 1;
+}
+
+.yaratish-card-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.3px;
+}
+
+.yaratish-card-description {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+/* Card Footer */
+.yaratish-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.yaratish-card-cta {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.yaratish-card:hover:not(.yaratish-card-disabled) .yaratish-card-cta {
+  color: var(--color-primary-dark);
+  transform: translateX(4px);
+}
+
+/* Bottom Spacing */
+.yaratish-bottom-space {
+  height: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .yaratish-container {
+    padding: 20px 14px;
+  }
+
+  .yaratish-intro {
+    margin-bottom: 28px;
+  }
+
+  .yaratish-subtitle {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .yaratish-description {
+    font-size: 13px;
+  }
+
+  .yaratish-grid {
+    gap: 14px;
+  }
+
+  .yaratish-card {
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .yaratish-card-icon {
+    font-size: 36px;
+  }
+
+  .yaratish-card-title {
+    font-size: 15px;
+  }
+
+  .yaratish-card-description {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .yaratish-page {
+    padding-bottom: 70px;
+  }
+
+  .yaratish-container {
+    padding: 18px 12px;
+  }
+
+  .yaratish-intro {
+    margin-bottom: 24px;
+  }
+
+  .yaratish-subtitle {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+
+  .yaratish-description {
+    font-size: 12px;
+  }
+
+  .yaratish-grid {
+    gap: 12px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .yaratish-card {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .yaratish-card-icon {
+    font-size: 32px;
+  }
+
+  .yaratish-card-title {
+    font-size: 14px;
+  }
+
+  .yaratish-card-description {
+    font-size: 11px;
+    line-height: 1.3;
+  }
+
+  .yaratish-badge {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+
+  .yaratish-card-cta {
+    font-size: 11px;
+  }
+}
+
+/* Error Overlay */
+.yaratish-error-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.yaratish-error-content {
+  background: var(--color-bg-primary);
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  max-width: 300px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.yaratish-error-message {
+  font-size: 14px;
+  color: #ff3b30;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.yaratish-error-button {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.yaratish-error-button:hover {
+  opacity: 0.9;
+}
+
+.yaratish-error-button:active {
+  opacity: 0.8;
+}

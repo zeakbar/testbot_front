@@ -100,10 +100,11 @@ export async function getSolvedTestDetail(solvedTestId: number): Promise<SolvedT
 }
 
 /**
- * Get user's solved tests (paginated)
+ * Get tests that user has solved (paginated)
+ * Returns actual Test objects, not solved test records
  */
 export async function getUserSolvedTests(page: number = 1, pageSize: number = 10) {
-  return apiClient.get<PaginatedResponse<SolvedTestDetail>>(
-    `/solved-tests/?page=${page}&page_size=${pageSize}`
+  return apiClient.get<PaginatedResponse<any>>(
+    `/testss/solved_tests/?page=${page}&page_size=${pageSize}`
   );
 }

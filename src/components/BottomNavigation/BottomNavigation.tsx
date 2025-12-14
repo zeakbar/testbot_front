@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FiHome, FiSearch, FiBook, FiBookmark, FiUser } from 'react-icons/fi';
+import { FiHome, FiBook, FiBookmark, FiUser, FiPlus } from 'react-icons/fi';
 import './BottomNavigation.css';
 
 interface NavItem {
@@ -12,7 +12,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { path: '/', icon: FiHome, label: 'Bosh Ekran' },
   { path: '/library', icon: FiBook, label: 'Kutubxona' },
-  { path: '/search', icon: FiSearch, label: 'Qidirish' },
+  { path: '/yaratish', icon: FiPlus, label: 'Yaratish' },
   { path: '/bookmarks', icon: FiBookmark, label: 'Saqlanganlar' },
   { path: '/profile', icon: FiUser, label: 'Profilim' },
 ];

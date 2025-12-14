@@ -1,5 +1,38 @@
-import type { Test } from './types';
+import type { Test, Quiz, PaginatedResponse, QuizLeaderboardEntry } from './types';
 import { apiClient } from './client';
+
+/**
+ * Get user's hosted quizzes (paginated)
+ */
+export async function getUserQuizzes(page: number = 1, pageSize: number = 10) {
+  return apiClient.get<PaginatedResponse<Quiz>>(
+    `/quizzes/?page=${page}&page_size=${pageSize}`
+  );
+}
+
+/**
+ * Get quiz details by ID
+ */
+export async function getQuizById(id: string | number): Promise<Quiz> {
+  return apiClient.get<Quiz>(`/quizzes/${id}/`);
+}
+
+/**
+ * Get quiz leaderboard with user scores
+ */
+export async function getQuizLeaderboard(id: string | number): Promise<QuizLeaderboardEntry[]> {
+  const response = await apiClient.get<{ quiz_id: number; leaderboard: QuizLeaderboardEntry[] }>(
+    `/quizzes/${id}/leaderboard/`
+  );
+  return response.leaderboard;
+}
+
+/**
+ * Get quiz user scores with aggregated statistics
+ */
+export async function getQuizUserScores(id: string | number): Promise<QuizLeaderboardEntry[]> {
+  return apiClient.get<QuizLeaderboardEntry[]>(`/quizzes/${id}/user_scores/`);
+}
 
 /**
  * Get featured/promoted tests for home page

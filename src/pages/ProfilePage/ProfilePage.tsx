@@ -10,7 +10,10 @@ import { Loading } from '@/components/Loading/Loading';
 import { authService } from '@/api/auth';
 import { getMyTests } from '@/api/tests';
 import { sendMessageToChat } from '@/api/chat';
-import type { User, Test, UserStats } from '@/api/types';
+import { getUserSolvedTests } from '@/api/solvedTests';
+import { getUserQuizzes, getTestById } from '@/api/quiz';
+import { QuizHostingCard } from '@/components/QuizHostingCard/QuizHostingCard';
+import type { User, Test, UserStats, Quiz } from '@/api/types';
 import './ProfilePage.css';
 
 type TabType = 'tests' | 'hosted' | 'played';
@@ -22,12 +25,23 @@ export const ProfilePage: FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [stats, setStats] = useState<UserStats | null>(null);
   const [tests, setTests] = useState<Test[]>([]);
+  const [solvedTests, setSolvedTests] = useState<Test[]>([]);
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [solvedTestsCurrentPage, setSolvedTestsCurrentPage] = useState(1);
+  const [quizzesCurrentPage, setQuizzesCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [solvedTestsTotalPages, setSolvedTestsTotalPages] = useState(1);
+  const [quizzesTotalPages, setQuizzesTotalPages] = useState(1);
   const [activeTab, setActiveTab] = useState<TabType>('tests');
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingTests, setIsLoadingTests] = useState(false);
+  const [isLoadingSolvedTests, setIsLoadingSolvedTests] = useState(false);
+  const [isLoadingQuizzes, setIsLoadingQuizzes] = useState(false);
   const [isLoadingBalance, setIsLoadingBalance] = useState(false);
+  const [hasLoadedTests, setHasLoadedTests] = useState(false);
+  const [hasLoadedSolvedTests, setHasLoadedSolvedTests] = useState(false);
+  const [hasLoadedQuizzes, setHasLoadedQuizzes] = useState(false);
 
   useEffect(() => {
     const loadUserProfile = async () => {
@@ -47,8 +61,15 @@ export const ProfilePage: FC = () => {
   }, []);
 
   useEffect(() => {
-    if (activeTab === 'tests' && currentPage === 1) {
+    if (activeTab === 'tests' && !hasLoadedTests) {
       loadTests(1);
+      setHasLoadedTests(true);
+    } else if (activeTab === 'played' && !hasLoadedSolvedTests) {
+      loadSolvedTests(1);
+      setHasLoadedSolvedTests(true);
+    } else if (activeTab === 'hosted' && !hasLoadedQuizzes) {
+      loadQuizzes(1);
+      setHasLoadedQuizzes(true);
     }
   }, [activeTab]);
 
@@ -59,10 +80,64 @@ export const ProfilePage: FC = () => {
       setTests(response.results);
       setTotalPages(Math.ceil(response.count / 10));
       setCurrentPage(page);
+      if (!hasLoadedTests) {
+        setHasLoadedTests(true);
+      }
     } catch (error) {
       console.error('Failed to load user tests:', error);
     } finally {
       setIsLoadingTests(false);
+    }
+  };
+
+  const loadSolvedTests = async (page: number) => {
+    try {
+      setIsLoadingSolvedTests(true);
+      const response = await getUserSolvedTests(page, 10);
+      setSolvedTests(response.results as Test[]);
+      setSolvedTestsTotalPages(Math.ceil(response.count / 10));
+      setSolvedTestsCurrentPage(page);
+      if (!hasLoadedSolvedTests) {
+        setHasLoadedSolvedTests(true);
+      }
+    } catch (error) {
+      console.error('Failed to load solved tests:', error);
+    } finally {
+      setIsLoadingSolvedTests(false);
+    }
+  };
+
+  const loadQuizzes = async (page: number) => {
+    try {
+      setIsLoadingQuizzes(true);
+      const response = await getUserQuizzes(page, 10);
+
+      // Fetch test details for each quiz
+      const quizzesWithTests = await Promise.all(
+        response.results.map(async (quiz) => {
+          try {
+            if (typeof quiz.test === 'number') {
+              const testData = await getTestById(String(quiz.test));
+              return { ...quiz, test: testData };
+            }
+            return quiz;
+          } catch (error) {
+            console.error(`Failed to load test ${quiz.test}:`, error);
+            return quiz;
+          }
+        })
+      );
+
+      setQuizzes(quizzesWithTests);
+      setQuizzesTotalPages(Math.ceil(response.count / 10));
+      setQuizzesCurrentPage(page);
+      if (!hasLoadedQuizzes) {
+        setHasLoadedQuizzes(true);
+      }
+    } catch (error) {
+      console.error('Failed to load quizzes:', error);
+    } finally {
+      setIsLoadingQuizzes(false);
     }
   };
 
@@ -250,24 +325,26 @@ export const ProfilePage: FC = () => {
         <div className="profile-content">
           {activeTab === 'tests' && (
             <div className="profile-tests-section">
-              {isLoadingTests ? (
-                <div className="profile-tests-loading">
-                  <Loading message="Testlar yuklanmoqda..." />
-                </div>
-              ) : tests.length > 0 ? (
+              {tests.length > 0 || isLoadingTests ? (
                 <>
                   <div className="profile-tests-list">
-                    {tests.map((test) => (
-                      <TestCardHorizontal
-                        key={test.id}
-                        test={test}
-                        onClick={() => navigate(`/test/${test.id}`)}
-                      />
-                    ))}
+                    {tests.length > 0 ? (
+                      tests.map((test) => (
+                        <TestCardHorizontal
+                          key={test.id}
+                          test={test}
+                          onClick={() => navigate(`/test/${test.id}`)}
+                        />
+                      ))
+                    ) : isLoadingTests ? (
+                      <div style={{ padding: '20px 16px', textAlign: 'center' }}>
+                        <Loading message="Testlar yuklanmoqda..." />
+                      </div>
+                    ) : null}
                   </div>
 
                   {/* Pagination */}
-                  {totalPages > 1 && (
+                  {!isLoadingTests && totalPages > 1 && (
                     <div className="profile-pagination">
                       <button
                         className="profile-pagination-button"
@@ -300,14 +377,108 @@ export const ProfilePage: FC = () => {
           )}
 
           {activeTab === 'hosted' && (
-            <div className="profile-developing-section">
-              <p className="profile-developing-message">Ushbu bo'lim ishlab chiqilmoqda...</p>
+            <div className="profile-tests-section">
+              {quizzes.length > 0 || isLoadingQuizzes ? (
+                <>
+                  <div className="profile-tests-list">
+                    {quizzes.length > 0 ? (
+                      quizzes.map((quiz) => (
+                        <QuizHostingCard
+                          key={quiz.id}
+                          quiz={quiz}
+                          onClick={() => navigate(`/quiz/${quiz.id}`)}
+                        />
+                      ))
+                    ) : isLoadingQuizzes ? (
+                      <div style={{ padding: '20px 16px', textAlign: 'center' }}>
+                        <Loading message="Testlar yuklanmoqda..." />
+                      </div>
+                    ) : null}
+                  </div>
+
+                  {/* Pagination */}
+                  {!isLoadingQuizzes && quizzesTotalPages > 1 && (
+                    <div className="profile-pagination">
+                      <button
+                        className="profile-pagination-button"
+                        onClick={() => loadQuizzes(quizzesCurrentPage - 1)}
+                        disabled={quizzesCurrentPage === 1}
+                        type="button"
+                      >
+                        Oldingi
+                      </button>
+                      <span className="profile-pagination-info">
+                        {quizzesCurrentPage} / {quizzesTotalPages}
+                      </span>
+                      <button
+                        className="profile-pagination-button"
+                        onClick={() => loadQuizzes(quizzesCurrentPage + 1)}
+                        disabled={quizzesCurrentPage === quizzesTotalPages}
+                        type="button"
+                      >
+                        Keyingi
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="profile-empty-state">
+                  <p className="profile-empty-message">Hali hech qanday quiz hosting qilmagan</p>
+                </div>
+              )}
             </div>
           )}
 
           {activeTab === 'played' && (
-            <div className="profile-developing-section">
-              <p className="profile-developing-message">Ushbu bo'lim ishlab chiqilmoqda...</p>
+            <div className="profile-tests-section">
+              {solvedTests.length > 0 || isLoadingSolvedTests ? (
+                <>
+                  <div className="profile-tests-list">
+                    {solvedTests.length > 0 ? (
+                      solvedTests.map((test) => (
+                        <TestCardHorizontal
+                          key={test.id}
+                          test={test}
+                          onClick={() => navigate(`/test/${test.id}`)}
+                        />
+                      ))
+                    ) : isLoadingSolvedTests ? (
+                      <div style={{ padding: '20px 16px', textAlign: 'center' }}>
+                        <Loading message="Testlar yuklanmoqda..." />
+                      </div>
+                    ) : null}
+                  </div>
+
+                  {/* Pagination */}
+                  {!isLoadingSolvedTests && solvedTestsTotalPages > 1 && (
+                    <div className="profile-pagination">
+                      <button
+                        className="profile-pagination-button"
+                        onClick={() => loadSolvedTests(solvedTestsCurrentPage - 1)}
+                        disabled={solvedTestsCurrentPage === 1}
+                        type="button"
+                      >
+                        Oldingi
+                      </button>
+                      <span className="profile-pagination-info">
+                        {solvedTestsCurrentPage} / {solvedTestsTotalPages}
+                      </span>
+                      <button
+                        className="profile-pagination-button"
+                        onClick={() => loadSolvedTests(solvedTestsCurrentPage + 1)}
+                        disabled={solvedTestsCurrentPage === solvedTestsTotalPages}
+                        type="button"
+                      >
+                        Keyingi
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="profile-empty-state">
+                  <p className="profile-empty-message">Hali hech qanday test yechilmagan</p>
+                </div>
+              )}
             </div>
           )}
         </div>

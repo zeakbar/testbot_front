@@ -1,7 +1,7 @@
 import { apiClient } from './client';
 
 export interface SendMessagePayload {
-  type: 'show_test_in_chat' | string;
+  type: 'show_test_in_chat' | 'create_test' | string;
   data: Record<string, unknown>;
 }
 
@@ -18,5 +18,12 @@ export async function showTestInChat(testId: number): Promise<SendMessageRespons
   return sendMessageToChat({
     type: 'show_test_in_chat',
     data: { test_id: testId },
+  });
+}
+
+export async function sendCreateTestMessage(): Promise<SendMessageResponse> {
+  return sendMessageToChat({
+    type: 'create_test',
+    data: {},
   });
 }

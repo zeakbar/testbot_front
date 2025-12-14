@@ -200,3 +200,25 @@ export interface TestDetailPageResponse {
   solved_tests: SolvedTestItem[];
   recommended_tests: RecommendedTest[];
 }
+
+/* Quiz Model */
+export interface Quiz {
+  id: number;
+  host: number;
+  open_period: number;
+  users: number[];
+  test: Test | number;
+  solved_tests: number | any[];
+  created: string;
+  status: 'active' | 'closed' | 'waiting' | string;
+}
+
+/* Quiz Leaderboard Entry */
+export interface QuizLeaderboardEntry {
+  user_id: number;
+  username?: string;
+  full_name: string;
+  total_points: number;
+  total_answers?: number;
+  correct_answers?: number;
+}

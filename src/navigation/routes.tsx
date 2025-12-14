@@ -14,6 +14,8 @@ import { TestDetailPage } from '@/pages/TestDetailPage/TestDetailPage';
 import { QuestionDetailPage } from '@/pages/QuestionDetailPage/QuestionDetailPage';
 import { SolvedTestDetailPage } from '@/pages/SolvedTestDetailPage/SolvedTestDetailPage';
 import { QuestionOwnerPage } from '@/pages/QuestionOwnerPage/QuestionOwnerPage';
+import { YaratishPage } from '@/pages/YaratishPage/YaratishPage';
+import { QuizDetailPage } from '@/pages/QuizDetailPage/QuizDetailPage';
 
 interface Route {
   path: string;
@@ -24,6 +26,7 @@ interface Route {
 
 export const routes: Route[] = [
   { path: '/', Component: HomePage },
+  { path: '/yaratish', Component: YaratishPage },
   { path: '/explore', Component: ExplorePage },
   { path: '/library', Component: LibraryPage },
   { path: '/categories', Component: CategoriesPage },
@@ -37,4 +40,5 @@ export const routes: Route[] = [
   { path: '/test/:testId/question/:questionIndex', Component: QuestionDetailPage },
   { path: '/solved-test/:solvedTestId', Component: SolvedTestDetailPage },
   { path: '/test/:testId/question/:questionIndex/info', Component: QuestionOwnerPage },
+  { path: '/quiz/:quizId', Component: QuizDetailPage },
 ];
