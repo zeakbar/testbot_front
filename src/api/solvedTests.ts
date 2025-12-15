@@ -2,7 +2,7 @@ import type { PaginatedResponse } from './types';
 import { apiClient } from './client';
 
 /* Request/Response Types for Step 1 - Get Test Details */
-// Test details are retrieved via GET /testss/<test_id>/ in tests.ts
+// Test details are retrieved via GET /tests/<test_id>/ in tests.ts
 
 /* Request/Response Types for Step 2 - Start Test */
 export interface StartTestPayload {
@@ -105,6 +105,6 @@ export async function getSolvedTestDetail(solvedTestId: number): Promise<SolvedT
  */
 export async function getUserSolvedTests(page: number = 1, pageSize: number = 10) {
   return apiClient.get<PaginatedResponse<any>>(
-    `/testss/solved_tests/?page=${page}&page_size=${pageSize}`
+    `/tests/solved_tests/?page=${page}&page_size=${pageSize}`
   );
 }

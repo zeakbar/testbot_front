@@ -210,6 +210,23 @@ class ApiClient {
     });
   }
 
+  public async patch<T>(
+    endpoint: string,
+    body?: unknown,
+    options?: RequestInit
+  ): Promise<T> {
+    return this.requestWithRetry(async () => {
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        method: 'PATCH',
+        headers: this.buildHeaders(),
+        body: body ? JSON.stringify(body) : undefined,
+        ...options,
+      });
+
+      return this.handleResponse<T>(response);
+    });
+  }
+
   public async delete<T>(endpoint: string, options?: RequestInit): Promise<T> {
     return this.requestWithRetry(async () => {
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {

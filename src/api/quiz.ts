@@ -38,35 +38,35 @@ export async function getQuizUserScores(id: string | number): Promise<QuizLeader
  * Get featured/promoted tests for home page
  */
 export async function getFeaturedTests(): Promise<Test[]> {
-  return apiClient.get<Test[]>('/testss/featured/');
+  return apiClient.get<Test[]>('/tests/featured/');
 }
 
 /**
  * Get discover tests (discover section on home page)
  */
 export async function getDiscoverTests(): Promise<Test[]> {
-  return apiClient.get<Test[]>('/testss/discover/');
+  return apiClient.get<Test[]>('/tests/discover/');
 }
 
 /**
  * Get trending tests
  */
 export async function getTrendingTests(): Promise<Test[]> {
-  return apiClient.get<Test[]>('/testss/trending/');
+  return apiClient.get<Test[]>('/tests/trending/');
 }
 
 /**
  * Get recommended tests for user
  */
 export async function getRecommendedTests(): Promise<Test[]> {
-  return apiClient.get<Test[]>('/testss/recommended/');
+  return apiClient.get<Test[]>('/tests/recommended/');
 }
 
 /**
  * Get single test by ID
  */
 export async function getTestById(id: string): Promise<Test> {
-  return apiClient.get<Test>(`/testss/${id}/`);
+  return apiClient.get<Test>(`/tests/${id}/`);
 }
 
 /**
@@ -75,5 +75,5 @@ export async function getTestById(id: string): Promise<Test> {
 export async function getTestsByDifficulty(
   difficulty: 'easy' | 'medium' | 'hard'
 ): Promise<Test[]> {
-  return apiClient.get<Test[]>(`/testss/difficulty/${difficulty}/`);
+  return apiClient.get<Test[]>(`/tests/difficulty/${difficulty}/`);
 }

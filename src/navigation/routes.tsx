@@ -16,6 +16,7 @@ import { SolvedTestDetailPage } from '@/pages/SolvedTestDetailPage/SolvedTestDet
 import { QuestionOwnerPage } from '@/pages/QuestionOwnerPage/QuestionOwnerPage';
 import { YaratishPage } from '@/pages/YaratishPage/YaratishPage';
 import { QuizDetailPage } from '@/pages/QuizDetailPage/QuizDetailPage';
+import { EditTestPage } from '@/pages/EditTestPage/EditTestPage';
 
 interface Route {
   path: string;
@@ -37,6 +38,7 @@ export const routes: Route[] = [
   { path: '/field/:fieldId', Component: CollectionDetailPage },
   { path: '/category/:categoryId', Component: SetDetailPage },
   { path: '/test/:testId', Component: TestDetailPage },
+  { path: '/test/:testId/edit', Component: EditTestPage },
   { path: '/test/:testId/question/:questionIndex', Component: QuestionDetailPage },
   { path: '/solved-test/:solvedTestId', Component: SolvedTestDetailPage },
   { path: '/test/:testId/question/:questionIndex/info', Component: QuestionOwnerPage },
