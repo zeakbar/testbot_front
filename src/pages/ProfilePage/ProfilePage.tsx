@@ -13,10 +13,11 @@ import { sendMessageToChat } from '@/api/chat';
 import { getUserSolvedTests } from '@/api/solvedTests';
 import { getUserQuizzes, getTestById } from '@/api/quiz';
 import { QuizHostingCard } from '@/components/QuizHostingCard/QuizHostingCard';
-import type { User, Test, UserStats, Quiz } from '@/api/types';
+import { getMyRoulettes } from '@/api/roulette';
+import type { User, Test, UserStats, Quiz, Roulette } from '@/api/types';
 import './ProfilePage.css';
 
-type TabType = 'tests' | 'hosted' | 'played';
+type TabType = 'tests' | 'hosted' | 'played' | 'roulettes';
 
 export const ProfilePage: FC = () => {
   const navigate = useNavigate();
@@ -27,21 +28,26 @@ export const ProfilePage: FC = () => {
   const [tests, setTests] = useState<Test[]>([]);
   const [solvedTests, setSolvedTests] = useState<Test[]>([]);
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const [roulettes, setRoulettes] = useState<Roulette[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [solvedTestsCurrentPage, setSolvedTestsCurrentPage] = useState(1);
   const [quizzesCurrentPage, setQuizzesCurrentPage] = useState(1);
+  const [roulettesCurrentPage, setRoulettesCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [solvedTestsTotalPages, setSolvedTestsTotalPages] = useState(1);
   const [quizzesTotalPages, setQuizzesTotalPages] = useState(1);
+  const [roulettesTotalPages, setRoulettesTotalPages] = useState(1);
   const [activeTab, setActiveTab] = useState<TabType>('tests');
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingTests, setIsLoadingTests] = useState(false);
   const [isLoadingSolvedTests, setIsLoadingSolvedTests] = useState(false);
   const [isLoadingQuizzes, setIsLoadingQuizzes] = useState(false);
+  const [isLoadingRoulettes, setIsLoadingRoulettes] = useState(false);
   const [isLoadingBalance, setIsLoadingBalance] = useState(false);
   const [hasLoadedTests, setHasLoadedTests] = useState(false);
   const [hasLoadedSolvedTests, setHasLoadedSolvedTests] = useState(false);
   const [hasLoadedQuizzes, setHasLoadedQuizzes] = useState(false);
+  const [hasLoadedRoulettes, setHasLoadedRoulettes] = useState(false);
 
   useEffect(() => {
     const loadUserProfile = async () => {
@@ -70,6 +76,9 @@ export const ProfilePage: FC = () => {
     } else if (activeTab === 'hosted' && !hasLoadedQuizzes) {
       loadQuizzes(1);
       setHasLoadedQuizzes(true);
+    } else if (activeTab === 'roulettes' && !hasLoadedRoulettes) {
+      loadRoulettes(1);
+      setHasLoadedRoulettes(true);
     }
   }, [activeTab]);
 
@@ -138,6 +147,23 @@ export const ProfilePage: FC = () => {
       console.error('Failed to load quizzes:', error);
     } finally {
       setIsLoadingQuizzes(false);
+    }
+  };
+
+  const loadRoulettes = async (page: number) => {
+    try {
+      setIsLoadingRoulettes(true);
+      const response = await getMyRoulettes(page, 10);
+      setRoulettes(response.results);
+      setRoulettesTotalPages(Math.ceil(response.count / 10));
+      setRoulettesCurrentPage(page);
+      if (!hasLoadedRoulettes) {
+        setHasLoadedRoulettes(true);
+      }
+    } catch (error) {
+      console.error('Failed to load roulettes:', error);
+    } finally {
+      setIsLoadingRoulettes(false);
     }
   };
 
@@ -318,6 +344,13 @@ export const ProfilePage: FC = () => {
             >
               O'ynalganlar
             </button>
+            <button
+              className={`profile-tab ${activeTab === 'roulettes' ? 'profile-tab-active' : ''}`}
+              onClick={() => setActiveTab('roulettes')}
+              type="button"
+            >
+              Ruletka
+            </button>
           </div>
         </div>
 
@@ -477,6 +510,79 @@ export const ProfilePage: FC = () => {
               ) : (
                 <div className="profile-empty-state">
                   <p className="profile-empty-message">Hali hech qanday test yechilmagan</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'roulettes' && (
+            <div className="profile-tests-section">
+              {roulettes.length > 0 || isLoadingRoulettes ? (
+                <>
+                  <div className="profile-roulettes-list">
+                    {roulettes.length > 0 ? (
+                      roulettes.map((roulette) => (
+                        <div
+                          key={roulette.id}
+                          className="profile-roulette-item"
+                          onClick={() => navigate(`/roulette/${roulette.id}`)}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              navigate(`/roulette/${roulette.id}`);
+                            }
+                          }}
+                        >
+                          <div className="profile-roulette-icon">🎡</div>
+                          <div className="profile-roulette-content">
+                            <h3 className="profile-roulette-title">{roulette.topic}</h3>
+                            <p className="profile-roulette-meta">
+                              {roulette.target_num_questions} savol • {roulette.language === 'uz' ? 'Uzbek' : roulette.language === 'en' ? 'English' : 'Русский'}
+                            </p>
+                          </div>
+                          <div className="profile-roulette-status">
+                            <span className={`profile-status-badge profile-status-${roulette.status}`}>
+                              {roulette.status === 'generated' ? '✓' : roulette.status === 'clarifying' ? '?' : '...'}
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    ) : isLoadingRoulettes ? (
+                      <div style={{ padding: '20px 16px', textAlign: 'center' }}>
+                        <Loading message="Ruletka yuklanmoqda..." />
+                      </div>
+                    ) : null}
+                  </div>
+
+                  {/* Pagination */}
+                  {!isLoadingRoulettes && roulettesTotalPages > 1 && (
+                    <div className="profile-pagination">
+                      <button
+                        className="profile-pagination-button"
+                        onClick={() => loadRoulettes(roulettesCurrentPage - 1)}
+                        disabled={roulettesCurrentPage === 1}
+                        type="button"
+                      >
+                        Oldingi
+                      </button>
+                      <span className="profile-pagination-info">
+                        {roulettesCurrentPage} / {roulettesTotalPages}
+                      </span>
+                      <button
+                        className="profile-pagination-button"
+                        onClick={() => loadRoulettes(roulettesCurrentPage + 1)}
+                        disabled={roulettesCurrentPage === roulettesTotalPages}
+                        type="button"
+                      >
+                        Keyingi
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="profile-empty-state">
+                  <p className="profile-empty-message">Hali hech qanday ruletka yaratilmagan</p>
                 </div>
               )}
             </div>

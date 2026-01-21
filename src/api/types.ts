@@ -222,3 +222,100 @@ export interface QuizLeaderboardEntry {
   total_answers?: number;
   correct_answers?: number;
 }
+
+/* Roulette Question Model */
+export interface RouletteQuestion {
+  id: number;
+  question: string;
+  answer: string;
+  ai_generated: boolean;
+  order: number;
+  created: string;
+}
+
+/* Roulette Model */
+export interface Roulette {
+  id: number;
+  topic: string;
+  description: string;
+  language: 'uz' | 'en' | 'ru';
+  difficulty_level: 'easy' | 'medium' | 'hard';
+  target_num_questions: number;
+  status: 'clarifying' | 'ready' | 'generated';
+  summary: string | null;
+  source_note: string | null;
+  is_public: boolean;
+  is_owner: boolean;
+  created: string;
+  questions?: RouletteQuestion[];
+}
+
+/* Roulette Creation Request */
+export interface RouletteCreateRequest {
+  topic: string;
+  language: 'uz' | 'en' | 'ru';
+  difficulty_level: 'easy' | 'medium' | 'hard';
+  target_num_questions: number;
+}
+
+/* Roulette Clarification Option */
+export interface RouletteClarificationOption {
+  value: string;
+  label: string;
+}
+
+/* Roulette Clarification Question (parsed) */
+export interface RouletteClarificationQuestion {
+  key: string;
+  question: string;
+  suggested_options: RouletteClarificationOption[];
+  allows_custom: boolean;
+}
+
+/* Raw Roulette Clarification Question from Backend */
+export type RawRouletteClarificationQuestion = Array<
+  | ['key', string]
+  | ['question', string]
+  | ['suggested_options', Array<Array<['value', string] | ['label', string]>>]
+  | ['allows_custom', boolean]
+>;
+
+/* Roulette Create Response */
+export interface RouletteCreateResponse {
+  id: number;
+  needs_clarification: boolean;
+  questions: RawRouletteClarificationQuestion[];
+}
+
+/* Roulette Generate Request */
+export interface RouletteGenerateRequest {
+  clarifications: Record<string, string>;
+}
+
+/* Roulette Generate Response */
+export interface RouletteGenerateResponse {
+  status: string;
+  count: number;
+  summary: string;
+  source: string;
+}
+
+/* Roulette Game Team */
+export interface RouletteTeam {
+  id: number;
+  name: string;
+  color: string;
+  score: number;
+}
+
+/* Roulette Game Session */
+export interface RouletteGameSession {
+  id: number;
+  roulette: number;
+  teams: RouletteTeam[];
+  mode: 'single' | 'multi';
+  status: 'setup' | 'in_progress' | 'completed';
+  current_question_index: number;
+  used_segments: number[];
+  created: string;
+}

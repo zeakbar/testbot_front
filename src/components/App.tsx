@@ -9,6 +9,7 @@ import { BottomNavigation } from '@/components/BottomNavigation/BottomNavigation
 function AppContent() {
   const location = useLocation();
   const isQuizPage = /\/test\/\d+\/question\/\d+/.test(location.pathname);
+  const isRoulettePlaying = /\/roulette\/\d+\/play/.test(location.pathname);
 
   return (
     <>
@@ -16,7 +17,7 @@ function AppContent() {
         {routes.map((route) => <Route key={route.path} {...route} />)}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-      {!isQuizPage && <BottomNavigation />}
+      {!isQuizPage && !isRoulettePlaying && <BottomNavigation />}
     </>
   );
 }

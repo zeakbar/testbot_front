@@ -1,0 +1,325 @@
+.roulette-clarification-page {
+  background: var(--color-bg-secondary);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  padding-bottom: 70px;
+}
+
+.roulette-clarification-chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Messages Container */
+.roulette-clarification-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 20px;
+}
+
+.roulette-clarification-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.roulette-clarification-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.roulette-clarification-messages::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+/* Message Container */
+.roulette-clarification-message {
+  display: flex;
+  animation: messageSlideIn 0.3s ease-out;
+}
+
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.roulette-clarification-message-bot {
+  justify-content: flex-start;
+}
+
+.roulette-clarification-message-user {
+  justify-content: flex-end;
+}
+
+/* Message Bubble */
+.roulette-clarification-bubble {
+  max-width: 85%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.roulette-clarification-message-bot .roulette-clarification-bubble {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  padding: 14px 16px;
+  border-radius: 16px;
+  border-bottom-left-radius: 4px;
+}
+
+.roulette-clarification-message-user .roulette-clarification-bubble {
+  background: var(--gradient-primary);
+  padding: 14px 16px;
+  border-radius: 16px;
+  border-bottom-right-radius: 4px;
+}
+
+.roulette-clarification-text {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.roulette-clarification-message-bot .roulette-clarification-text {
+  color: var(--color-text-primary);
+}
+
+.roulette-clarification-message-user .roulette-clarification-text {
+  color: white;
+}
+
+/* Quick Options (Suggested Answers) */
+.roulette-clarification-quick-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.roulette-clarification-quick-option {
+  padding: 10px 12px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  font-size: 13px;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  font-weight: 500;
+}
+
+.roulette-clarification-quick-option:hover {
+  background: var(--color-primary-lighter);
+  border-color: var(--color-primary);
+}
+
+.roulette-clarification-quick-option:active {
+  transform: scale(0.98);
+}
+
+/* Input Form */
+.roulette-clarification-input-form {
+  padding: 16px;
+  background: var(--color-bg-primary);
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+  z-index: 10;
+  position: relative;
+}
+
+.roulette-clarification-input-wrapper {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.roulette-clarification-input {
+  flex: 1;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  font-size: 15px;
+  color: var(--color-text-primary);
+  background: var(--color-bg-secondary);
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+  resize: none;
+  max-height: 100px;
+}
+
+.roulette-clarification-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.1);
+}
+
+.roulette-clarification-input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.roulette-clarification-send-button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 12px;
+  background: var(--gradient-primary);
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.roulette-clarification-send-button:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
+}
+
+.roulette-clarification-send-button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.roulette-clarification-send-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Error Box */
+.roulette-clarification-error-box {
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
+
+.roulette-clarification-error-message {
+  margin: 0;
+  font-size: 12px;
+  color: #d32f2f;
+  line-height: 1.4;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .roulette-clarification-messages {
+    padding: 16px 12px;
+    gap: 12px;
+  }
+
+  .roulette-clarification-bubble {
+    max-width: 90%;
+  }
+
+  .roulette-clarification-message-bot .roulette-clarification-bubble {
+    padding: 12px 14px;
+  }
+
+  .roulette-clarification-message-user .roulette-clarification-bubble {
+    padding: 12px 14px;
+  }
+
+  .roulette-clarification-text {
+    font-size: 14px;
+  }
+
+  .roulette-clarification-input-form {
+    padding: 14px;
+  }
+
+  .roulette-clarification-input {
+    padding: 11px 12px;
+    font-size: 14px;
+  }
+
+  .roulette-clarification-send-button {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .roulette-clarification-page {
+    padding-bottom: 80px;
+  }
+
+  .roulette-clarification-messages {
+    padding: 14px 10px;
+    gap: 10px;
+  }
+
+  .roulette-clarification-bubble {
+    max-width: 95%;
+  }
+
+  .roulette-clarification-message-bot .roulette-clarification-bubble {
+    padding: 11px 12px;
+    border-radius: 14px;
+    border-bottom-left-radius: 2px;
+  }
+
+  .roulette-clarification-message-user .roulette-clarification-bubble {
+    padding: 11px 12px;
+    border-radius: 14px;
+    border-bottom-right-radius: 2px;
+  }
+
+  .roulette-clarification-text {
+    font-size: 13px;
+  }
+
+  .roulette-clarification-quick-options {
+    gap: 6px;
+  }
+
+  .roulette-clarification-quick-option {
+    padding: 9px 11px;
+    font-size: 12px;
+  }
+
+  .roulette-clarification-input-form {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .roulette-clarification-input-wrapper {
+    gap: 8px;
+  }
+
+  .roulette-clarification-input {
+    padding: 10px 11px;
+    font-size: 13px;
+  }
+
+  .roulette-clarification-send-button {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+
+  .roulette-clarification-error-box {
+    padding: 9px 11px;
+  }
+
+  .roulette-clarification-error-message {
+    font-size: 11px;
+  }
+}

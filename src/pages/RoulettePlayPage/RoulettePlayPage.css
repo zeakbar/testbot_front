@@ -1,0 +1,403 @@
+.roulette-play-full {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-family: 'Lato', sans-serif;
+  color: var(--color-text-primary);
+}
+
+.roulette-play-back-button {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+  color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.roulette-play-back-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  background: white;
+}
+
+.roulette-play-back-button:active {
+  transform: translateY(0);
+}
+
+.roulette-play-full.roulette-play-error {
+  flex-direction: column;
+  gap: 24px;
+}
+
+.roulette-play-error > p {
+  color: white;
+  font-size: 18px;
+  margin: 0;
+  text-align: center;
+  max-width: 300px;
+}
+
+.roulette-play-error-button {
+  padding: 12px 24px;
+  background: white;
+  color: var(--color-primary);
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.roulette-play-error-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Wheel Container */
+.roulette-play-wheel-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 40px 16px 30px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Controls */
+.roulette-play-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  width: 100%;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Hide controls during spin */
+.roulette-play-spinning .roulette-play-controls {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Scoreboard */
+.roulette-play-scoreboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 12px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.roulette-play-score-item {
+  background: rgba(255, 255, 255, 0.95);
+  border: 3px solid;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.roulette-play-score-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.roulette-play-team-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.roulette-play-team-score {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+/* Spin Button */
+.roulette-play-spin-button {
+  padding: 16px 32px;
+  background: var(--color-secondary);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 8px 24px rgba(255, 152, 0, 0.3);
+  letter-spacing: -0.3px;
+  min-width: 200px;
+}
+
+.roulette-play-spin-button:hover:not(:disabled) {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(255, 152, 0, 0.4);
+}
+
+.roulette-play-spin-button:active:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.roulette-play-spin-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.roulette-play-spin-button.spinning {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 8px 24px rgba(255, 152, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 8px 32px rgba(255, 152, 0, 0.6);
+  }
+}
+
+/* Remaining */
+.roulette-play-remaining {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+}
+
+/* Reveal Button */
+.roulette-play-reveal-button {
+  padding: 14px 28px;
+  background: white;
+  color: var(--color-primary);
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  letter-spacing: -0.3px;
+}
+
+.roulette-play-reveal-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.roulette-play-reveal-button:active {
+  transform: translateY(0);
+}
+
+/* Question Modal */
+.roulette-question-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.roulette-question-modal {
+  background: var(--color-bg-primary);
+  border-radius: 20px;
+  padding: 32px 24px;
+  max-width: 480px;
+  width: calc(100% - 32px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.roulette-question-modal-number {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.roulette-question-modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.roulette-question-modal-text {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.5;
+  letter-spacing: -0.3px;
+}
+
+.roulette-question-modal-button {
+  padding: 16px 32px;
+  background: var(--color-secondary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+  letter-spacing: -0.3px;
+  align-self: center;
+}
+
+.roulette-question-modal-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 152, 0, 0.4);
+}
+
+.roulette-question-modal-button:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .roulette-play-back-button {
+    width: 40px;
+    height: 40px;
+    top: 12px;
+    left: 12px;
+  }
+
+  .roulette-play-wheel-container {
+    padding: 50px 16px 24px;
+  }
+
+  .roulette-play-controls {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .roulette-play-scoreboard {
+    max-width: 100%;
+    gap: 10px;
+  }
+
+  .roulette-play-spin-button {
+    padding: 14px 28px;
+    font-size: 16px;
+    min-width: 160px;
+  }
+
+  .roulette-play-reveal-button {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .roulette-play-back-button {
+    width: 38px;
+    height: 38px;
+    top: 10px;
+    left: 10px;
+  }
+
+  .roulette-play-wheel-container {
+    padding: 48px 12px 20px;
+  }
+
+  .roulette-play-controls {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .roulette-play-scoreboard {
+    gap: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  }
+
+  .roulette-play-score-item {
+    padding: 10px;
+  }
+
+  .roulette-play-team-name {
+    font-size: 11px;
+  }
+
+  .roulette-play-team-score {
+    font-size: 20px;
+  }
+
+  .roulette-play-spin-button {
+    padding: 12px 24px;
+    font-size: 14px;
+    min-width: 140px;
+  }
+
+  .roulette-play-remaining {
+    font-size: 12px;
+  }
+
+  .roulette-play-reveal-button {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}

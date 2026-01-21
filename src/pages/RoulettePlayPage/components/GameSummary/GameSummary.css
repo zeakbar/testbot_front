@@ -1,0 +1,277 @@
+.roulette-summary {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(156, 39, 176, 0.95), rgba(0, 188, 212, 0.95));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  padding: 20px;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.roulette-summary-content {
+  background: var(--color-bg-primary);
+  border-radius: 24px;
+  padding: 32px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Header */
+.roulette-summary-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.roulette-summary-icon {
+  font-size: 60px;
+  line-height: 1;
+  animation: bounce 1s ease infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.roulette-summary-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.5px;
+}
+
+/* Winner */
+.roulette-summary-winner {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(255, 215, 0, 0.3);
+}
+
+.roulette-summary-winner-label {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.roulette-summary-winner-name {
+  margin: 0 0 12px;
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -0.3px;
+}
+
+.roulette-summary-winner-score {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+}
+
+.roulette-summary-score-value {
+  font-size: 36px;
+  font-weight: 700;
+  color: white;
+  line-height: 1;
+}
+
+.roulette-summary-score-label {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+}
+
+/* Leaderboard */
+.roulette-summary-leaderboard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.roulette-summary-leaderboard-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.roulette-summary-leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.roulette-summary-leaderboard-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--color-bg-secondary);
+  border-left: 4px solid;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.roulette-summary-leaderboard-item:hover {
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.roulette-summary-rank {
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.roulette-summary-team-name {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.roulette-summary-team-score {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+/* Stats */
+.roulette-summary-stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.roulette-summary-stat-item {
+  background: var(--color-bg-secondary);
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid var(--color-border);
+}
+
+.roulette-summary-stat-label {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.roulette-summary-stat-value {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+/* Button */
+.roulette-summary-button {
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: -0.3px;
+}
+
+.roulette-summary-button:hover {
+  box-shadow: 0 8px 24px rgba(156, 39, 176, 0.3);
+  transform: translateY(-2px);
+}
+
+.roulette-summary-button:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .roulette-summary-content {
+    padding: 24px;
+    gap: 20px;
+  }
+
+  .roulette-summary-icon {
+    font-size: 48px;
+  }
+
+  .roulette-summary-title {
+    font-size: 24px;
+  }
+
+  .roulette-summary-winner {
+    padding: 20px;
+  }
+
+  .roulette-summary-winner-name {
+    font-size: 20px;
+  }
+
+  .roulette-summary-score-value {
+    font-size: 32px;
+  }
+
+  .roulette-summary-leaderboard-item {
+    padding: 10px 12px;
+  }
+
+  .roulette-summary-team-name {
+    font-size: 13px;
+  }
+
+  .roulette-summary-button {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+}

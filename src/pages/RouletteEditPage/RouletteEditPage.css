@@ -1,0 +1,451 @@
+.roulette-edit-page {
+  background: var(--color-bg-secondary);
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+.roulette-edit-container {
+  max-width: 100%;
+  padding: 24px 16px;
+}
+
+/* Header */
+.roulette-edit-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.roulette-edit-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+
+.roulette-edit-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+/* Error Message */
+.roulette-edit-error-box {
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 20px;
+}
+
+.roulette-edit-error-text {
+  margin: 0;
+  font-size: 13px;
+  color: #d32f2f;
+  line-height: 1.4;
+}
+
+.roulette-edit-error {
+  padding: 40px 16px;
+  text-align: center;
+}
+
+.roulette-edit-error p {
+  margin: 0 0 24px 0;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.roulette-edit-error-button {
+  padding: 10px 20px;
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Form Sections */
+.roulette-edit-form-section,
+.roulette-edit-questions-section {
+  margin-bottom: 24px;
+}
+
+.roulette-edit-section-title {
+  margin: 0 0 16px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: -0.3px;
+  text-transform: uppercase;
+}
+
+/* Form */
+.roulette-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.roulette-edit-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.roulette-edit-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+  letter-spacing: -0.2px;
+}
+
+.roulette-edit-textarea {
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+
+.roulette-edit-textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.1);
+}
+
+.roulette-edit-textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: var(--color-bg-tertiary);
+}
+
+.roulette-edit-textarea::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+/* Buttons */
+.roulette-edit-submit-button {
+  padding: 12px 16px;
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  letter-spacing: -0.3px;
+}
+
+.roulette-edit-submit-button:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
+  transform: translateY(-2px);
+}
+
+.roulette-edit-submit-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.roulette-edit-submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Question Item */
+.roulette-edit-question-item {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+
+.roulette-edit-question-item:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 8px rgba(156, 39, 176, 0.1);
+}
+
+.roulette-edit-question-number {
+  min-width: 32px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-primary);
+  color: white;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.roulette-edit-question-content {
+  flex: 1;
+}
+
+.roulette-edit-question-text {
+  margin: 0 0 6px 0;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.roulette-edit-question-answer {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.roulette-edit-answer-label {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.roulette-edit-question-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.roulette-edit-question-button {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.roulette-edit-question-button:hover:not(:disabled) {
+  background: var(--color-primary-lighter);
+}
+
+.roulette-edit-question-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Form Actions */
+.roulette-edit-form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.roulette-edit-button {
+  flex: 1;
+  padding: 11px 14px;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  letter-spacing: -0.2px;
+}
+
+.roulette-edit-button-save {
+  background: var(--gradient-primary);
+  color: white;
+}
+
+.roulette-edit-button-save:hover:not(:disabled) {
+  box-shadow: 0 2px 8px rgba(156, 39, 176, 0.25);
+}
+
+.roulette-edit-button-cancel {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+}
+
+.roulette-edit-button-cancel:hover:not(:disabled) {
+  background: var(--color-bg-tertiary);
+}
+
+.roulette-edit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Questions List */
+.roulette-edit-questions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.roulette-edit-question-form {
+  background: var(--color-bg-primary);
+  border: 2px solid var(--color-primary);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.roulette-edit-empty {
+  text-align: center;
+  padding: 32px 16px;
+  background: var(--color-bg-primary);
+  border: 2px dashed var(--color-border);
+  border-radius: 12px;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Loading */
+.roulette-edit-loading {
+  padding: 40px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+}
+
+/* Bottom Space */
+.roulette-edit-bottom-space {
+  height: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .roulette-edit-container {
+    padding: 20px 14px;
+  }
+
+  .roulette-edit-title {
+    font-size: 20px;
+  }
+
+  .roulette-edit-textarea {
+    padding: 11px 12px;
+    font-size: 13px;
+  }
+
+  .roulette-edit-submit-button {
+    padding: 11px 14px;
+    font-size: 13px;
+  }
+
+  .roulette-edit-question-item {
+    padding: 12px;
+  }
+
+  .roulette-edit-question-text {
+    font-size: 13px;
+  }
+
+  .roulette-edit-question-answer {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .roulette-edit-page {
+    padding-bottom: 90px;
+  }
+
+  .roulette-edit-container {
+    padding: 18px 12px;
+  }
+
+  .roulette-edit-title {
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+
+  .roulette-edit-subtitle {
+    font-size: 12px;
+  }
+
+  .roulette-edit-section-title {
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+
+  .roulette-edit-form {
+    gap: 12px;
+  }
+
+  .roulette-edit-form-group {
+    gap: 5px;
+  }
+
+  .roulette-edit-textarea {
+    padding: 10px 11px;
+    font-size: 13px;
+  }
+
+  .roulette-edit-submit-button {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .roulette-edit-question-item {
+    padding: 11px;
+    gap: 10px;
+  }
+
+  .roulette-edit-question-number {
+    min-width: 28px;
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
+  }
+
+  .roulette-edit-question-text {
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+
+  .roulette-edit-question-answer {
+    font-size: 11px;
+  }
+
+  .roulette-edit-question-actions {
+    gap: 4px;
+  }
+
+  .roulette-edit-question-button {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .roulette-edit-form-actions {
+    gap: 8px;
+  }
+
+  .roulette-edit-button {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .roulette-edit-empty {
+    padding: 24px 12px;
+    font-size: 13px;
+  }
+}

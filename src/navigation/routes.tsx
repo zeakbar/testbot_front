@@ -17,6 +17,11 @@ import { QuestionOwnerPage } from '@/pages/QuestionOwnerPage/QuestionOwnerPage';
 import { YaratishPage } from '@/pages/YaratishPage/YaratishPage';
 import { QuizDetailPage } from '@/pages/QuizDetailPage/QuizDetailPage';
 import { EditTestPage } from '@/pages/EditTestPage/EditTestPage';
+import { RouletteCreatePage } from '@/pages/RouletteCreatePage/RouletteCreatePage';
+import { RouletteClarificationPage } from '@/pages/RouletteClarificationPage/RouletteClarificationPage';
+import { RouletteDetailPage } from '@/pages/RouletteDetailPage/RouletteDetailPage';
+import { RoulettePreGameSetupPage } from '@/pages/RoulettePreGameSetupPage/RoulettePreGameSetupPage';
+import { RoulettePlayPage } from '@/pages/RoulettePlayPage/RoulettePlayPage';
 
 interface Route {
   path: string;
@@ -43,4 +48,9 @@ export const routes: Route[] = [
   { path: '/solved-test/:solvedTestId', Component: SolvedTestDetailPage },
   { path: '/test/:testId/question/:questionIndex/info', Component: QuestionOwnerPage },
   { path: '/quiz/:quizId', Component: QuizDetailPage },
+  { path: '/roulette/create', Component: RouletteCreatePage },
+  { path: '/roulette/:rouletteId/clarify', Component: RouletteClarificationPage },
+  { path: '/roulette/:rouletteId', Component: RouletteDetailPage },
+  { path: '/roulette/:rouletteId/setup', Component: RoulettePreGameSetupPage },
+  { path: '/roulette/:rouletteId/play', Component: RoulettePlayPage },
 ];

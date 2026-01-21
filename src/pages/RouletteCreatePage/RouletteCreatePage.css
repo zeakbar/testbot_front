@@ -1,0 +1,483 @@
+.roulette-create-page {
+  background: var(--color-bg-secondary);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  padding-bottom: 70px;
+}
+
+.roulette-create-chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Messages Container */
+.roulette-create-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 20px;
+}
+
+.roulette-create-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.roulette-create-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.roulette-create-messages::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+/* Message Container */
+.roulette-create-message {
+  display: flex;
+  animation: messageSlideIn 0.3s ease-out;
+}
+
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.roulette-create-message-bot {
+  justify-content: flex-start;
+}
+
+.roulette-create-message-user {
+  justify-content: flex-end;
+}
+
+/* Message Bubble */
+.roulette-create-bubble {
+  max-width: 85%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.roulette-create-message-bot .roulette-create-bubble {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  padding: 14px 16px;
+  border-radius: 16px;
+  border-bottom-left-radius: 4px;
+}
+
+.roulette-create-message-user .roulette-create-bubble {
+  background: var(--gradient-primary);
+  padding: 14px 16px;
+  border-radius: 16px;
+  border-bottom-right-radius: 4px;
+}
+
+.roulette-create-text {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.roulette-create-message-bot .roulette-create-text {
+  color: var(--color-text-primary);
+}
+
+.roulette-create-message-user .roulette-create-text {
+  color: white;
+}
+
+/* Options Wrapper */
+.roulette-create-options-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Quick Options (Select Buttons) */
+.roulette-create-quick-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.roulette-create-quick-option {
+  padding: 12px 14px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  font-weight: 500;
+  font-family: inherit;
+}
+
+.roulette-create-quick-option:hover {
+  background: var(--color-primary-lighter);
+  border-color: var(--color-primary);
+}
+
+.roulette-create-quick-option.active {
+  background: var(--gradient-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+.roulette-create-quick-option:active {
+  transform: scale(0.98);
+}
+
+/* Quick Select Dropdown */
+.roulette-create-quick-select-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+
+.roulette-create-quick-select-wrapper::after {
+  content: '▼';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--color-text-tertiary);
+  font-size: 11px;
+  z-index: 1;
+}
+
+.roulette-create-quick-select {
+  padding: 12px 14px;
+  padding-right: 36px;
+  background: var(--color-bg-secondary);
+  border: 2px solid var(--color-border);
+  border-radius: 14px;
+  font-size: 15px;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  font-family: inherit;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: none;
+  width: 100%;
+}
+
+.roulette-create-quick-select:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-bg-secondary);
+  box-shadow: 0 2px 8px rgba(156, 39, 176, 0.15);
+}
+
+.roulette-create-quick-select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(156, 39, 176, 0.15);
+  background-color: var(--color-bg-secondary);
+}
+
+.roulette-create-quick-select option {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  padding: 8px 12px;
+}
+
+.roulette-create-quick-select option:checked {
+  background: var(--color-primary);
+  color: white;
+}
+
+/* Input Form */
+.roulette-create-input-form {
+  padding: 16px;
+  background: var(--color-bg-primary);
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+  z-index: 10;
+  position: relative;
+}
+
+.roulette-create-input-wrapper {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.roulette-create-input {
+  flex: 1;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  font-size: 15px;
+  color: var(--color-text-primary);
+  background: var(--color-bg-secondary);
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+  resize: none;
+  max-height: 100px;
+}
+
+.roulette-create-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.1);
+}
+
+.roulette-create-input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.roulette-create-send-button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 12px;
+  background: var(--gradient-primary);
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: inherit;
+  font-weight: 600;
+}
+
+.roulette-create-send-button:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
+}
+
+.roulette-create-send-button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.roulette-create-send-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Submit Button */
+.roulette-create-submit-button {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: inherit;
+  letter-spacing: -0.3px;
+}
+
+.roulette-create-submit-button:hover:not(:disabled) {
+  box-shadow: 0 6px 16px rgba(156, 39, 176, 0.35);
+  transform: translateY(-2px);
+}
+
+.roulette-create-submit-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.roulette-create-submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Error Box */
+.roulette-create-error-box {
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
+
+.roulette-create-error-message {
+  margin: 0;
+  font-size: 12px;
+  color: #d32f2f;
+  line-height: 1.4;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .roulette-create-messages {
+    padding: 16px 12px;
+    gap: 12px;
+  }
+
+  .roulette-create-bubble {
+    max-width: 90%;
+  }
+
+  .roulette-create-message-bot .roulette-create-bubble {
+    padding: 12px 14px;
+  }
+
+  .roulette-create-message-user .roulette-create-bubble {
+    padding: 12px 14px;
+  }
+
+  .roulette-create-text {
+    font-size: 14px;
+  }
+
+  .roulette-create-options-wrapper {
+    gap: 10px;
+  }
+
+  .roulette-create-quick-option {
+    padding: 11px 13px;
+    font-size: 13px;
+  }
+
+  .roulette-create-quick-select-wrapper::after {
+    right: 11px;
+  }
+
+  .roulette-create-quick-select {
+    padding: 11px 12px;
+    padding-right: 34px;
+    font-size: 13px;
+  }
+
+  .roulette-create-input-form {
+    padding: 14px;
+  }
+
+  .roulette-create-input {
+    padding: 11px 12px;
+    font-size: 14px;
+  }
+
+  .roulette-create-send-button {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .roulette-create-submit-button {
+    padding: 11px 14px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .roulette-create-page {
+    padding-bottom: 80px;
+  }
+
+  .roulette-create-messages {
+    padding: 14px 10px;
+    gap: 10px;
+  }
+
+  .roulette-create-bubble {
+    max-width: 95%;
+  }
+
+  .roulette-create-message-bot .roulette-create-bubble {
+    padding: 11px 12px;
+    border-radius: 14px;
+    border-bottom-left-radius: 2px;
+  }
+
+  .roulette-create-message-user .roulette-create-bubble {
+    padding: 11px 12px;
+    border-radius: 14px;
+    border-bottom-right-radius: 2px;
+  }
+
+  .roulette-create-text {
+    font-size: 13px;
+  }
+
+  .roulette-create-options-wrapper {
+    gap: 8px;
+  }
+
+  .roulette-create-quick-options {
+    gap: 6px;
+  }
+
+  .roulette-create-quick-option {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .roulette-create-quick-select-wrapper {
+    gap: 6px;
+  }
+
+  .roulette-create-quick-select-wrapper::after {
+    right: 10px;
+    font-size: 10px;
+  }
+
+  .roulette-create-quick-select {
+    padding: 11px 12px;
+    padding-right: 32px;
+    font-size: 12px;
+  }
+
+  .roulette-create-input-form {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .roulette-create-input-wrapper {
+    gap: 8px;
+  }
+
+  .roulette-create-input {
+    padding: 10px 11px;
+    font-size: 13px;
+  }
+
+  .roulette-create-send-button {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+
+  .roulette-create-submit-button {
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+
+  .roulette-create-error-box {
+    padding: 9px 11px;
+  }
+
+  .roulette-create-error-message {
+    font-size: 11px;
+  }
+}
