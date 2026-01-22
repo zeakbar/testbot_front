@@ -16,7 +16,7 @@ import { apiClient } from './client';
 export async function createRoulette(
   data: RouletteCreateRequest
 ): Promise<RouletteCreateResponse> {
-  return apiClient.post<RouletteCreateResponse>('/api/roulettes/', {
+  return apiClient.post<RouletteCreateResponse>('/roulettes/', {
     topic: data.topic,
     language: data.language,
     difficulty_level: data.difficulty_level,
@@ -32,7 +32,7 @@ export async function generateRouletteQuestions(
   data: RouletteGenerateRequest
 ): Promise<RouletteGenerateResponse> {
   return apiClient.post<RouletteGenerateResponse>(
-    `/api/roulettes/${rouletteId}/generate/`,
+    `/roulettes/${rouletteId}/generate/`,
     data
   );
 }
@@ -45,7 +45,7 @@ export async function getMyRoulettes(
   pageSize: number = 10
 ): Promise<PaginatedResponse<Roulette>> {
   return apiClient.get<PaginatedResponse<Roulette>>(
-    `/api/roulettes/?page=${page}&page_size=${pageSize}`
+    `/roulettes/?page=${page}&page_size=${pageSize}`
   );
 }
 
@@ -53,7 +53,7 @@ export async function getMyRoulettes(
  * Get roulette details by ID
  */
 export async function getRouletteById(id: number | string): Promise<Roulette> {
-  return apiClient.get<Roulette>(`/api/roulettes/${id}/`);
+  return apiClient.get<Roulette>(`/roulettes/${id}/`);
 }
 
 /**
@@ -63,7 +63,7 @@ export async function getRouletteQuestions(
   rouletteId: number | string
 ): Promise<RouletteQuestion[]> {
   const response = await apiClient.get<RouletteQuestion[]>(
-    `/api/roulettes/${rouletteId}/questions/`
+    `/roulettes/${rouletteId}/questions/`
   );
   // Backend returns array directly, not a paginated response
   return Array.isArray(response) ? response : [];
@@ -77,7 +77,7 @@ export async function addRouletteQuestion(
   data: { question: string; answer: string }
 ): Promise<RouletteQuestion> {
   return apiClient.post<RouletteQuestion>(
-    `/api/roulettes/${rouletteId}/add_question/`,
+    `/roulettes/${rouletteId}/add_question/`,
     data
   );
 }
@@ -91,7 +91,7 @@ export async function updateRouletteQuestion(
   data: { question?: string; answer?: string }
 ): Promise<RouletteQuestion> {
   return apiClient.patch<RouletteQuestion>(
-    `/api/roulettes/${rouletteId}/questions/${questionId}/`,
+    `/roulettes/${rouletteId}/questions/${questionId}/update/`,
     data
   );
 }
@@ -104,7 +104,7 @@ export async function deleteRouletteQuestion(
   questionId: number | string
 ): Promise<void> {
   return apiClient.delete<void>(
-    `/api/roulettes/${rouletteId}/questions/${questionId}/`
+    `/roulettes/${rouletteId}/questions/${questionId}/`
   );
 }
 
@@ -115,12 +115,12 @@ export async function updateRoulette(
   rouletteId: number | string,
   data: Partial<Roulette>
 ): Promise<Roulette> {
-  return apiClient.patch<Roulette>(`/api/roulettes/${rouletteId}/`, data);
+  return apiClient.patch<Roulette>(`/roulettes/${rouletteId}/`, data);
 }
 
 /**
  * Delete roulette
  */
 export async function deleteRoulette(rouletteId: number | string): Promise<void> {
-  return apiClient.delete<void>(`/api/roulettes/${rouletteId}/`);
+  return apiClient.delete<void>(`/roulettes/${rouletteId}/`);
 }

@@ -6,6 +6,7 @@ import { Page } from '@/components/Page';
 import { Loading } from '@/components/Loading/Loading';
 import { getRouletteById, getRouletteQuestions } from '@/api/roulette';
 import type { Roulette, RouletteQuestion } from '@/api/types';
+import { RouletteEditModal } from './RouletteEditModal';
 import './RouletteDetailPage.css';
 
 const difficultyLabels: Record<string, string> = {
@@ -41,45 +42,46 @@ export const RouletteDetailPage: FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [expandedQuestion, setExpandedQuestion] = useState<number | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const loadData = async () => {
+    if (!rouletteId) {
+      setError('Ruletka ID topilmadi');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const rouletteData = await getRouletteById(parseInt(rouletteId, 10));
+      setRoulette(rouletteData);
+
+      // Try to use questions from roulette object first
+      let questionsData: RouletteQuestion[] = [];
+      if (rouletteData.questions && rouletteData.questions.length > 0) {
+        questionsData = rouletteData.questions;
+      } else if (rouletteData.status === 'generated') {
+        // Fall back to fetching separately
+        try {
+          questionsData = await getRouletteQuestions(rouletteId);
+        } catch (fetchErr) {
+          console.warn('[Fetch Questions Separately] Error:', fetchErr);
+          questionsData = [];
+        }
+      }
+
+      setQuestions(questionsData);
+      setError(null);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Ruletka tafsilotlarini yuklashda xato';
+      setError(errorMessage);
+      console.error('[Load Roulette Detail] Error:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadData = async () => {
-      if (!rouletteId) {
-        setError('Ruletka ID topilmadi');
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        setIsLoading(true);
-        const rouletteData = await getRouletteById(parseInt(rouletteId, 10));
-        setRoulette(rouletteData);
-
-        // Try to use questions from roulette object first
-        let questionsData: RouletteQuestion[] = [];
-        if (rouletteData.questions && rouletteData.questions.length > 0) {
-          questionsData = rouletteData.questions;
-        } else if (rouletteData.status === 'generated') {
-          // Fall back to fetching separately
-          try {
-            questionsData = await getRouletteQuestions(rouletteId);
-          } catch (fetchErr) {
-            console.warn('[Fetch Questions Separately] Error:', fetchErr);
-            questionsData = [];
-          }
-        }
-
-        setQuestions(questionsData);
-        setError(null);
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Ruletka tafsilotlarini yuklashda xato';
-        setError(errorMessage);
-        console.error('[Load Roulette Detail] Error:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     loadData();
   }, [rouletteId]);
 
@@ -156,7 +158,7 @@ export const RouletteDetailPage: FC = () => {
           {roulette.is_owner && (
             <button
               className="roulette-action-button roulette-action-button-secondary"
-              onClick={() => navigate(`/roulette/${rouletteId}/edit`)}
+              onClick={() => setIsEditModalOpen(true)}
               type="button"
               title="Ruletka tahrir qilish"
               aria-label="Ruletka tahrir qilish"
@@ -235,6 +237,22 @@ export const RouletteDetailPage: FC = () => {
 
         <div className="roulette-detail-page-bottom-space" />
       </div>
+
+      {roulette && (
+        <RouletteEditModal
+          roulette={roulette}
+          questions={questions}
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          onSave={() => {
+            setIsEditModalOpen(false);
+            // Reload roulette and questions data
+            if (rouletteId) {
+              loadData();
+            }
+          }}
+        />
+      )}
     </Page>
   );
 };

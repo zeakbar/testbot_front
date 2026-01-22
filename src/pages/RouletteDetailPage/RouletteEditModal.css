@@ -1,0 +1,396 @@
+/* Modal Overlay */
+.roulette-edit-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  z-index: 1000;
+  animation: slideOverlayIn 0.3s ease;
+}
+
+@keyframes slideOverlayIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal Container */
+.roulette-edit-modal {
+  width: 100%;
+  max-width: 100%;
+  background: var(--color-bg-primary);
+  border-radius: 24px 24px 0 0;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  animation: slideModalUp 0.3s ease;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes slideModalUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Modal Header */
+.roulette-edit-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.roulette-edit-modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.roulette-edit-modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: color 0.2s ease;
+}
+
+.roulette-edit-modal-close:hover {
+  color: var(--color-text-primary);
+}
+
+/* Modal Content */
+.roulette-edit-modal-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Error Message */
+.roulette-edit-modal-error {
+  padding: 12px 14px;
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  border-left: 4px solid #ef4444;
+}
+
+/* Form Field Group */
+.roulette-edit-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.roulette-edit-field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.roulette-edit-field-input,
+.roulette-edit-field-textarea {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--color-text-primary);
+  background: var(--color-bg-secondary);
+  transition: border-color 0.2s ease;
+}
+
+.roulette-edit-field-input:focus,
+.roulette-edit-field-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.1);
+}
+
+.roulette-edit-field-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Questions Section */
+.roulette-edit-questions-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.roulette-edit-section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.roulette-edit-empty-state {
+  padding: 24px;
+  text-align: center;
+  background: var(--color-bg-secondary);
+  border-radius: 8px;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+/* Questions List */
+.roulette-edit-questions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.roulette-edit-question-card {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.roulette-edit-question-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 8px rgba(156, 39, 176, 0.1);
+}
+
+.roulette-edit-question-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-family: inherit;
+}
+
+.roulette-edit-question-header:hover {
+  background: var(--color-bg-primary);
+}
+
+.roulette-edit-question-preview {
+  flex: 1;
+  text-align: left;
+  font-size: 13px;
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.roulette-edit-question-toggle {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+/* Expanded Question Content */
+.roulette-edit-question-expanded {
+  padding: 12px;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.roulette-edit-delete-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #fee2e2;
+  color: #991b1b;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.roulette-edit-delete-button:active {
+  background: #fecaca;
+  transform: scale(0.98);
+}
+
+/* Add Question Button */
+.roulette-edit-add-question-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px;
+  background: var(--color-bg-secondary);
+  color: var(--color-primary);
+  border: 2px dashed var(--color-primary);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.roulette-edit-add-question-button:active {
+  background: rgba(156, 39, 176, 0.05);
+  transform: scale(0.98);
+}
+
+/* New Question Form */
+.roulette-edit-new-question-form {
+  padding: 12px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.roulette-edit-new-question-form h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.roulette-edit-new-question-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.roulette-edit-new-question-actions button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+/* Buttons */
+.roulette-edit-button-primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+.roulette-edit-button-primary:active:not(:disabled) {
+  background: var(--color-primary-dark, #7b1fa2);
+  transform: scale(0.98);
+}
+
+.roulette-edit-button-secondary {
+  background: var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.roulette-edit-button-secondary:active:not(:disabled) {
+  background: #d1d5db;
+  transform: scale(0.98);
+}
+
+.roulette-edit-button-primary:disabled,
+.roulette-edit-button-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Modal Footer */
+.roulette-edit-modal-footer {
+  display: flex;
+  gap: 10px;
+  padding: 14px 16px;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+  background: var(--color-bg-primary);
+}
+
+.roulette-edit-modal-footer button {
+  flex: 1;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+/* Responsive Design */
+@media (min-width: 480px) {
+  .roulette-edit-modal-header h2 {
+    font-size: 20px;
+  }
+
+  .roulette-edit-modal-content {
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .roulette-edit-modal-footer {
+    padding: 16px 20px;
+    gap: 12px;
+  }
+
+  .roulette-edit-field-input,
+  .roulette-edit-field-textarea {
+    padding: 12px 14px;
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 768px) {
+  .roulette-edit-modal {
+    max-width: 600px;
+    max-height: 85vh;
+    border-radius: 16px;
+    margin: auto;
+  }
+
+  .roulette-edit-modal-overlay {
+    align-items: center;
+  }
+
+  @keyframes slideModalUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+}
