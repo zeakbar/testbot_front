@@ -332,7 +332,7 @@ export const ProfilePage: FC = () => {
             <p className="profile-empty-message">Hali hech qanday uyga vazifa yaratilmagan</p>
             <button 
               className="profile-empty-action"
-              onClick={() => navigate('/lesson/generate-ai')}
+              onClick={() => navigate('/#/yaratish')}
             >
               Yangi uyga vazifa yaratish
             </button>

@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Banner } from '@/api/types';
 import './BannerCarousel.css';
 
@@ -9,6 +10,7 @@ interface BannerCarouselProps {
 
 export const BannerCarousel: FC<BannerCarouselProps> = ({ banners }) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (banners.length <= 1) return;
@@ -26,7 +28,11 @@ export const BannerCarousel: FC<BannerCarouselProps> = ({ banners }) => {
 
   const goToBanner = (banner: Banner) => {
     if (banner.link) {
-      window.open(banner.link, '_blank');
+      if (banner.link.startsWith('http://') || banner.link.startsWith('https://')) {
+        window.open(banner.link, '_blank');
+      } else {
+        navigate(banner.link);
+      }
     }
   };
 
