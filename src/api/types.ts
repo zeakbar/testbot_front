@@ -319,3 +319,314 @@ export interface RouletteGameSession {
   used_segments: number[];
   created: string;
 }
+
+// =============================================================================
+// UNIFIED MATERIALS SYSTEM
+// =============================================================================
+
+/* Material Types */
+export type MaterialType = 
+  | 'quiz' 
+  | 'flashcards' 
+  | 'roulette' 
+  | 'matching' 
+  | 'fill_blanks' 
+  | 'true_false';
+
+/* Material Author (lightweight) */
+export interface MaterialAuthor {
+  user_id: number;
+  full_name: string;
+  username?: string;
+}
+
+/* Material Category (lightweight) */
+export interface MaterialCategory {
+  id: number;
+  name: string;
+  icon?: string;
+  icon_color?: string;
+}
+
+/* Material List Item (for lists) */
+export interface MaterialListItem {
+  id: number;
+  type: MaterialType;
+  title: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  total_items: number;
+  language: string;
+  author: MaterialAuthor;
+  category?: MaterialCategory;
+  is_public: boolean;
+  featured: boolean;
+  creation_method: 'manual' | 'ai';
+  created: string;
+  updated: string;
+}
+
+/* Full Material (with content) */
+export interface Material extends MaterialListItem {
+  content: MaterialContent;
+  content_version: string;
+  lesson?: number;
+  lesson_title?: string;
+  order: number;
+  is_active: boolean;
+  standards: string[];
+  keywords: string[];
+  prerequisites: string[];
+  metadata: Record<string, unknown>;
+  agent_version: string;
+  llm_provider: string;
+  llm_model: string;
+  version: number;
+}
+
+/* Material Content (JSON stored in DB) */
+export interface MaterialContent {
+  version: string;
+  type: MaterialType;
+  title: string;
+  instructions: string;
+  grade_level: string;
+  body: MaterialBody;
+  config: MaterialConfig;
+  metadata?: Record<string, unknown>;
+}
+
+/* Material Body - varies by type */
+export interface MaterialBody {
+  items: MaterialItem[];
+}
+
+/* Generic Material Item */
+export interface MaterialItem {
+  id: number;
+  question?: string;
+  answer?: string;
+  options?: MaterialOption[];
+  is_correct?: boolean;
+  hint?: string;
+  explanation?: string;
+  difficulty?: string;
+  [key: string]: unknown;
+}
+
+/* Material Option (for quiz-like items) */
+export interface MaterialOption {
+  id: string | number;
+  text: string;
+  is_correct?: boolean;
+}
+
+/* Material Config */
+export interface MaterialConfig {
+  total_items: number;
+  time_limit_seconds?: number;
+  shuffle_items?: boolean;
+  points_per_correct?: number;
+  [key: string]: unknown;
+}
+
+/* Material Generate Request - seamless for English + general subjects */
+export interface MaterialGenerateRequest {
+  materialType: MaterialType;
+  topic: string;
+  description?: string;
+  gradeLevel: string;
+  numItems: number;
+  title?: string;
+  difficulty?: 'easy' | 'medium' | 'hard';
+  /** Content language - language of exercises/questions */
+  language?: string;
+  /** Instructions language - e.g. Uzbek when teaching English */
+  instructionLanguage?: 'uz' | 'en' | 'ru';
+  /** Skill focus for language: grammar, vocabulary, reading, mixed */
+  skillFocus?: 'grammar' | 'vocabulary' | 'reading' | 'mixed';
+  categoryId?: number;
+  llmProvider?: 'anthropic' | 'openai' | 'gemini';
+}
+
+/* Material Generate Response (task created) */
+export interface MaterialGenerateResponse {
+  task_id: string;
+  message: string;
+  status_url: string;
+}
+
+/* Task Progress Event (from SSE) */
+export interface TaskProgressEvent {
+  status: 'pending' | 'started' | 'generating' | 'validating' | 'saving' | 'success' | 'failed' | 'timeout' | 'cancelled';
+  progress: number;
+  message: string;
+  result?: TaskResult;
+  error?: string;
+}
+
+/* Task Result (on success) */
+export interface TaskResult {
+  status: string;
+  material_id?: number;
+  message: string;
+  material_type?: MaterialType;
+  title?: string;
+  total_items?: number;
+}
+
+// =============================================================================
+// TEACHER & STUDENT SYSTEM
+// =============================================================================
+
+/* Teacher Preference */
+export interface TeacherPreference {
+  id: number;
+  default_subject: string;
+  default_grade_level: string;
+  default_language: 'uz' | 'en' | 'ru';
+  default_difficulty: 'easy' | 'medium' | 'hard';
+  preferred_llm_provider: 'openai' | 'anthropic' | 'gemini' | '';
+  teaching_style: string;
+  created: string;
+  updated: string;
+}
+
+/* Lesson (with enrollment info) */
+export interface Lesson {
+  id: number;
+  title: string;
+  description: string;
+  subject: string;
+  grade_level: string;
+  duration_minutes: number;
+  learning_objectives?: string[];
+  tags?: string[];
+  language: 'uz' | 'en' | 'ru';
+  author: MaterialAuthor;
+  category?: MaterialCategory;
+  materials_count: number;
+  enrolled_count: number;
+  is_public: boolean;
+  featured: boolean;
+  is_enrolled: boolean;
+  is_owner: boolean;
+  invite_code?: string;
+  invite_link?: string;
+  is_archived?: boolean;
+  is_homework_enabled?: boolean;
+  created: string;
+  updated: string;
+}
+
+/* Lesson Detail (with materials) */
+export interface LessonDetail extends Lesson {
+  materials: MaterialListItem[];
+}
+
+/* Lesson Enrollment */
+export interface LessonEnrollment {
+  id: number;
+  student: MaterialAuthor;
+  enrolled_at: string;
+  progress_summary: ProgressSummary;
+}
+
+/* Progress Summary */
+export interface ProgressSummary {
+  total_materials: number;
+  completed: number;
+  completion_percentage: number;
+  average_score: number | null;
+}
+
+/* Material Progress */
+export interface MaterialProgress {
+  id: number;
+  material: {
+    id: number;
+    type: MaterialType;
+    title: string;
+    total_items: number;
+    order: number;
+  };
+  status: 'not_started' | 'in_progress' | 'completed';
+  score: number | null;
+  time_spent_seconds: number;
+  attempts: number;
+  started_at: string | null;
+  completed_at: string | null;
+  answers_data: Record<string, unknown>;
+}
+
+/* Lesson Stats (teacher view) */
+export interface LessonStats {
+  total_enrolled: number;
+  total_materials: number;
+  students_completed_all: number;
+  students_in_progress: number;
+  students_not_started: number;
+  average_score: number | null;
+  highest_score: number | null;
+  lowest_score: number | null;
+  average_time_seconds: number | null;
+  material_stats: MaterialStat[];
+}
+
+/* Material Stat */
+export interface MaterialStat {
+  id: number;
+  title: string;
+  type: MaterialType;
+  total_students: number;
+  completed: number;
+  average_score: number | null;
+}
+
+/* Student Progress Detail (teacher view) */
+export interface StudentProgressDetail {
+  student: MaterialAuthor;
+  enrolled_at: string;
+  materials_completed: number;
+  materials_total: number;
+  completion_percentage: number;
+  average_score: number | null;
+  total_time_seconds: number;
+  progress: MaterialProgress[];
+}
+
+/* My Progress (student view) */
+export interface MyLessonProgress {
+  lesson_id: number;
+  lesson_title: string;
+  materials_completed: number;
+  materials_total: number;
+  completion_percentage: number;
+  average_score: number | null;
+  materials: MaterialProgressItem[];
+}
+
+/* Material Progress Item (for my progress) */
+export interface MaterialProgressItem {
+  id: number;
+  title: string;
+  type: MaterialType;
+  total_items: number;
+  order: number;
+  status: 'not_started' | 'in_progress' | 'completed';
+  score: number | null;
+  time_spent_seconds: number;
+  attempts: number;
+}
+
+/* Invite Link Response */
+export interface InviteLinkResponse {
+  invite_code: string;
+  invite_link: string;
+  message: string;
+}
+
+/* Join Lesson Response */
+export interface JoinLessonResponse {
+  message: string;
+  lesson: LessonDetail;
+}

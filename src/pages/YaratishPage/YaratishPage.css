@@ -1,250 +1,165 @@
 .yaratish-page {
   background: var(--color-bg-secondary);
   min-height: 100vh;
-  padding-bottom: 80px;
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
 }
 
-.yaratish-container {
-  padding: 24px 16px;
-  max-width: 100%;
+/* Purple header – matches app design */
+.yaratish-header {
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 18px 16px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  box-shadow: 0 2px 12px rgba(156, 39, 176, 0.2);
 }
 
-/* Intro Section */
-.yaratish-intro {
-  margin-bottom: 32px;
-  text-align: center;
+.yaratish-header-title {
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 800;
+  color: white;
 }
 
-.yaratish-subtitle {
-  margin: 0 0 12px;
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  letter-spacing: -0.5px;
-}
-
-.yaratish-description {
+.yaratish-header-subtitle {
   margin: 0;
-  font-size: 14px;
-  color: var(--color-text-secondary);
-  line-height: 1.6;
-  max-width: 280px;
-  margin-left: auto;
-  margin-right: auto;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
 }
 
-/* Grid Layout */
-.yaratish-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+/* Container */
+.yaratish-container {
+  padding: 20px 16px;
 }
 
-/* Card Styles */
-.yaratish-card {
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border);
-  border-radius: 16px;
-  padding: 16px;
+/* Option list – single list of four, homework first and featured */
+.yaratish-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+}
+
+.yaratish-option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: 14px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  transition: all 0.2s ease;
+  width: 100%;
   outline: none;
 }
 
-.yaratish-card:hover:not(.yaratish-card-disabled) {
-  border-color: var(--color-primary);
-  box-shadow: 0 8px 24px rgba(156, 39, 176, 0.12);
-  transform: translateY(-4px);
+.yaratish-option:hover:not(.yaratish-option-disabled) {
+  border-color: var(--opt-color, var(--color-primary));
+  box-shadow: 0 4px 12px rgba(156, 39, 176, 0.1);
 }
 
-.yaratish-card:focus-visible:not(.yaratish-card-disabled) {
-  border-color: var(--color-primary);
-  box-shadow: 0 8px 24px rgba(156, 39, 176, 0.12);
+.yaratish-option:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
-.yaratish-card-disabled {
-  opacity: 0.7;
+.yaratish-option-disabled {
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
-/* Card Header */
-.yaratish-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.yaratish-card-icon {
-  font-size: 40px;
-  line-height: 1;
+.yaratish-option-icon {
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Developing Badge */
-.yaratish-badge {
-  background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
-  color: white;
-  font-size: 10px;
-  font-weight: 600;
-  padding: 4px 8px;
+  font-size: 24px;
+  background: var(--color-bg-secondary);
   border-radius: 12px;
-  text-align: center;
-  line-height: 1.2;
-  white-space: nowrap;
-  letter-spacing: 0.3px;
+  flex-shrink: 0;
 }
 
-/* Card Content */
-.yaratish-card-content {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  flex-grow: 1;
+.yaratish-option:not(.yaratish-option-disabled) .yaratish-option-icon {
+  background: rgba(156, 39, 176, 0.14);
 }
 
-.yaratish-card-title {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  letter-spacing: -0.3px;
+/* Primary option: homework – stands out with glow, no link pointer, stays in app */
+.yaratish-option-primary {
+  cursor: default;
+  border-left: 4px solid #8b5cf6;
+  background: linear-gradient(to right, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.03));
+  box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.15), 0 4px 20px rgba(139, 92, 246, 0.12);
 }
 
-.yaratish-card-description {
-  margin: 0;
-  font-size: 12px;
-  color: var(--color-text-secondary);
-  line-height: 1.4;
+.yaratish-option-primary:hover {
+  border-left-color: #7c3aed;
+  box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.2), 0 6px 24px rgba(139, 92, 246, 0.18);
 }
 
-/* Card Footer */
-.yaratish-card-footer {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.yaratish-option-icon-primary {
+  background: rgba(139, 92, 246, 0.2) !important;
+  font-size: 22px;
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.25);
 }
 
-.yaratish-card-cta {
-  font-size: 12px;
+/* Test: text hint that creation continues in bot chat and app closes */
+.yaratish-option-chat-msg {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #9ca3af;
+  line-height: 1.3;
+}
+
+/* Paid badge – compact, for homework and test */
+.yaratish-option-paid {
+  font-size: 11px;
   font-weight: 600;
   color: var(--color-primary);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 4px 8px;
+  background: rgba(156, 39, 176, 0.12);
+  border-radius: 8px;
+  flex-shrink: 0;
 }
 
-.yaratish-card:hover:not(.yaratish-card-disabled) .yaratish-card-cta {
-  color: var(--color-primary-dark);
-  transform: translateX(4px);
+.yaratish-option-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-/* Bottom Spacing */
-.yaratish-bottom-space {
-  height: 20px;
+.yaratish-option-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-primary);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .yaratish-container {
-    padding: 20px 14px;
-  }
-
-  .yaratish-intro {
-    margin-bottom: 28px;
-  }
-
-  .yaratish-subtitle {
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
-
-  .yaratish-description {
-    font-size: 13px;
-  }
-
-  .yaratish-grid {
-    gap: 14px;
-  }
-
-  .yaratish-card {
-    padding: 14px;
-    gap: 10px;
-  }
-
-  .yaratish-card-icon {
-    font-size: 36px;
-  }
-
-  .yaratish-card-title {
-    font-size: 15px;
-  }
-
-  .yaratish-card-description {
-    font-size: 11px;
-  }
+.yaratish-option-desc {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.3;
 }
 
-@media (max-width: 480px) {
-  .yaratish-page {
-    padding-bottom: 70px;
-  }
-
-  .yaratish-container {
-    padding: 18px 12px;
-  }
-
-  .yaratish-intro {
-    margin-bottom: 24px;
-  }
-
-  .yaratish-subtitle {
-    font-size: 22px;
-    margin-bottom: 8px;
-  }
-
-  .yaratish-description {
-    font-size: 12px;
-  }
-
-  .yaratish-grid {
-    gap: 12px;
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .yaratish-card {
-    padding: 12px;
-    gap: 8px;
-  }
-
-  .yaratish-card-icon {
-    font-size: 32px;
-  }
-
-  .yaratish-card-title {
-    font-size: 14px;
-  }
-
-  .yaratish-card-description {
-    font-size: 11px;
-    line-height: 1.3;
-  }
-
-  .yaratish-badge {
-    font-size: 9px;
-    padding: 3px 6px;
-  }
-
-  .yaratish-card-cta {
-    font-size: 11px;
-  }
+.yaratish-option-action {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--opt-color, var(--color-primary));
+  padding: 4px 10px;
+  background: rgba(156, 39, 176, 0.1);
+  border-radius: 10px;
 }
 
-/* Error Overlay */
+.yaratish-option-badge {
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
+  background: #f59e0b;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+/* Error overlay */
 .yaratish-error-overlay {
   position: fixed;
   top: 0;
@@ -287,13 +202,8 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: opacity 0.2s ease;
 }
 
 .yaratish-error-button:hover {
   opacity: 0.9;
-}
-
-.yaratish-error-button:active {
-  opacity: 0.8;
 }

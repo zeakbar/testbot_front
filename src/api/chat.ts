@@ -27,3 +27,11 @@ export async function sendCreateTestMessage(): Promise<SendMessageResponse> {
     data: {},
   });
 }
+
+/** Open balance top-up flow (same as Profile page) – returns to bot chat */
+export async function sendBalanceMessage(): Promise<SendMessageResponse> {
+  return sendMessageToChat({
+    type: 'balance',
+    data: {},
+  });
+}

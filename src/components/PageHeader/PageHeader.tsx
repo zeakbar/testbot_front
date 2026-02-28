@@ -5,7 +5,8 @@ interface PageHeaderProps {
   title?: string;
   icon?: string;
   image?: string;
-  variant?: 'default' | 'special';
+  variant?: 'default' | 'special' | 'gradient-orange' | 'gradient-primary';
+  centerTitle?: boolean;
 }
 
 export const PageHeader: FC<PageHeaderProps> = ({
@@ -13,6 +14,7 @@ export const PageHeader: FC<PageHeaderProps> = ({
   icon,
   image,
   variant = 'default',
+  centerTitle = false,
 }) => {
   if (variant === 'special') {
     return (
@@ -30,7 +32,7 @@ export const PageHeader: FC<PageHeaderProps> = ({
   }
 
   return (
-    <div className="page-header">
+    <div className={`page-header ${variant === 'gradient-orange' ? 'page-header-gradient-orange' : ''} ${variant === 'gradient-primary' ? 'page-header-gradient-primary' : ''} ${centerTitle ? 'page-header-center' : ''}`}>
       {image ? (
         <img src={image} alt="Header Logo" className="page-header-logo-default" />
       ) : (

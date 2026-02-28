@@ -1,0 +1,129 @@
+.meta-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Field */
+.meta-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.meta-field label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.meta-field input,
+.meta-field textarea,
+.meta-field select {
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  font-size: 15px;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+.meta-field input:focus,
+.meta-field textarea:focus,
+.meta-field select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.meta-field textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.meta-hint {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+}
+
+/* Section */
+.meta-section {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.meta-section h3 {
+  margin: 0 0 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.meta-section .meta-field {
+  margin-bottom: 16px;
+}
+
+.meta-section .meta-field:last-child {
+  margin-bottom: 0;
+}
+
+/* Checkbox */
+.meta-checkbox {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.meta-checkbox label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.meta-checkbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--color-primary);
+}
+
+/* Info Section */
+.meta-info {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.meta-info h3 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 14px;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-row span:first-child {
+  color: var(--color-text-secondary);
+}
+
+.info-row span:last-child {
+  color: var(--color-text-primary);
+  font-weight: 500;
+}

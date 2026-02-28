@@ -4,10 +4,12 @@ import { AppRoot } from '@telegram-apps/telegram-ui';
 
 import { routes } from '@/navigation/routes.tsx';
 import { AuthProvider } from '@/context/AuthContext';
+import { PlayerFullscreenProvider, usePlayerFullscreen } from '@/context/PlayerFullscreenContext';
 import { BottomNavigation } from '@/components/BottomNavigation/BottomNavigation';
 
 function AppContent() {
   const location = useLocation();
+  const { hideBottomNav } = usePlayerFullscreen();
   const isQuizPage = /\/test\/\d+\/question\/\d+/.test(location.pathname);
   const isRoulettePlaying = /\/roulette\/\d+\/play/.test(location.pathname);
 
@@ -17,7 +19,7 @@ function AppContent() {
         {routes.map((route) => <Route key={route.path} {...route} />)}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-      {!isQuizPage && !isRoulettePlaying && <BottomNavigation />}
+      {!isQuizPage && !isRoulettePlaying && !hideBottomNav && <BottomNavigation />}
     </>
   );
 }
@@ -32,9 +34,11 @@ export function App() {
       platform={['macos', 'ios'].includes(lp.tgWebAppPlatform) ? 'ios' : 'base'}
     >
       <AuthProvider>
-        <HashRouter>
-          <AppContent />
-        </HashRouter>
+        <PlayerFullscreenProvider>
+          <HashRouter>
+            <AppContent />
+          </HashRouter>
+        </PlayerFullscreenProvider>
       </AuthProvider>
     </AppRoot>
   );

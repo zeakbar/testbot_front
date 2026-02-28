@@ -1,0 +1,205 @@
+.lesson-edit-page {
+  background: var(--color-bg-secondary);
+  min-height: 100vh;
+  padding: 16px;
+  padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px) + 24px);
+}
+
+.lesson-edit-loading,
+.lesson-edit-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+  padding: 20px;
+}
+
+.lesson-edit-error p {
+  margin: 0 0 16px;
+  color: var(--color-text-secondary);
+}
+
+.lesson-edit-error button {
+  padding: 12px 24px;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Purple title bar – matches other page headers */
+.lesson-edit-header {
+  margin: -16px -16px 20px -16px;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 18px 14px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  box-shadow: 0 2px 12px rgba(156, 39, 176, 0.2);
+  font-size: 18px;
+  font-weight: 800;
+  color: white;
+  line-height: 1.2;
+  text-align: left;
+}
+
+/* Messages */
+.lesson-edit-message {
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.lesson-edit-error-msg {
+  background: rgba(255, 59, 48, 0.1);
+  border: 1px solid rgba(255, 59, 48, 0.25);
+  color: #ff3b30;
+}
+
+.lesson-edit-success-msg {
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.25);
+  color: #4CAF50;
+}
+
+/* Form */
+.lesson-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Bordered sections */
+.edit-section {
+  padding: 18px 20px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.edit-section-main {
+  border-left: 4px solid var(--color-primary);
+}
+
+.edit-section-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 10px;
+}
+
+.lesson-edit-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lesson-edit-form .form-group + .form-group {
+  margin-top: 14px;
+}
+
+.lesson-edit-form .form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.lesson-edit-form input[type="text"],
+.lesson-edit-form textarea,
+.lesson-edit-form select {
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  font-size: 15px;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  transition: border-color 0.2s ease;
+}
+
+.lesson-edit-form input:focus,
+.lesson-edit-form textarea:focus,
+.lesson-edit-form select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.1);
+}
+
+.lesson-edit-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Visibility toggle – pill style */
+.visibility-toggle {
+  display: flex;
+  gap: 0;
+  padding: 4px;
+  background: var(--color-bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--color-border-light);
+}
+
+.toggle-option {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggle-option:hover {
+  color: var(--color-text-primary);
+}
+
+.toggle-option.active {
+  background: var(--color-primary);
+  color: white;
+  box-shadow: 0 2px 8px rgba(156, 39, 176, 0.3);
+}
+
+/* Select in section */
+/* Submit button */
+.lesson-edit-submit {
+  margin-top: 8px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px rgba(156, 39, 176, 0.25);
+}
+
+.lesson-edit-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(156, 39, 176, 0.3);
+}
+
+.lesson-edit-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}

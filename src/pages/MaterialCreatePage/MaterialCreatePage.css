@@ -1,0 +1,318 @@
+/* Material Create - matches Lesson Create design for consistent UX */
+.material-create-page {
+  padding: 0;
+  max-width: 600px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--color-bg-primary);
+}
+
+.material-create-form {
+  padding: 20px 16px 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Form sections - same as lesson create */
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-section label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  font-size: 15px;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  transition: border-color 0.2s;
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.5;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.form-hint {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  text-align: right;
+  margin-top: 4px;
+}
+
+/* Generation settings box - same as lesson create */
+.generation-settings {
+  background: var(--color-bg-secondary);
+  border-radius: 14px;
+  padding: 16px;
+  gap: 14px !important;
+  border: 1px solid var(--color-border-light);
+}
+
+.setting-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.setting-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.setting-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.setting-hint {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+}
+
+.form-select {
+  width: 100%;
+  padding: 12px 16px;
+  padding-right: 40px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  font-size: 15px;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  transition: border-color 0.2s;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23757575' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+/* Difficulty segmented control - same as lesson create */
+.difficulty-segmented {
+  display: flex;
+  background: var(--color-bg-primary);
+  border-radius: 10px;
+  padding: 4px;
+  border: 1px solid var(--color-border);
+}
+
+.segmented-btn {
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.segmented-btn.active {
+  background: var(--color-primary);
+  color: white;
+}
+
+/* Number stepper - same as lesson create */
+.number-stepper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 8px 16px;
+}
+
+.stepper-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.stepper-btn:hover:not(:disabled) {
+  background: var(--color-border);
+}
+
+.stepper-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.stepper-value {
+  flex: 1;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+/* Price info - compact inline */
+.material-price-info {
+  background: var(--color-bg-secondary);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid var(--color-border-light);
+}
+
+.price-row-inline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price-row-inline .price-label,
+.price-row-inline .balance-label {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.price-row-inline .price-value {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.price-row-inline .balance-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.price-row-inline .balance-value.insufficient {
+  color: var(--color-danger);
+}
+
+.balance-warning {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-warning, #e65100);
+  text-align: center;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border-light);
+  margin-top: 4px;
+}
+
+/* Form error */
+.form-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(244, 67, 54, 0.1);
+  border-radius: 12px;
+  color: var(--color-danger);
+  font-size: 14px;
+}
+
+/* Generate button - same as lesson create */
+.generate-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 24px;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  background: var(--color-primary);
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(156, 39, 176, 0.4);
+}
+
+.generate-btn:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(156, 39, 176, 0.5);
+}
+
+.generate-btn:active {
+  transform: translateY(0);
+}
+
+.generate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.generate-icon {
+  font-size: 20px;
+}
+
+/* Error state page */
+.material-create-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 16px;
+  text-align: center;
+  padding: 24px;
+}
+
+.material-create-error h2 {
+  color: var(--color-text-primary);
+  font-size: 18px;
+  margin: 0;
+}
+
+.material-create-error button {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .material-create-form {
+    padding: 16px 12px 100px;
+    gap: 16px;
+  }
+
+  .generation-settings {
+    padding: 14px;
+  }
+}

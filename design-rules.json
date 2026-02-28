@@ -1,0 +1,215 @@
+{
+  "meta": {
+    "name": "Ilmoq Frontend Design Rules",
+    "description": "Design system and visual guidelines for the Ilmoq Telegram Mini App",
+    "framework": "React",
+    "buildTool": "Vite",
+    "platform": "Telegram Mini App",
+    "version": "1.0.0"
+  },
+  "colors": {
+    "primary": {
+      "base": "#9C27B0",
+      "light": "#E1BEE7",
+      "dark": "#7B1FA2",
+      "lighter": "#F3E5F5",
+      "description": "Purple - Brand color for CTAs, accents, active states"
+    },
+    "secondary": {
+      "base": "#FF9800",
+      "light": "#FFE0B2",
+      "dark": "#F57C00",
+      "description": "Orange - Accent color for highlights"
+    },
+    "tertiary": {
+      "base": "#00BCD4",
+      "light": "#B2EBF2",
+      "dark": "#00ACC1",
+      "description": "Teal - Highlight color"
+    },
+    "semantic": {
+      "danger": "#F44336",
+      "dangerLight": "#FFEBEE",
+      "success": "#4CAF50",
+      "successLight": "#E8F5E9"
+    },
+    "background": {
+      "primary": "#FFFFFF",
+      "secondary": "#F5F5F5",
+      "tertiary": "#EEEEEE",
+      "dark": "#1A1A1A"
+    },
+    "text": {
+      "primary": "#212121",
+      "secondary": "#757575",
+      "tertiary": "#BDBDBD",
+      "light": "#FFFFFF"
+    },
+    "border": {
+      "base": "#E0E0E0",
+      "light": "#F0F0F0"
+    },
+    "cssVariables": {
+      "primary": "var(--color-primary)",
+      "primaryLight": "var(--color-primary-light)",
+      "primaryDark": "var(--color-primary-dark)",
+      "primaryLighter": "var(--color-primary-lighter)",
+      "secondary": "var(--color-secondary)",
+      "bgPrimary": "var(--color-bg-primary)",
+      "bgSecondary": "var(--color-bg-secondary)",
+      "textPrimary": "var(--color-text-primary)",
+      "textSecondary": "var(--color-text-secondary)",
+      "textTertiary": "var(--color-text-tertiary)",
+      "border": "var(--color-border)",
+      "borderLight": "var(--color-border-light)"
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "primary": "'Lato', sans-serif",
+      "fallback": "sans-serif"
+    },
+    "fontSizes": {
+      "xs": "9px",
+      "sm": "10px",
+      "md": "13px",
+      "base": "14px",
+      "lg": "15px",
+      "xl": "20px",
+      "2xl": "22px",
+      "3xl": "24px",
+      "iconSmall": "22px",
+      "iconMedium": "24px",
+      "iconLarge": "28px",
+      "iconXl": "48px"
+    },
+    "fontWeights": {
+      "regular": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700
+    },
+    "letterSpacing": {
+      "tight": "-0.5px",
+      "normal": "0",
+      "wide": "0.5px"
+    },
+    "lineHeight": {
+      "tight": "1.2",
+      "normal": "1.5"
+    }
+  },
+  "spacing": {
+    "xs": "2px",
+    "sm": "4px",
+    "md": "6px",
+    "base": "8px",
+    "lg": "10px",
+    "xl": "12px",
+    "2xl": "14px",
+    "3xl": "16px",
+    "4xl": "20px",
+    "5xl": "24px",
+    "gaps": [4, 6, 8, 10, 12],
+    "padding": {
+      "page": "16px",
+      "card": "16px 20px",
+      "button": "14px 20px",
+      "input": "12px 16px",
+      "header": "20px 16px",
+      "bottomNav": "8px 12px"
+    }
+  },
+  "borderRadius": {
+    "sm": "8px",
+    "md": "14px",
+    "lg": "20px",
+    "xl": "24px",
+    "pill": "20px",
+    "full": "9999px"
+  },
+  "shadows": {
+    "sm": "0 2px 8px rgba(0, 0, 0, 0.05)",
+    "md": "0 2px 12px rgba(0, 0, 0, 0.08)",
+    "lg": "0 4px 16px rgba(0, 0, 0, 0.1)"
+  },
+  "gradients": {
+    "primary": "linear-gradient(135deg, #9C27B0 0%, #7B1FA2 100%)",
+    "secondary": "linear-gradient(135deg, #FF9800 0%, #F57C00 100%)",
+    "tertiary": "linear-gradient(135deg, #00BCD4 0%, #00ACC1 100%)",
+    "headerLight": "linear-gradient(135deg, var(--color-primary-light) 0%, #f0e6f5 100%)",
+    "pageBgLight": "linear-gradient(135deg, var(--color-primary-light) 0%, #f5f5f5 100%)"
+  },
+  "motion": {
+    "duration": {
+      "fast": "0.2s",
+      "normal": "0.3s",
+      "slow": "0.4s"
+    },
+    "easing": {
+      "ease": "ease",
+      "smooth": "cubic-bezier(0.4, 0, 0.2, 1)"
+    }
+  },
+  "breakpoints": {
+    "mobile": "480px",
+    "tablet": "768px",
+    "desktop": "1024px"
+  },
+  "layout": {
+    "maxWidth": "100%",
+    "bottomNavHeight": "70px",
+    "bottomNavHeightMobile": "65px",
+    "safeArea": "max(env(safe-area-inset-bottom), 0px)"
+  },
+  "components": {
+    "pageHeader": {
+      "background": "gradient.primary",
+      "padding": "20px 16px",
+      "titleSize": "24px",
+      "titleWeight": 700
+    },
+    "buttons": {
+      "primary": {
+        "background": "var(--color-primary)",
+        "color": "white",
+        "borderRadius": "14px",
+        "padding": "14px 20px",
+        "fontSize": "15px",
+        "fontWeight": 600
+      },
+      "secondary": {
+        "background": "var(--color-bg-primary)",
+        "color": "var(--color-text-primary)",
+        "border": "1px solid var(--color-border)",
+        "borderRadius": "14px"
+      }
+    },
+    "cards": {
+      "background": "var(--color-bg-primary)",
+      "border": "1px solid var(--color-border)",
+      "borderRadius": "14px",
+      "padding": "16px",
+      "accentBorder": "4px solid var(--color-primary)"
+    },
+    "inputs": {
+      "background": "var(--color-bg-primary)",
+      "border": "1px solid var(--color-border)",
+      "borderRadius": "12px",
+      "focusBorderColor": "var(--color-primary)"
+    }
+  },
+  "rules": [
+    "Use CSS variables (--color-*) instead of hardcoded colors",
+    "Use Lato font family for all text",
+    "Apply safe-area-inset-bottom for bottom navigation on mobile",
+    "Primary actions use var(--color-primary) background",
+    "Cards use var(--color-bg-primary) with var(--color-border) borders",
+    "Text hierarchy: primary for headings, secondary for body, tertiary for hints",
+    "Use 135deg gradients for headers and hero sections",
+    "Border radius: 14px for buttons/cards, 20–24px for sections",
+    "Breakpoints: 480px (mobile), 768px (tablet) for responsive adjustments",
+    "Transitions: 0.2s ease for hover, 0.3s cubic-bezier for animations",
+    "Material detail pages: Put prev/next nav buttons in one row (icon-only, ← left / → right); put edit/delete in one row (icon-only) to save space"
+  ]
+}

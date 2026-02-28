@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { miniApp } from '@tma.js/sdk-react';
 import { Page } from '@/components/Page';
-import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { Loading } from '@/components/Loading/Loading';
 import { sendCreateTestMessage } from '@/api/chat';
+import { MATERIAL_CONFIGS, formatPrice, getHomeworkPrice, type MaterialType } from '@/api/materials';
 import './YaratishPage.css';
 
 interface CreationOption {
@@ -13,48 +13,55 @@ interface CreationOption {
   title: string;
   description: string;
   icon: string;
+  color?: string;
   isDeveloping: boolean;
   route?: string;
+  /** Price in UZS - null means flexible/bot pricing */
+  price: number | null;
+  /** Display text when price is flexible (e.g. ~2 000 so'm) */
+  priceDisplay?: string;
+  /** Show compact "Pullik" badge instead of price */
+  isPaid?: boolean;
+  /** Material type for navigation */
+  materialType?: MaterialType;
 }
 
-const creationOptions: CreationOption[] = [
+// Build creation options: Test, Flashcards, Roulette
+const buildCreationOptions = (): CreationOption[] => [
   {
     id: 'test',
     title: 'Test',
-    description: 'O\'z bilimingizni testlab ko\'ring va to\'liq tahlil oling',
+    description: "O'z bilimingizni testlab ko'ring va to'liq tahlil oling",
     icon: '📝',
     isDeveloping: false,
+    price: 0,
+    priceDisplay: "~ Bepul",
+  },
+  {
+    id: 'flashcards',
+    title: MATERIAL_CONFIGS.flashcards.title,
+    description: MATERIAL_CONFIGS.flashcards.description,
+    icon: MATERIAL_CONFIGS.flashcards.icon,
+    color: MATERIAL_CONFIGS.flashcards.color,
+    isDeveloping: !MATERIAL_CONFIGS.flashcards.enabled,
+    route: '/material/create/flashcards',
+    price: MATERIAL_CONFIGS.flashcards.price,
+    materialType: 'flashcards',
   },
   {
     id: 'roulette',
-    title: 'Ruletka',
-    description: 'O\'yinli o\'rganish uchun ruletka yarating',
-    icon: '🎡',
-    isDeveloping: false,
-    route: '/roulette/create',
-  },
-  {
-    id: 'flashcard',
-    title: 'FlashCard',
-    description: 'Tez o\'rganish uchun flash kartalarni yarating',
-    icon: '🎴',
-    isDeveloping: true,
-  },
-  {
-    id: 'lesson',
-    title: 'Interaktive Lesson',
-    description: 'Chuqur o\'rganish uchun interaktiv dars yarating',
-    icon: '🎓',
-    isDeveloping: true,
-  },
-  {
-    id: 'topic',
-    title: 'Mavzuni tushinish',
-    description: 'Mavzuni yaxshiroq tushunish uchun qo\'llanma yarating',
-    icon: '🧠',
-    isDeveloping: true,
+    title: MATERIAL_CONFIGS.roulette.title,
+    description: MATERIAL_CONFIGS.roulette.description,
+    icon: MATERIAL_CONFIGS.roulette.icon,
+    color: MATERIAL_CONFIGS.roulette.color,
+    isDeveloping: !MATERIAL_CONFIGS.roulette.enabled,
+    route: '/material/create/roulette',
+    price: MATERIAL_CONFIGS.roulette.price,
+    materialType: 'roulette',
   },
 ];
+
+const creationOptions = buildCreationOptions();
 
 export const YaratishPage: FC = () => {
   const navigate = useNavigate();
@@ -66,11 +73,13 @@ export const YaratishPage: FC = () => {
       return;
     }
 
-    if (option.route) {
+    // Material types - navigate to create page
+    if (option.route && option.materialType) {
       navigate(option.route);
       return;
     }
 
+    // Test - uses bot interaction
     if (option.id === 'test') {
       try {
         setError(null);
@@ -85,7 +94,7 @@ export const YaratishPage: FC = () => {
           setIsLoading(false);
         }
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Noma\'lum xatolik yuz berdi';
+        const errorMessage = err instanceof Error ? err.message : "Noma'lum xatolik yuz berdi";
         setError(errorMessage);
         setIsLoading(false);
         console.error('[Create Test] Error:', err);
@@ -96,57 +105,62 @@ export const YaratishPage: FC = () => {
   return (
     <Page back={true}>
       <div className="yaratish-page">
-        <PageHeader title="Yaratish" />
+        <div className="yaratish-header">
+          <h1 className="yaratish-header-title">Yaratish</h1>
+          <p className="yaratish-header-subtitle">Nima yaratmoqchisiz?</p>
+        </div>
 
         <div className="yaratish-container">
-          <div className="yaratish-intro">
-            <h2 className="yaratish-subtitle">Nima yaratmoqchisiz?</h2>
-            <p className="yaratish-description">
-              Siz xohlagan turdagi ta'lim materialini yarating. AI yordamida tezroq va osonroq!
-            </p>
-          </div>
+          <div className="yaratish-list">
+            {/* Primary: homework – first in one list, featured (stays in app) */}
+            <button
+              type="button"
+              className="yaratish-option yaratish-option-primary"
+              onClick={() => navigate('/lesson/generate-ai')}
+            >
+              <span className="yaratish-option-icon yaratish-option-icon-primary">⚡</span>
+              <div className="yaratish-option-info">
+                <span className="yaratish-option-title">Uyga vazifa yarating</span>
+                <span className="yaratish-option-desc">O'quvchilaringiz uchun interaktiv uyga vazifalar yarating!</span>
+              </div>
+              <span className="yaratish-option-paid">~ {formatPrice(getHomeworkPrice(5))}</span>
+            </button>
 
-          <div className="yaratish-grid">
             {creationOptions.map((option) => (
-              <div
+              <button
                 key={option.id}
-                className={`yaratish-card ${option.isDeveloping ? 'yaratish-card-disabled' : ''}`}
+                type="button"
+                className={`yaratish-option ${option.isDeveloping ? 'yaratish-option-disabled' : ''}`}
                 onClick={() => handleCreateClick(option)}
-                role={option.isDeveloping ? 'presentation' : 'button'}
-                tabIndex={option.isDeveloping ? -1 : 0}
-                onKeyDown={
-                  !option.isDeveloping
-                    ? (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          handleCreateClick(option);
-                        }
-                      }
-                    : undefined
-                }
+                disabled={option.isDeveloping}
+                style={option.color && !option.isDeveloping ? { '--opt-color': option.color } as React.CSSProperties : undefined}
               >
-                <div className="yaratish-card-header">
-                  <div className="yaratish-card-icon">{option.icon}</div>
-                  {option.isDeveloping && (
-                    <span className="yaratish-badge">Tayyorlash jarayonida</span>
+                <span className="yaratish-option-icon">{option.icon}</span>
+                <div className="yaratish-option-info">
+                  <span className="yaratish-option-title">{option.title}</span>
+                  <span className="yaratish-option-desc">{option.description}</span>
+                  {option.id === 'test' && !option.isDeveloping && (
+                    <span className="yaratish-option-chat-msg" aria-label="Bot chatda davom etadi, ilova yopiladi">
+                      Bot chatda yaratiladi — ilova yopiladi
+                    </span>
                   )}
                 </div>
-
-                <div className="yaratish-card-content">
-                  <h3 className="yaratish-card-title">{option.title}</h3>
-                  <p className="yaratish-card-description">{option.description}</p>
-                </div>
-
                 {!option.isDeveloping && (
-                  <div className="yaratish-card-footer">
-                    <span className="yaratish-card-cta">Yaratish →</span>
-                  </div>
+                  option.isPaid ? (
+                    <span className="yaratish-option-paid">{option.priceDisplay ?? 'Pullik'}</span>
+                  ) : (
+                    <span className="yaratish-option-action">
+                      {option.priceDisplay ?? (option.price !== null ? formatPrice(option.price) : 'Bepul')}
+                    </span>
+                  )
                 )}
-              </div>
+                {option.isDeveloping && (
+                  <span className="yaratish-option-badge">Tez kunda</span>
+                )}
+              </button>
             ))}
           </div>
         </div>
-
-        <div className="yaratish-bottom-space"></div>
       </div>
 
       {isLoading && <Loading message="" />}

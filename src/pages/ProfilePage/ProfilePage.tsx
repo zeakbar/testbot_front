@@ -1,8 +1,8 @@
 import type { FC } from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLaunchParams, miniApp } from '@tma.js/sdk-react';
-import { FiDollarSign, FiPlus } from 'react-icons/fi';
+import { FiDollarSign, FiPlus, FiMoreVertical, FiSettings, FiChevronRight } from 'react-icons/fi';
 import { Page } from '@/components/Page';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { TestCardHorizontal } from '@/components/TestCardHorizontal/TestCardHorizontal';
@@ -13,41 +13,80 @@ import { sendMessageToChat } from '@/api/chat';
 import { getUserSolvedTests } from '@/api/solvedTests';
 import { getUserQuizzes, getTestById } from '@/api/quiz';
 import { QuizHostingCard } from '@/components/QuizHostingCard/QuizHostingCard';
-import { getMyRoulettes } from '@/api/roulette';
-import type { User, Test, UserStats, Quiz, Roulette } from '@/api/types';
+import { getMyLessons } from '@/api/lessons';
+import { getMyMaterials, getMaterialConfig, type MaterialType } from '@/api/materials';
+import type { User, Test, UserStats, Quiz, Lesson, MaterialListItem } from '@/api/types';
 import './ProfilePage.css';
 
-type TabType = 'tests' | 'hosted' | 'played' | 'roulettes';
+type MainTabType = 'created' | 'activity';
+type CreatedFilterType = 'lessons' | 'tests' | 'materials';
+type ActivityFilterType = 'solved' | 'hosted';
 
 export const ProfilePage: FC = () => {
   const navigate = useNavigate();
   const launchParams = useLaunchParams();
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const [user, setUser] = useState<User | null>(null);
   const [stats, setStats] = useState<UserStats | null>(null);
   const [tests, setTests] = useState<Test[]>([]);
   const [solvedTests, setSolvedTests] = useState<Test[]>([]);
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
-  const [roulettes, setRoulettes] = useState<Roulette[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [solvedTestsCurrentPage, setSolvedTestsCurrentPage] = useState(1);
-  const [quizzesCurrentPage, setQuizzesCurrentPage] = useState(1);
-  const [roulettesCurrentPage, setRoulettesCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [materials, setMaterials] = useState<MaterialListItem[]>([]);
+  
+  // Pagination states
+  const [testsPage, setTestsPage] = useState(1);
+  const [testsTotalPages, setTestsTotalPages] = useState(1);
+  const [solvedTestsPage, setSolvedTestsPage] = useState(1);
   const [solvedTestsTotalPages, setSolvedTestsTotalPages] = useState(1);
+  const [quizzesPage, setQuizzesPage] = useState(1);
   const [quizzesTotalPages, setQuizzesTotalPages] = useState(1);
-  const [roulettesTotalPages, setRoulettesTotalPages] = useState(1);
-  const [activeTab, setActiveTab] = useState<TabType>('tests');
+  const [lessonsPage, setLessonsPage] = useState(1);
+  const [lessonsTotalPages, setLessonsTotalPages] = useState(1);
+  const [materialsPage, setMaterialsPage] = useState(1);
+  const [materialsTotalPages, setMaterialsTotalPages] = useState(1);
+
+  // Tab states
+  const [mainTab, setMainTab] = useState<MainTabType>('created');
+  const [createdFilter, setCreatedFilter] = useState<CreatedFilterType>('lessons');
+  const [activityFilter, setActivityFilter] = useState<ActivityFilterType>('solved');
+  
+  // Loading states
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingTests, setIsLoadingTests] = useState(false);
   const [isLoadingSolvedTests, setIsLoadingSolvedTests] = useState(false);
   const [isLoadingQuizzes, setIsLoadingQuizzes] = useState(false);
-  const [isLoadingRoulettes, setIsLoadingRoulettes] = useState(false);
+  const [isLoadingLessons, setIsLoadingLessons] = useState(false);
+  const [isLoadingMaterials, setIsLoadingMaterials] = useState(false);
   const [isLoadingBalance, setIsLoadingBalance] = useState(false);
+  
+  // Loaded flags
   const [hasLoadedTests, setHasLoadedTests] = useState(false);
   const [hasLoadedSolvedTests, setHasLoadedSolvedTests] = useState(false);
   const [hasLoadedQuizzes, setHasLoadedQuizzes] = useState(false);
-  const [hasLoadedRoulettes, setHasLoadedRoulettes] = useState(false);
+  const [hasLoadedLessons, setHasLoadedLessons] = useState(false);
+  const [hasLoadedMaterials, setHasLoadedMaterials] = useState(false);
+
+  // Menu state
+  const [showMenu, setShowMenu] = useState(false);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+
+    if (showMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showMenu]);
 
   useEffect(() => {
     const loadUserProfile = async () => {
@@ -66,34 +105,81 @@ export const ProfilePage: FC = () => {
     loadUserProfile();
   }, []);
 
+  // Load data based on active tab and filter
   useEffect(() => {
-    if (activeTab === 'tests' && !hasLoadedTests) {
-      loadTests(1);
-      setHasLoadedTests(true);
-    } else if (activeTab === 'played' && !hasLoadedSolvedTests) {
-      loadSolvedTests(1);
-      setHasLoadedSolvedTests(true);
-    } else if (activeTab === 'hosted' && !hasLoadedQuizzes) {
-      loadQuizzes(1);
-      setHasLoadedQuizzes(true);
-    } else if (activeTab === 'roulettes' && !hasLoadedRoulettes) {
-      loadRoulettes(1);
-      setHasLoadedRoulettes(true);
+    if (mainTab === 'created') {
+      if (createdFilter === 'lessons' && !hasLoadedLessons) {
+        loadLessons(1);
+      } else if (createdFilter === 'tests' && !hasLoadedTests) {
+        loadTests(1);
+      } else if (createdFilter === 'materials' && !hasLoadedMaterials) {
+        loadMaterials(1);
+      }
+    } else if (mainTab === 'activity') {
+      if (activityFilter === 'solved' && !hasLoadedSolvedTests) {
+        loadSolvedTests(1);
+      } else if (activityFilter === 'hosted' && !hasLoadedQuizzes) {
+        loadQuizzes(1);
+      }
     }
-  }, [activeTab]);
+  }, [mainTab, createdFilter, activityFilter, hasLoadedLessons, hasLoadedTests, hasLoadedMaterials, hasLoadedSolvedTests, hasLoadedQuizzes]);
+
+  const loadLessons = async (page: number) => {
+    try {
+      setIsLoadingLessons(true);
+      const response = await getMyLessons(page, 10);
+      // Handle both paginated and non-paginated responses
+      const lessonsList = Array.isArray(response) ? response : (response?.results || []);
+      const totalCount = Array.isArray(response) ? response.length : (response?.count || 0);
+      setLessons(lessonsList);
+      setLessonsTotalPages(Math.ceil(totalCount / 10));
+      setLessonsPage(page);
+      setHasLoadedLessons(true);
+    } catch (error) {
+      console.error('Failed to load lessons:', error);
+      setLessons([]);
+      setHasLoadedLessons(true);
+    } finally {
+      setIsLoadingLessons(false);
+    }
+  };
+
+  const loadMaterials = async (page: number) => {
+    try {
+      setIsLoadingMaterials(true);
+      // Only load standalone materials (not attached to any lesson)
+      const response = await getMyMaterials(page, 10, undefined, true);
+      // Handle both paginated and non-paginated responses
+      const materialsList = Array.isArray(response) ? response : (response?.results || []);
+      const totalCount = Array.isArray(response) ? response.length : (response?.count || 0);
+      setMaterials(materialsList);
+      setMaterialsTotalPages(Math.ceil(totalCount / 10));
+      setMaterialsPage(page);
+      setHasLoadedMaterials(true);
+    } catch (error) {
+      console.error('Failed to load materials:', error);
+      setMaterials([]);
+      setHasLoadedMaterials(true);
+    } finally {
+      setIsLoadingMaterials(false);
+    }
+  };
 
   const loadTests = async (page: number) => {
     try {
       setIsLoadingTests(true);
       const response = await getMyTests(page, 10);
-      setTests(response.results);
-      setTotalPages(Math.ceil(response.count / 10));
-      setCurrentPage(page);
-      if (!hasLoadedTests) {
-        setHasLoadedTests(true);
-      }
+      // Handle both paginated and non-paginated responses
+      const testsList = Array.isArray(response) ? response : (response?.results || []);
+      const totalCount = Array.isArray(response) ? response.length : (response?.count || 0);
+      setTests(testsList);
+      setTestsTotalPages(Math.ceil(totalCount / 10));
+      setTestsPage(page);
+      setHasLoadedTests(true);
     } catch (error) {
       console.error('Failed to load user tests:', error);
+      setTests([]);
+      setHasLoadedTests(true);
     } finally {
       setIsLoadingTests(false);
     }
@@ -103,14 +189,17 @@ export const ProfilePage: FC = () => {
     try {
       setIsLoadingSolvedTests(true);
       const response = await getUserSolvedTests(page, 10);
-      setSolvedTests(response.results as Test[]);
-      setSolvedTestsTotalPages(Math.ceil(response.count / 10));
-      setSolvedTestsCurrentPage(page);
-      if (!hasLoadedSolvedTests) {
-        setHasLoadedSolvedTests(true);
-      }
+      // Handle both paginated and non-paginated responses
+      const solvedList = Array.isArray(response) ? response : (response?.results || []);
+      const totalCount = Array.isArray(response) ? response.length : (response?.count || 0);
+      setSolvedTests(solvedList as Test[]);
+      setSolvedTestsTotalPages(Math.ceil(totalCount / 10));
+      setSolvedTestsPage(page);
+      setHasLoadedSolvedTests(true);
     } catch (error) {
       console.error('Failed to load solved tests:', error);
+      setSolvedTests([]);
+      setHasLoadedSolvedTests(true);
     } finally {
       setIsLoadingSolvedTests(false);
     }
@@ -120,10 +209,13 @@ export const ProfilePage: FC = () => {
     try {
       setIsLoadingQuizzes(true);
       const response = await getUserQuizzes(page, 10);
+      // Handle both paginated and non-paginated responses
+      const quizzesList = Array.isArray(response) ? response : (response?.results || []);
+      const totalCount = Array.isArray(response) ? response.length : (response?.count || 0);
 
       // Fetch test details for each quiz
       const quizzesWithTests = await Promise.all(
-        response.results.map(async (quiz) => {
+        quizzesList.map(async (quiz) => {
           try {
             if (typeof quiz.test === 'number') {
               const testData = await getTestById(String(quiz.test));
@@ -138,32 +230,15 @@ export const ProfilePage: FC = () => {
       );
 
       setQuizzes(quizzesWithTests);
-      setQuizzesTotalPages(Math.ceil(response.count / 10));
-      setQuizzesCurrentPage(page);
-      if (!hasLoadedQuizzes) {
-        setHasLoadedQuizzes(true);
-      }
+      setQuizzesTotalPages(Math.ceil(totalCount / 10));
+      setQuizzesPage(page);
+      setHasLoadedQuizzes(true);
     } catch (error) {
       console.error('Failed to load quizzes:', error);
+      setQuizzes([]);
+      setHasLoadedQuizzes(true);
     } finally {
       setIsLoadingQuizzes(false);
-    }
-  };
-
-  const loadRoulettes = async (page: number) => {
-    try {
-      setIsLoadingRoulettes(true);
-      const response = await getMyRoulettes(page, 10);
-      setRoulettes(response.results);
-      setRoulettesTotalPages(Math.ceil(response.count / 10));
-      setRoulettesCurrentPage(page);
-      if (!hasLoadedRoulettes) {
-        setHasLoadedRoulettes(true);
-      }
-    } catch (error) {
-      console.error('Failed to load roulettes:', error);
-    } finally {
-      setIsLoadingRoulettes(false);
     }
   };
 
@@ -209,6 +284,15 @@ export const ProfilePage: FC = () => {
     };
   };
 
+  const configForType = (type: string) => {
+    if (!type) return getMaterialConfig('quiz');
+    const t = String(type)
+      .replace(/^flashcard$/, 'flashcards')
+      .replace(/^fill_blank$/, 'fill_blanks')
+      .replace(/multiple_choice/, 'quiz');
+    return getMaterialConfig(t as MaterialType) ?? getMaterialConfig('quiz');
+  };
+
   if (isLoading) {
     return (
       <Page back={false}>
@@ -231,6 +315,367 @@ export const ProfilePage: FC = () => {
     );
   }
 
+  const renderCreatedContent = () => {
+    if (createdFilter === 'lessons') {
+      if (isLoadingLessons) {
+        return (
+          <div className="profile-content-loading">
+            <Loading message="Uyga vazifalar yuklanmoqda..." />
+          </div>
+        );
+      }
+      
+      if (!lessons || lessons.length === 0) {
+        return (
+          <div className="profile-empty-state">
+            <div className="profile-empty-icon">📚</div>
+            <p className="profile-empty-message">Hali hech qanday uyga vazifa yaratilmagan</p>
+            <button 
+              className="profile-empty-action"
+              onClick={() => navigate('/lesson/generate-ai')}
+            >
+              Yangi uyga vazifa yaratish
+            </button>
+          </div>
+        );
+      }
+
+      return (
+        <>
+          <div className="profile-lessons-list">
+            {lessons.map((lesson) => (
+              <div
+                key={lesson.id}
+                className="profile-lesson-card"
+                onClick={() => navigate(`/lesson/${lesson.id}`)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') navigate(`/lesson/${lesson.id}`);
+                }}
+              >
+                <div className="profile-lesson-content">
+                  <h3 className="profile-lesson-title">{lesson.title}</h3>
+                  {lesson.description && (
+                    <p className="profile-lesson-description">{lesson.description}</p>
+                  )}
+                  <div className="profile-lesson-meta">
+                    <span className="profile-lesson-subject">{lesson.subject}</span>
+                    <span className="profile-lesson-dot">•</span>
+                    <span>{lesson.materials_count || 0} material</span>
+                  </div>
+                </div>
+                <FiChevronRight className="profile-lesson-arrow" />
+              </div>
+            ))}
+          </div>
+          {lessonsTotalPages > 1 && (
+            <div className="profile-pagination">
+              <button
+                className="profile-pagination-button"
+                onClick={() => loadLessons(lessonsPage - 1)}
+                disabled={lessonsPage === 1}
+                type="button"
+              >
+                Oldingi
+              </button>
+              <span className="profile-pagination-info">
+                {lessonsPage} / {lessonsTotalPages}
+              </span>
+              <button
+                className="profile-pagination-button"
+                onClick={() => loadLessons(lessonsPage + 1)}
+                disabled={lessonsPage === lessonsTotalPages}
+                type="button"
+              >
+                Keyingi
+              </button>
+            </div>
+          )}
+        </>
+      );
+    }
+
+    if (createdFilter === 'tests') {
+      if (isLoadingTests) {
+        return (
+          <div className="profile-content-loading">
+            <Loading message="Testlar yuklanmoqda..." />
+          </div>
+        );
+      }
+
+      if (!tests || tests.length === 0) {
+        return (
+          <div className="profile-empty-state">
+            <div className="profile-empty-icon">📝</div>
+            <p className="profile-empty-message">Hali hech qanday test yaratilmagan</p>
+            <button 
+              className="profile-empty-action"
+              onClick={() => navigate('/yaratish')}
+            >
+              Yangi test yaratish
+            </button>
+          </div>
+        );
+      }
+
+      return (
+        <>
+          <div className="profile-tests-list">
+            {tests.map((test) => (
+              <TestCardHorizontal
+                key={test.id}
+                test={test}
+                onClick={() => navigate(`/test/${test.id}`)}
+              />
+            ))}
+          </div>
+          {testsTotalPages > 1 && (
+            <div className="profile-pagination">
+              <button
+                className="profile-pagination-button"
+                onClick={() => loadTests(testsPage - 1)}
+                disabled={testsPage === 1}
+                type="button"
+              >
+                Oldingi
+              </button>
+              <span className="profile-pagination-info">
+                {testsPage} / {testsTotalPages}
+              </span>
+              <button
+                className="profile-pagination-button"
+                onClick={() => loadTests(testsPage + 1)}
+                disabled={testsPage === testsTotalPages}
+                type="button"
+              >
+                Keyingi
+              </button>
+            </div>
+          )}
+        </>
+      );
+    }
+
+    if (createdFilter === 'materials') {
+      if (isLoadingMaterials) {
+        return (
+          <div className="profile-content-loading">
+            <Loading message="Materiallar yuklanmoqda..." />
+          </div>
+        );
+      }
+
+      if (!materials || materials.length === 0) {
+        return (
+          <div className="profile-empty-state">
+            <div className="profile-empty-icon">📄</div>
+            <p className="profile-empty-message">Hali hech qanday material yaratilmagan</p>
+            <button 
+              className="profile-empty-action"
+              onClick={() => navigate('/material/create/multiple_choice')}
+            >
+              Yangi material yaratish
+            </button>
+          </div>
+        );
+      }
+
+      return (
+        <>
+          <div className="profile-materials-list">
+            {materials.map((material) => {
+              const config = configForType(material.type);
+              return (
+              <div
+                key={material.id}
+                className="profile-material-card"
+                onClick={() => navigate(`/material/${material.id}`)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') navigate(`/material/${material.id}`);
+                }}
+              >
+                <div
+                  className="profile-material-type-badge"
+                  style={{ backgroundColor: `${config.color}20`, color: config.color }}
+                  title={config.title}
+                >
+                  {config.icon}
+                </div>
+                <div className="profile-material-content">
+                  <h3 className="profile-material-title">{material.title || 'Material'}</h3>
+                  <div className="profile-material-meta">
+                    <span>{material.difficulty === 'easy' ? 'Oson' : material.difficulty === 'medium' ? "O'rta" : 'Qiyin'}</span>
+                    <span className="profile-material-dot">•</span>
+                    <span>{material.language === 'uz' ? "O'zbekcha" : material.language === 'ru' ? 'Русский' : 'English'}</span>
+                  </div>
+                </div>
+                <FiChevronRight className="profile-material-arrow" />
+              </div>
+            );
+            })}
+          </div>
+          {materialsTotalPages > 1 && (
+            <div className="profile-pagination">
+              <button
+                className="profile-pagination-button"
+                onClick={() => loadMaterials(materialsPage - 1)}
+                disabled={materialsPage === 1}
+                type="button"
+              >
+                Oldingi
+              </button>
+              <span className="profile-pagination-info">
+                {materialsPage} / {materialsTotalPages}
+              </span>
+              <button
+                className="profile-pagination-button"
+                onClick={() => loadMaterials(materialsPage + 1)}
+                disabled={materialsPage === materialsTotalPages}
+                type="button"
+              >
+                Keyingi
+              </button>
+            </div>
+          )}
+        </>
+      );
+    }
+
+    return null;
+  };
+
+  const renderActivityContent = () => {
+    if (activityFilter === 'solved') {
+      if (isLoadingSolvedTests) {
+        return (
+          <div className="profile-content-loading">
+            <Loading message="Yechilgan testlar yuklanmoqda..." />
+          </div>
+        );
+      }
+
+      if (!solvedTests || solvedTests.length === 0) {
+        return (
+          <div className="profile-empty-state">
+            <div className="profile-empty-icon">✅</div>
+            <p className="profile-empty-message">Hali hech qanday test yechilmagan</p>
+            <button 
+              className="profile-empty-action"
+              onClick={() => navigate('/')}
+            >
+              Testlarni ko'rish
+            </button>
+          </div>
+        );
+      }
+
+      return (
+        <>
+          <div className="profile-tests-list">
+            {solvedTests.map((test) => (
+              <TestCardHorizontal
+                key={test.id}
+                test={test}
+                onClick={() => navigate(`/test/${test.id}`)}
+              />
+            ))}
+          </div>
+          {solvedTestsTotalPages > 1 && (
+            <div className="profile-pagination">
+              <button
+                className="profile-pagination-button"
+                onClick={() => loadSolvedTests(solvedTestsPage - 1)}
+                disabled={solvedTestsPage === 1}
+                type="button"
+              >
+                Oldingi
+              </button>
+              <span className="profile-pagination-info">
+                {solvedTestsPage} / {solvedTestsTotalPages}
+              </span>
+              <button
+                className="profile-pagination-button"
+                onClick={() => loadSolvedTests(solvedTestsPage + 1)}
+                disabled={solvedTestsPage === solvedTestsTotalPages}
+                type="button"
+              >
+                Keyingi
+              </button>
+            </div>
+          )}
+        </>
+      );
+    }
+
+    if (activityFilter === 'hosted') {
+      if (isLoadingQuizzes) {
+        return (
+          <div className="profile-content-loading">
+            <Loading message="Hostinglar yuklanmoqda..." />
+          </div>
+        );
+      }
+
+      if (!quizzes || quizzes.length === 0) {
+        return (
+          <div className="profile-empty-state">
+            <div className="profile-empty-icon">🎮</div>
+            <p className="profile-empty-message">Hali hech qanday quiz hosting qilinmagan</p>
+            <button 
+              className="profile-empty-action"
+              onClick={() => navigate('/')}
+            >
+              Testlarni ko'rish
+            </button>
+          </div>
+        );
+      }
+
+      return (
+        <>
+          <div className="profile-tests-list">
+            {quizzes.map((quiz) => (
+              <QuizHostingCard
+                key={quiz.id}
+                quiz={quiz}
+                onClick={() => navigate(`/quiz/${quiz.id}`)}
+              />
+            ))}
+          </div>
+          {quizzesTotalPages > 1 && (
+            <div className="profile-pagination">
+              <button
+                className="profile-pagination-button"
+                onClick={() => loadQuizzes(quizzesPage - 1)}
+                disabled={quizzesPage === 1}
+                type="button"
+              >
+                Oldingi
+              </button>
+              <span className="profile-pagination-info">
+                {quizzesPage} / {quizzesTotalPages}
+              </span>
+              <button
+                className="profile-pagination-button"
+                onClick={() => loadQuizzes(quizzesPage + 1)}
+                disabled={quizzesPage === quizzesTotalPages}
+                type="button"
+              >
+                Keyingi
+              </button>
+            </div>
+          )}
+        </>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <Page back={false}>
       <div className="profile-page">
@@ -240,6 +685,32 @@ export const ProfilePage: FC = () => {
         <div className="profile-header-section">
           {/* Profile Card */}
           <div className="profile-card">
+            {/* 3-dot Menu */}
+            <div className="profile-menu-container" ref={menuRef}>
+              <button
+                className="profile-menu-button"
+                onClick={() => setShowMenu(!showMenu)}
+                type="button"
+                aria-label="Menu"
+              >
+                <FiMoreVertical />
+              </button>
+              {showMenu && (
+                <div className="profile-menu-dropdown">
+                  <button
+                    className="profile-menu-item"
+                    onClick={() => {
+                      setShowMenu(false);
+                      navigate('/teacher/settings');
+                    }}
+                  >
+                    <FiSettings />
+                    <span>Sozlamalar</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
             <div className="profile-card-top">
               {/* Profile Photo */}
               <div className="profile-avatar-wrapper">
@@ -278,11 +749,6 @@ export const ProfilePage: FC = () => {
                     <span className="quick-stat-value">{stats.solved_tests}</span>
                     <span className="quick-stat-label">Yechilgan</span>
                   </div>
-                  <div className="quick-stat-divider"></div>
-                  {/* <div className="quick-stat">
-                    <span className="quick-stat-value">{calculateMemberSince(user.created || '').days}d</span>
-                    <span className="quick-stat-label">Kunlar</span>
-                  </div> */}
                 </>
               )}
             </div>
@@ -320,273 +786,75 @@ export const ProfilePage: FC = () => {
           </p>
         </div>
 
-        {/* Tabs */}
+        {/* Main Tabs */}
         <div className="profile-tabs-wrapper">
           <div className="profile-tabs-container">
             <button
-              className={`profile-tab ${activeTab === 'tests' ? 'profile-tab-active' : ''}`}
-              onClick={() => setActiveTab('tests')}
+              className={`profile-tab ${mainTab === 'created' ? 'profile-tab-active' : ''}`}
+              onClick={() => setMainTab('created')}
               type="button"
             >
-              Testlar
+              Yaratganlarim
             </button>
             <button
-              className={`profile-tab ${activeTab === 'hosted' ? 'profile-tab-active' : ''}`}
-              onClick={() => setActiveTab('hosted')}
+              className={`profile-tab ${mainTab === 'activity' ? 'profile-tab-active' : ''}`}
+              onClick={() => setMainTab('activity')}
               type="button"
             >
-              Hosting
-            </button>
-            <button
-              className={`profile-tab ${activeTab === 'played' ? 'profile-tab-active' : ''}`}
-              onClick={() => setActiveTab('played')}
-              type="button"
-            >
-              O'ynalganlar
-            </button>
-            <button
-              className={`profile-tab ${activeTab === 'roulettes' ? 'profile-tab-active' : ''}`}
-              onClick={() => setActiveTab('roulettes')}
-              type="button"
-            >
-              Ruletka
+              Faoliyatim
             </button>
           </div>
         </div>
 
+        {/* Filter Chips */}
+        <div className="profile-filter-chips">
+          {mainTab === 'created' ? (
+            <>
+              <button
+                className={`profile-filter-chip ${createdFilter === 'lessons' ? 'profile-filter-chip-active' : ''}`}
+                onClick={() => setCreatedFilter('lessons')}
+                type="button"
+              >
+                Uyga vazifalar
+              </button>
+              <button
+                className={`profile-filter-chip ${createdFilter === 'tests' ? 'profile-filter-chip-active' : ''}`}
+                onClick={() => setCreatedFilter('tests')}
+                type="button"
+              >
+                Testlar
+              </button>
+              <button
+                className={`profile-filter-chip ${createdFilter === 'materials' ? 'profile-filter-chip-active' : ''}`}
+                onClick={() => setCreatedFilter('materials')}
+                type="button"
+              >
+                Materiallar
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                className={`profile-filter-chip ${activityFilter === 'solved' ? 'profile-filter-chip-active' : ''}`}
+                onClick={() => setActivityFilter('solved')}
+                type="button"
+              >
+                Yechilganlar
+              </button>
+              <button
+                className={`profile-filter-chip ${activityFilter === 'hosted' ? 'profile-filter-chip-active' : ''}`}
+                onClick={() => setActivityFilter('hosted')}
+                type="button"
+              >
+                Hosting
+              </button>
+            </>
+          )}
+        </div>
+
         {/* Tab Content */}
         <div className="profile-content">
-          {activeTab === 'tests' && (
-            <div className="profile-tests-section">
-              {tests.length > 0 || isLoadingTests ? (
-                <>
-                  <div className="profile-tests-list">
-                    {tests.length > 0 ? (
-                      tests.map((test) => (
-                        <TestCardHorizontal
-                          key={test.id}
-                          test={test}
-                          onClick={() => navigate(`/test/${test.id}`)}
-                        />
-                      ))
-                    ) : isLoadingTests ? (
-                      <div style={{ padding: '20px 16px', textAlign: 'center' }}>
-                        <Loading message="Testlar yuklanmoqda..." />
-                      </div>
-                    ) : null}
-                  </div>
-
-                  {/* Pagination */}
-                  {!isLoadingTests && totalPages > 1 && (
-                    <div className="profile-pagination">
-                      <button
-                        className="profile-pagination-button"
-                        onClick={() => loadTests(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        type="button"
-                      >
-                        Oldingi
-                      </button>
-                      <span className="profile-pagination-info">
-                        {currentPage} / {totalPages}
-                      </span>
-                      <button
-                        className="profile-pagination-button"
-                        onClick={() => loadTests(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        type="button"
-                      >
-                        Keyingi
-                      </button>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="profile-empty-state">
-                  <p className="profile-empty-message">Hali hech qanday test yaratilmagan</p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {activeTab === 'hosted' && (
-            <div className="profile-tests-section">
-              {quizzes.length > 0 || isLoadingQuizzes ? (
-                <>
-                  <div className="profile-tests-list">
-                    {quizzes.length > 0 ? (
-                      quizzes.map((quiz) => (
-                        <QuizHostingCard
-                          key={quiz.id}
-                          quiz={quiz}
-                          onClick={() => navigate(`/quiz/${quiz.id}`)}
-                        />
-                      ))
-                    ) : isLoadingQuizzes ? (
-                      <div style={{ padding: '20px 16px', textAlign: 'center' }}>
-                        <Loading message="Testlar yuklanmoqda..." />
-                      </div>
-                    ) : null}
-                  </div>
-
-                  {/* Pagination */}
-                  {!isLoadingQuizzes && quizzesTotalPages > 1 && (
-                    <div className="profile-pagination">
-                      <button
-                        className="profile-pagination-button"
-                        onClick={() => loadQuizzes(quizzesCurrentPage - 1)}
-                        disabled={quizzesCurrentPage === 1}
-                        type="button"
-                      >
-                        Oldingi
-                      </button>
-                      <span className="profile-pagination-info">
-                        {quizzesCurrentPage} / {quizzesTotalPages}
-                      </span>
-                      <button
-                        className="profile-pagination-button"
-                        onClick={() => loadQuizzes(quizzesCurrentPage + 1)}
-                        disabled={quizzesCurrentPage === quizzesTotalPages}
-                        type="button"
-                      >
-                        Keyingi
-                      </button>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="profile-empty-state">
-                  <p className="profile-empty-message">Hali hech qanday quiz hosting qilmagan</p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {activeTab === 'played' && (
-            <div className="profile-tests-section">
-              {solvedTests.length > 0 || isLoadingSolvedTests ? (
-                <>
-                  <div className="profile-tests-list">
-                    {solvedTests.length > 0 ? (
-                      solvedTests.map((test) => (
-                        <TestCardHorizontal
-                          key={test.id}
-                          test={test}
-                          onClick={() => navigate(`/test/${test.id}`)}
-                        />
-                      ))
-                    ) : isLoadingSolvedTests ? (
-                      <div style={{ padding: '20px 16px', textAlign: 'center' }}>
-                        <Loading message="Testlar yuklanmoqda..." />
-                      </div>
-                    ) : null}
-                  </div>
-
-                  {/* Pagination */}
-                  {!isLoadingSolvedTests && solvedTestsTotalPages > 1 && (
-                    <div className="profile-pagination">
-                      <button
-                        className="profile-pagination-button"
-                        onClick={() => loadSolvedTests(solvedTestsCurrentPage - 1)}
-                        disabled={solvedTestsCurrentPage === 1}
-                        type="button"
-                      >
-                        Oldingi
-                      </button>
-                      <span className="profile-pagination-info">
-                        {solvedTestsCurrentPage} / {solvedTestsTotalPages}
-                      </span>
-                      <button
-                        className="profile-pagination-button"
-                        onClick={() => loadSolvedTests(solvedTestsCurrentPage + 1)}
-                        disabled={solvedTestsCurrentPage === solvedTestsTotalPages}
-                        type="button"
-                      >
-                        Keyingi
-                      </button>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="profile-empty-state">
-                  <p className="profile-empty-message">Hali hech qanday test yechilmagan</p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {activeTab === 'roulettes' && (
-            <div className="profile-tests-section">
-              {roulettes.length > 0 || isLoadingRoulettes ? (
-                <>
-                  <div className="profile-roulettes-list">
-                    {roulettes.length > 0 ? (
-                      roulettes.map((roulette) => (
-                        <div
-                          key={roulette.id}
-                          className="profile-roulette-item"
-                          onClick={() => navigate(`/roulette/${roulette.id}`)}
-                          role="button"
-                          tabIndex={0}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                              navigate(`/roulette/${roulette.id}`);
-                            }
-                          }}
-                        >
-                          <div className="profile-roulette-icon">🎡</div>
-                          <div className="profile-roulette-content">
-                            <h3 className="profile-roulette-title">{roulette.topic}</h3>
-                            <p className="profile-roulette-meta">
-                              {roulette.target_num_questions} savol • {roulette.language === 'uz' ? 'Uzbek' : roulette.language === 'en' ? 'English' : 'Русский'}
-                            </p>
-                          </div>
-                          <div className="profile-roulette-status">
-                            <span className={`profile-status-badge profile-status-${roulette.status}`}>
-                              {roulette.status === 'generated' ? '✓' : roulette.status === 'clarifying' ? '?' : '...'}
-                            </span>
-                          </div>
-                        </div>
-                      ))
-                    ) : isLoadingRoulettes ? (
-                      <div style={{ padding: '20px 16px', textAlign: 'center' }}>
-                        <Loading message="Ruletka yuklanmoqda..." />
-                      </div>
-                    ) : null}
-                  </div>
-
-                  {/* Pagination */}
-                  {!isLoadingRoulettes && roulettesTotalPages > 1 && (
-                    <div className="profile-pagination">
-                      <button
-                        className="profile-pagination-button"
-                        onClick={() => loadRoulettes(roulettesCurrentPage - 1)}
-                        disabled={roulettesCurrentPage === 1}
-                        type="button"
-                      >
-                        Oldingi
-                      </button>
-                      <span className="profile-pagination-info">
-                        {roulettesCurrentPage} / {roulettesTotalPages}
-                      </span>
-                      <button
-                        className="profile-pagination-button"
-                        onClick={() => loadRoulettes(roulettesCurrentPage + 1)}
-                        disabled={roulettesCurrentPage === roulettesTotalPages}
-                        type="button"
-                      >
-                        Keyingi
-                      </button>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="profile-empty-state">
-                  <p className="profile-empty-message">Hali hech qanday ruletka yaratilmagan</p>
-                </div>
-              )}
-            </div>
-          )}
+          {mainTab === 'created' ? renderCreatedContent() : renderActivityContent()}
         </div>
 
         {/* Bottom spacing */}

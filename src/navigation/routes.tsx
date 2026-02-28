@@ -22,6 +22,18 @@ import { RouletteClarificationPage } from '@/pages/RouletteClarificationPage/Rou
 import { RouletteDetailPage } from '@/pages/RouletteDetailPage/RouletteDetailPage';
 import { RoulettePreGameSetupPage } from '@/pages/RoulettePreGameSetupPage/RoulettePreGameSetupPage';
 import { RoulettePlayPage } from '@/pages/RoulettePlayPage/RoulettePlayPage';
+// Material System
+import { MaterialCreatePage } from '@/pages/MaterialCreatePage/MaterialCreatePage';
+import { MaterialGeneratingPage } from '@/pages/MaterialGeneratingPage/MaterialGeneratingPage';
+import { MaterialDetailPage } from '@/pages/MaterialDetailPage/MaterialDetailPage';
+import { MaterialEditPage } from '@/pages/MaterialEditPage/MaterialEditPage';
+// Teacher & Lesson System
+import { TeacherSettingsPage } from '@/pages/TeacherSettingsPage/TeacherSettingsPage';
+import { MyLessonsPage } from '@/pages/MyLessonsPage/MyLessonsPage';
+import { LessonDetailPage } from '@/pages/LessonDetailPage/LessonDetailPage';
+import { LessonEditPage } from '@/pages/LessonEditPage/LessonEditPage';
+import { LessonStudentStatsPage } from '@/pages/LessonStudentStatsPage/LessonStudentStatsPage';
+import { LessonGenerateAIPage } from '@/pages/LessonGenerateAIPage/LessonGenerateAIPage';
 
 interface Route {
   path: string;
@@ -48,9 +60,22 @@ export const routes: Route[] = [
   { path: '/solved-test/:solvedTestId', Component: SolvedTestDetailPage },
   { path: '/test/:testId/question/:questionIndex/info', Component: QuestionOwnerPage },
   { path: '/quiz/:quizId', Component: QuizDetailPage },
+  // Old Roulette routes (deprecated, kept for backward compatibility)
   { path: '/roulette/create', Component: RouletteCreatePage },
   { path: '/roulette/:rouletteId/clarify', Component: RouletteClarificationPage },
   { path: '/roulette/:rouletteId', Component: RouletteDetailPage },
   { path: '/roulette/:rouletteId/setup', Component: RoulettePreGameSetupPage },
   { path: '/roulette/:rouletteId/play', Component: RoulettePlayPage },
+  // New Material System routes
+  { path: '/material/create/:materialType', Component: MaterialCreatePage },
+  { path: '/material/generating/:taskId', Component: MaterialGeneratingPage },
+  { path: '/material/:materialId', Component: MaterialDetailPage },
+  { path: '/material/:materialId/edit', Component: MaterialEditPage },
+  // Teacher & Lesson System routes
+  { path: '/teacher/settings', Component: TeacherSettingsPage },
+  { path: '/lessons', Component: MyLessonsPage },
+  { path: '/lesson/generate-ai', Component: LessonGenerateAIPage },
+  { path: '/lesson/:lessonId/edit', Component: LessonEditPage },
+  { path: '/lesson/:lessonId/student/:studentId', Component: LessonStudentStatsPage },
+  { path: '/lesson/:lessonId', Component: LessonDetailPage },
 ];
