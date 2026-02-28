@@ -7,6 +7,7 @@ interface PageHeaderProps {
   image?: string;
   variant?: 'default' | 'special' | 'gradient-orange' | 'gradient-primary';
   centerTitle?: boolean;
+  actionNode?: React.ReactNode;
 }
 
 export const PageHeader: FC<PageHeaderProps> = ({
@@ -15,6 +16,7 @@ export const PageHeader: FC<PageHeaderProps> = ({
   image,
   variant = 'default',
   centerTitle = false,
+  actionNode,
 }) => {
   if (variant === 'special') {
     return (
@@ -27,16 +29,28 @@ export const PageHeader: FC<PageHeaderProps> = ({
             title && <h1 className="page-header-special-title">{title}</h1>
           )}
         </div>
+        {actionNode && (
+          <div className="page-header-action">
+            {actionNode}
+          </div>
+        )}
       </div>
     );
   }
 
   return (
     <div className={`page-header ${variant === 'gradient-orange' ? 'page-header-gradient-orange' : ''} ${variant === 'gradient-primary' ? 'page-header-gradient-primary' : ''} ${centerTitle ? 'page-header-center' : ''}`}>
-      {image ? (
-        <img src={image} alt="Header Logo" className="page-header-logo-default" />
-      ) : (
-        title && <h1 className="page-header-title">{title}</h1>
+      <div className="page-header-inner">
+        {image ? (
+          <img src={image} alt="Header Logo" className="page-header-logo-default" />
+        ) : (
+          title && <h1 className="page-header-title">{title}</h1>
+        )}
+      </div>
+      {actionNode && (
+        <div className="page-header-action">
+          {actionNode}
+        </div>
       )}
     </div>
   );

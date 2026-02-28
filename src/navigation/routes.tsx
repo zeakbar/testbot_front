@@ -34,6 +34,7 @@ import { LessonDetailPage } from '@/pages/LessonDetailPage/LessonDetailPage';
 import { LessonEditPage } from '@/pages/LessonEditPage/LessonEditPage';
 import { LessonStudentStatsPage } from '@/pages/LessonStudentStatsPage/LessonStudentStatsPage';
 import { LessonGenerateAIPage } from '@/pages/LessonGenerateAIPage/LessonGenerateAIPage';
+import { HomeworkOnboardingPage } from '@/pages/HomeworkOnboardingPage/HomeworkOnboardingPage';
 
 interface Route {
   path: string;
@@ -75,6 +76,7 @@ export const routes: Route[] = [
   { path: '/teacher/settings', Component: TeacherSettingsPage },
   { path: '/lessons', Component: MyLessonsPage },
   { path: '/lesson/generate-ai', Component: LessonGenerateAIPage },
+  { path: '/homework-onboarding', Component: HomeworkOnboardingPage },
   { path: '/lesson/:lessonId/edit', Component: LessonEditPage },
   { path: '/lesson/:lessonId/student/:studentId', Component: LessonStudentStatsPage },
   { path: '/lesson/:lessonId', Component: LessonDetailPage },

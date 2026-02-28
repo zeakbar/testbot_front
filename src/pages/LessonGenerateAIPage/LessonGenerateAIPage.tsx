@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiZap, FiBook, FiUsers, FiCheck, FiAlertCircle, FiRefreshCw, FiSettings, FiPlus } from 'react-icons/fi';
+import { FiZap, FiBook, FiUsers, FiCheck, FiAlertCircle, FiRefreshCw, FiSettings, FiPlus, FiInfo } from 'react-icons/fi';
 import { IoMdHelpCircleOutline } from 'react-icons/io';
 import { MdOutlineSwapHoriz } from 'react-icons/md';
 import { TbLetterU } from 'react-icons/tb';
@@ -51,7 +51,7 @@ export const LessonGenerateAIPage: FC = () => {
     topic: '',
     description: '',
     grade_level: GRADE_LEVELS[0]?.value ?? 'A2',
-    preferred_types: [],
+    preferred_types: MATERIAL_CHIPS.map(chip => chip.value),
     difficulty: 'medium',
     num_questions: 6,
     content_language: 'en',
@@ -180,6 +180,10 @@ export const LessonGenerateAIPage: FC = () => {
       setError("Mavzu kiriting");
       return;
     }
+    if (formData.preferred_types.length === 0) {
+      setError("Kamida bitta material turini tanlang");
+      return;
+    }
     if (!hasEnoughBalance) {
       setError(`Balansingiz yetarli emas. Kerak: ${formatPrice(homeworkPrice)}. Profil sahifasidan balansingizni to'ldiring.`);
       return;
@@ -257,7 +261,7 @@ export const LessonGenerateAIPage: FC = () => {
 
       <div className="form-section">
         <label>Qo'shiladigan materiallar</label>
-        <p className="material-hint">Tanlanmasa, AI barcha turlardan avtomatik tanlaydi</p>
+        <p className="material-hint">Kerakli material turlarini belgilang</p>
         <div className="material-chips">
           {MATERIAL_CHIPS.map(({ value, label, icon: Icon }) => (
             <button
@@ -305,12 +309,12 @@ export const LessonGenerateAIPage: FC = () => {
             className="form-select"
           >
             <optgroup label="CEFR - Til darajalari">
-              {GRADE_LEVELS.filter(g => ['A1','A2','B1','B2','C1','C2'].includes(g.value)).map(g => (
+              {GRADE_LEVELS.filter(g => ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].includes(g.value)).map(g => (
                 <option key={g.value} value={g.value}>{g.label}</option>
               ))}
             </optgroup>
             <optgroup label="Sinf darajalari">
-              {GRADE_LEVELS.filter(g => g.value.includes('sinf') || ['universitet','umumiy'].includes(g.value)).map(g => (
+              {GRADE_LEVELS.filter(g => g.value.includes('sinf') || ['universitet', 'umumiy'].includes(g.value)).map(g => (
                 <option key={g.value} value={g.value}>{g.label}</option>
               ))}
             </optgroup>
@@ -404,7 +408,7 @@ export const LessonGenerateAIPage: FC = () => {
           <div className="balance-too-low-content">
             <p className="balance-too-low-title">Balansingiz yetarli emas</p>
             <p className="balance-too-low-desc">
-              Uyga vazifa yaratish uchun {formatPrice(homeworkPrice)} kerak. 
+              Uyga vazifa yaratish uchun {formatPrice(homeworkPrice)} kerak.
               Balansingizni to'ldiring.
             </p>
             <button
@@ -487,49 +491,49 @@ export const LessonGenerateAIPage: FC = () => {
     };
 
     return (
-    <div className="ai-success">
-      {/* Fixed top – status & lesson info */}
-      <div className="ai-success-header">
-        <div className="success-icon"><FiCheck size={48} /></div>
-        <h2>Uyga vazifa tayyor!</h2>
-        {lessonPlan && (
-          <div className="lesson-summary-top">
-            <h3 className="lesson-summary-title">{lessonPlan.title}</h3>
-            <p className="lesson-summary-desc">{lessonPlan.description}</p>
-            <div className="summary-stats">
-              <div className="stat"><FiBook size={14} /><span>{materials.length} ta material</span></div>
-              <div className="stat"><FiUsers size={14} /><span>{lessonPlan.subject}</span></div>
+      <div className="ai-success">
+        {/* Fixed top – status & lesson info */}
+        <div className="ai-success-header">
+          <div className="success-icon"><FiCheck size={48} /></div>
+          <h2>Uyga vazifa tayyor!</h2>
+          {lessonPlan && (
+            <div className="lesson-summary-top">
+              <h3 className="lesson-summary-title">{lessonPlan.title}</h3>
+              <p className="lesson-summary-desc">{lessonPlan.description}</p>
+              <div className="summary-stats">
+                <div className="stat"><FiBook size={14} /><span>{materials.length} ta material</span></div>
+                <div className="stat"><FiUsers size={14} /><span>{lessonPlan.subject}</span></div>
+              </div>
+            </div>
+          )}
+        </div>
+        {/* Scrollable materials list only */}
+        {lessonPlan && materials.length > 0 && (
+          <div className="ai-success-materials">
+            <div className="materials-preview">
+              {materials.map((m, i) => (
+                <div key={i} className="material-preview-item">
+                  <span className="material-order">{m.order}</span>
+                  <div className="material-info">
+                    <span className="material-title" title={m.title}>{m.title}</span>
+                    <span className="material-meta">{materialTypeLabel(m.material_type)} • {m.num_items} ta</span>
+                  </div>
+                  <span className={`difficulty-badge ${m.difficulty}`}>{m.difficulty}</span>
+                </div>
+              ))}
             </div>
           </div>
         )}
-      </div>
-      {/* Scrollable materials list only */}
-      {lessonPlan && materials.length > 0 && (
-        <div className="ai-success-materials">
-          <div className="materials-preview">
-            {materials.map((m, i) => (
-              <div key={i} className="material-preview-item">
-                <span className="material-order">{m.order}</span>
-                <div className="material-info">
-                  <span className="material-title" title={m.title}>{m.title}</span>
-                  <span className="material-meta">{materialTypeLabel(m.material_type)} • {m.num_items} ta</span>
-                </div>
-                <span className={`difficulty-badge ${m.difficulty}`}>{m.difficulty}</span>
-              </div>
-            ))}
-          </div>
+        {/* Fixed bottom – action buttons */}
+        <div className="success-actions">
+          <button type="button" className="primary-btn" onClick={handleViewLesson}>
+            <FiBook /><span>Uyga vazifani ko'rish</span>
+          </button>
+          <button type="button" className="secondary-btn" onClick={handleReset}>
+            <FiRefreshCw /><span>Yana yaratish</span>
+          </button>
         </div>
-      )}
-      {/* Fixed bottom – action buttons */}
-      <div className="success-actions">
-        <button type="button" className="primary-btn" onClick={handleViewLesson}>
-          <FiBook /><span>Uyga vazifani ko'rish</span>
-        </button>
-        <button type="button" className="secondary-btn" onClick={handleReset}>
-          <FiRefreshCw /><span>Yana yaratish</span>
-        </button>
       </div>
-    </div>
     );
   };
 
@@ -551,7 +555,21 @@ export const LessonGenerateAIPage: FC = () => {
     <Page back={true}>
       <div className="ai-lesson-page">
         {phase !== 'success' && (
-          <PageHeader title="Uyga vazifa yaratish" variant="gradient-primary" />
+          <PageHeader
+            title="Uyga vazifa yaratish"
+            variant="gradient-primary"
+            actionNode={
+              <button
+                type="button"
+                onClick={() => navigate('/homework-onboarding')}
+                style={{ background: 'transparent', border: 'none', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', cursor: 'pointer' }}
+                aria-label="Qo'llanmani ko'rish"
+                title="Qo'llanmani ko'rish"
+              >
+                <FiInfo size={24} />
+              </button>
+            }
+          />
         )}
         <div className={`ai-lesson-content ${phase === 'success' ? 'ai-lesson-content-success' : ''}`}>
           {phase === 'form' && renderForm()}
