@@ -140,6 +140,9 @@ export const MaterialGeneratingPage: FC = () => {
               </div>
               <h2>{config ? `${config.title} yaratilmoqda` : 'Material yaratilmoqda'}</h2>
               <p className="generating-message">{message}</p>
+              <p className="generating-safe-close" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', textAlign: 'center', marginTop: '4px', marginBottom: '16px' }}>
+                Xavotir olmang, sahifani yopishingiz mumkin. Tayyor bo'lganda sizga xabar beramiz.
+              </p>
               <div className="progress-section">
                 <div className="progress-bar-container">
                   <div

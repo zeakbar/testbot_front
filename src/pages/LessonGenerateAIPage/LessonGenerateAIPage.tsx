@@ -447,6 +447,9 @@ export const LessonGenerateAIPage: FC = () => {
       </div>
       <h2>Uyga vazifa yaratilmoqda</h2>
       <p className="generating-message">{progress?.message ?? "AI mavzuni tahlil qilmoqda..."}</p>
+      <p className="generating-safe-close">
+        Xavotir olmang, sahifani yopishingiz mumkin. Tayyor bo'lganda sizga xabar beramiz.
+      </p>
       <div className="progress-section">
         <div className="progress-bar-container">
           <div className="progress-bar-fill" style={{ width: `${progress?.progress ?? 5}%` }} />
