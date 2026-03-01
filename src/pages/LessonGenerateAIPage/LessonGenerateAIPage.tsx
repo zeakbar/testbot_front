@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiZap, FiBook, FiUsers, FiCheck, FiAlertCircle, FiRefreshCw, FiSettings, FiPlus, FiInfo } from 'react-icons/fi';
+import { FiZap, FiBook, FiUsers, FiCheck, FiAlertCircle, FiRefreshCw, FiSettings, FiPlus, FiInfo, FiHome } from 'react-icons/fi';
 import { IoMdHelpCircleOutline } from 'react-icons/io';
 import { MdOutlineSwapHoriz } from 'react-icons/md';
 import { TbLetterU } from 'react-icons/tb';
@@ -53,7 +53,7 @@ export const LessonGenerateAIPage: FC = () => {
     grade_level: GRADE_LEVELS[0]?.value ?? 'A2',
     preferred_types: MATERIAL_CHIPS.map(chip => chip.value),
     difficulty: 'medium',
-    num_questions: 6,
+    num_questions: 5,
     content_language: 'en',
     instruction_language: 'uz',
     skill_focus: '',
@@ -448,7 +448,7 @@ export const LessonGenerateAIPage: FC = () => {
       <h2>Uyga vazifa yaratilmoqda</h2>
       <p className="generating-message">{progress?.message ?? "AI mavzuni tahlil qilmoqda..."}</p>
       <p className="generating-safe-close">
-        Xavotir olmang, sahifani yopishingiz mumkin. Tayyor bo'lganda sizga xabar beramiz.
+        Siz kutishingiz shart emas. Tayyor bo'lganda sizga xabar beramiz.
       </p>
       <div className="progress-section">
         <div className="progress-bar-container">
@@ -472,6 +472,25 @@ export const LessonGenerateAIPage: FC = () => {
           <div className="step-icon"><FiCheck /></div>
           <span className="step-label">Saqlash</span>
         </div>
+      </div>
+      <div style={{ display: 'flex', gap: '10px', width: '100%', marginTop: '20px' }}>
+        <button
+          type="button"
+          className="secondary-btn cancel-btn"
+          onClick={() => navigate('/')}
+          style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '12px', borderRadius: '12px', background: 'transparent', color: 'white', border: '1px solid rgba(255,255,255,0.2)', cursor: 'pointer' }}
+        >
+          <FiHome size={18} />
+          Bosh sahifa
+        </button>
+        <button
+          type="button"
+          className="secondary-btn cancel-btn"
+          onClick={() => navigate(-1)}
+          style={{ flex: 1, padding: '12px', borderRadius: '12px', background: '#e53e3e', color: 'white', border: 'none', cursor: 'pointer' }}
+        >
+          Bekor qilish
+        </button>
       </div>
     </div>
   );

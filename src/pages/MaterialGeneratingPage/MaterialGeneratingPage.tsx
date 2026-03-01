@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { FiZap, FiCheck, FiAlertCircle, FiBook } from 'react-icons/fi';
+import { FiZap, FiCheck, FiAlertCircle, FiBook, FiHome } from 'react-icons/fi';
 import { Page } from '@/components/Page';
 import { PageHeader } from '@/components/PageHeader/PageHeader';
 import { subscribeToTaskProgress, cancelTask, getMaterialConfig, type MaterialType } from '@/api/materials';
@@ -141,7 +141,7 @@ export const MaterialGeneratingPage: FC = () => {
               <h2>{config ? `${config.title} yaratilmoqda` : 'Material yaratilmoqda'}</h2>
               <p className="generating-message">{message}</p>
               <p className="generating-safe-close" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', textAlign: 'center', marginTop: '4px', marginBottom: '16px' }}>
-                Xavotir olmang, sahifani yopishingiz mumkin. Tayyor bo'lganda sizga xabar beramiz.
+                Siz kutishingiz shart emas. Tayyor bo'lganda sizga xabar beramiz.
               </p>
               <div className="progress-section">
                 <div className="progress-bar-container">
@@ -175,14 +175,26 @@ export const MaterialGeneratingPage: FC = () => {
                   <span className="step-label">Saqlash</span>
                 </div>
               </div>
-              <button
-                type="button"
-                className="secondary-btn cancel-btn"
-                onClick={handleCancel}
-                disabled={isCancelling}
-              >
-                {isCancelling ? 'Bekor qilinmoqda...' : 'Bekor qilish'}
-              </button>
+              <div style={{ display: 'flex', gap: '10px', width: '100%', marginTop: '20px' }}>
+                <button
+                  type="button"
+                  className="secondary-btn cancel-btn"
+                  onClick={() => navigate('/')}
+                  style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '12px', borderRadius: '12px', background: 'transparent', color: 'white', border: '1px solid rgba(255,255,255,0.2)', cursor: 'pointer' }}
+                >
+                  <FiHome size={18} />
+                  Bosh sahifa
+                </button>
+                <button
+                  type="button"
+                  className="secondary-btn cancel-btn"
+                  onClick={handleCancel}
+                  disabled={isCancelling}
+                  style={{ flex: 1, padding: '12px', borderRadius: '12px', background: '#e53e3e', color: 'white', border: 'none', cursor: 'pointer' }}
+                >
+                  {isCancelling ? 'Bekor qilinmoqda...' : 'Bekor qilish'}
+                </button>
+              </div>
             </div>
           )}
 

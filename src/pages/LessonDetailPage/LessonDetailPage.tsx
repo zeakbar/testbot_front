@@ -1,16 +1,16 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  FiShare2, FiUsers, FiBook, FiClock, FiBarChart2, 
+import {
+  FiShare2, FiUsers, FiBook, FiClock, FiBarChart2,
   FiChevronRight, FiCopy, FiCheck, FiTrash2, FiEdit2,
   FiPlus, FiCheckCircle
 } from 'react-icons/fi';
 import { Page } from '@/components/Page';
 import { Loading } from '@/components/Loading/Loading';
-import { 
-  getLessonById, 
-  generateInviteLink, 
+import {
+  getLessonById,
+  generateInviteLink,
   getLessonStudents,
   getLessonStats,
   removeStudent,
@@ -33,7 +33,7 @@ export const LessonDetailPage: FC = () => {
   const [isLoadingStats, setIsLoadingStats] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'materials' | 'students' | 'stats'>('materials');
-  
+
   // Share modal state
   const [showShareModal, setShowShareModal] = useState(false);
   const [inviteLink, setInviteLink] = useState<string | null>(null);
@@ -244,7 +244,7 @@ export const LessonDetailPage: FC = () => {
             {lesson.description && (
               <p className="lesson-description">{lesson.description}</p>
             )}
-            
+
             <div className="lesson-meta lesson-meta-single-row">
               <span className="meta-item">
                 <FiBook size={14} />
@@ -274,7 +274,7 @@ export const LessonDetailPage: FC = () => {
           <div className="student-homework-progress">
             <div className="homework-progress-bar-wrapper">
               <div className="homework-progress-bar">
-                <div 
+                <div
                   className="homework-progress-fill"
                   style={{ width: `${myProgress.completion_percentage}%` }}
                 />
@@ -357,10 +357,10 @@ export const LessonDetailPage: FC = () => {
                   {lesson.materials.map((material, index) => {
                     const config = configForType(material.type);
                     const progress = getMaterialProgress(material.id);
-                    const statusClass = progress?.status === 'completed' ? 'hw-completed' 
-                      : progress?.status === 'in_progress' ? 'hw-in-progress' 
-                      : '';
-                    
+                    const statusClass = progress?.status === 'completed' ? 'hw-completed'
+                      : progress?.status === 'in_progress' ? 'hw-in-progress'
+                        : '';
+
                     return (
                       <div
                         key={material.id}
@@ -379,8 +379,8 @@ export const LessonDetailPage: FC = () => {
                         ) : (
                           <div className="material-order">{index + 1}</div>
                         )}
-                        
-                        <div 
+
+                        <div
                           className="material-icon"
                           style={{ background: `${config.color}20`, color: config.color }}
                         >
@@ -445,12 +445,12 @@ export const LessonDetailPage: FC = () => {
                           Yozilgan: {formatDate(enrollment.enrolled_at)}
                         </p>
                         <div className="student-progress">
-                          <div 
+                          <div
                             className="progress-bar"
                             style={{ width: `${enrollment.progress_summary.completion_percentage}%` }}
                           />
                           <span className="progress-text">
-                            {enrollment.progress_summary.completed}/{enrollment.progress_summary.total_materials} 
+                            {enrollment.progress_summary.completed}/{enrollment.progress_summary.total_materials}
                             ({enrollment.progress_summary.completion_percentage.toFixed(0)}%)
                           </span>
                         </div>
@@ -493,45 +493,45 @@ export const LessonDetailPage: FC = () => {
                   <div className="stats-grid">
                     <div className="stat-card">
                       <span className="stat-value">{stats.total_enrolled}</span>
-                      <span className="stat-label">Students</span>
+                      <span className="stat-label">Talabalar</span>
                     </div>
                     <div className="stat-card">
                       <span className="stat-value">{stats.total_materials}</span>
-                      <span className="stat-label">Exercises</span>
+                      <span className="stat-label">Materiallar</span>
                     </div>
                     <div className="stat-card">
                       <span className="stat-value">{stats.students_completed_all}</span>
-                      <span className="stat-label">Completed</span>
+                      <span className="stat-label">Tugatgan</span>
                     </div>
                     <div className="stat-card">
                       <span className="stat-value">{stats.students_in_progress}</span>
-                      <span className="stat-label">In Progress</span>
+                      <span className="stat-label">Jarayonda</span>
                     </div>
                   </div>
 
                   <div className="score-stats">
-                    <h4>Score Overview</h4>
+                    <h4>Natijalar xulosasi</h4>
                     {stats.average_score !== null ? (
                       <>
                         <div className="score-row">
-                          <span>Average</span>
+                          <span className="score-label">O'rtacha</span>
                           <span className="score-value">{stats.average_score.toFixed(1)}%</span>
                         </div>
                         {stats.highest_score !== null && (
                           <div className="score-row">
-                            <span>Highest</span>
+                            <span className="score-label">Eng yuqori</span>
                             <span className="score-value high">{stats.highest_score.toFixed(1)}%</span>
                           </div>
                         )}
                         {stats.lowest_score !== null && (
                           <div className="score-row">
-                            <span>Lowest</span>
+                            <span className="score-label">Eng past</span>
                             <span className="score-value low">{stats.lowest_score.toFixed(1)}%</span>
                           </div>
                         )}
                         {stats.average_time_seconds !== null && (
                           <div className="score-row">
-                            <span>Avg. Time</span>
+                            <span className="score-label">O'rtacha vaqt</span>
                             <span className="score-value">
                               {Math.floor(stats.average_time_seconds / 60)}m {stats.average_time_seconds % 60}s
                             </span>
@@ -539,13 +539,13 @@ export const LessonDetailPage: FC = () => {
                         )}
                       </>
                     ) : (
-                      <p className="stats-empty-hint">No scores recorded yet</p>
+                      <p className="stats-empty-hint">Hali natijalar qayd etilmagan</p>
                     )}
                   </div>
 
                   {students.length > 0 && (
                     <div className="student-stats-section">
-                      <h4>Per Student</h4>
+                      <h4>Talabalar kesimida</h4>
                       {students.map(enrollment => (
                         <div key={enrollment.id} className="student-stat-row">
                           <div className="student-stat-info">
@@ -553,14 +553,14 @@ export const LessonDetailPage: FC = () => {
                               {enrollment.student.full_name}
                             </span>
                             <span className="student-stat-detail">
-                              {enrollment.progress_summary?.completed || 0}/{enrollment.progress_summary?.total_materials || stats.total_materials} done
+                              {enrollment.progress_summary?.completed || 0}/{enrollment.progress_summary?.total_materials || stats.total_materials} bajarildi
                               {enrollment.progress_summary?.average_score != null && (
                                 <> &middot; {enrollment.progress_summary.average_score.toFixed(0)}%</>
                               )}
                             </span>
                           </div>
                           <div className="student-stat-bar-wrapper">
-                            <div 
+                            <div
                               className="student-stat-bar-fill"
                               style={{ width: `${enrollment.progress_summary?.completion_percentage || 0}%` }}
                             />
@@ -572,7 +572,7 @@ export const LessonDetailPage: FC = () => {
 
                   {stats.material_stats.length > 0 && (
                     <div className="material-stats">
-                      <h4>Per Exercise</h4>
+                      <h4>Materiallar kesimida</h4>
                       {stats.material_stats.map(mat => (
                         <div key={mat.id} className="material-stat-row">
                           <span className="mat-title">{mat.title}</span>
@@ -592,7 +592,7 @@ export const LessonDetailPage: FC = () => {
               ) : (
                 <div className="empty-state">
                   <FiBarChart2 size={48} />
-                  <p>No statistics available yet</p>
+                  <p>Hozircha statistika mavjud emas</p>
                 </div>
               )}
             </div>
@@ -607,15 +607,15 @@ export const LessonDetailPage: FC = () => {
               <p className="modal-description">
                 Bu havolani talabalarga yuboring. Ular havola orqali uyga vazifaga yozilishlari mumkin.
               </p>
-              
+
               <div className="invite-link-box">
-                <input 
-                  type="text" 
-                  value={inviteLink} 
-                  readOnly 
+                <input
+                  type="text"
+                  value={inviteLink}
+                  readOnly
                   className="invite-link-input"
                 />
-                <button 
+                <button
                   className="copy-btn"
                   onClick={handleCopyLink}
                 >
@@ -631,15 +631,23 @@ export const LessonDetailPage: FC = () => {
               )}
 
               <div className="modal-actions">
-                <button 
+                <button
                   className="modal-btn modal-btn-primary"
                   onClick={() => {
-                    window.open(inviteLink, '_blank');
+                    const query = `lesson_${lesson.invite_code}`;
+                    const tg = (window as any).Telegram?.WebApp;
+                    if (tg && typeof tg.switchInlineQuery === 'function') {
+                      tg.switchInlineQuery(query, ['users', 'groups', 'channels']);
+                    } else {
+                      const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(inviteLink || '')}&text=${encodeURIComponent(lesson.title)}`;
+                      window.open(shareUrl, '_blank');
+                    }
                   }}
                 >
+                  <FiShare2 style={{ marginRight: '8px' }} />
                   Telegram orqali ulashish
                 </button>
-                <button 
+                <button
                   className="modal-btn modal-btn-secondary"
                   onClick={() => setShowShareModal(false)}
                 >

@@ -21,12 +21,12 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
 // MATERIAL TYPES & PRICING CONFIG
 // =============================================================================
 
-export type MaterialType = 
-  | 'quiz' 
-  | 'flashcards' 
-  | 'roulette' 
-  | 'matching' 
-  | 'fill_blanks' 
+export type MaterialType =
+  | 'quiz'
+  | 'flashcards'
+  | 'roulette'
+  | 'matching'
+  | 'fill_blanks'
   | 'true_false';
 
 export interface MaterialTypeConfig {
@@ -155,7 +155,7 @@ export function formatPrice(price: number): string {
 // =============================================================================
 
 /** Base price for homework creation (UZS) - e.g. 5 materials = 2000 + 5000 = 7000 so'm */
-export const HOMEWORK_BASE_PRICE = 2000;
+export const HOMEWORK_BASE_PRICE = 0;
 /** Price per material in homework (UZS) */
 export const HOMEWORK_PRICE_PER_MATERIAL = 1000;
 
@@ -218,11 +218,11 @@ export function subscribeToTaskProgress(
 ): () => void {
   const url = `${API_BASE_URL}/tasks/${taskId}/progress/`;
   const eventSource = new EventSource(url);
-  
+
   eventSource.onmessage = (event) => {
     try {
       const data = JSON.parse(event.data) as TaskProgressEvent;
-      
+
       if (data.status === 'success' || data.status === 'failed') {
         onComplete(data);
         eventSource.close();
@@ -233,13 +233,13 @@ export function subscribeToTaskProgress(
       console.error('Error parsing SSE event:', error);
     }
   };
-  
+
   eventSource.onerror = (error) => {
     console.error('SSE connection error:', error);
     onError(new Error('Ulanishda xatolik yuz berdi'));
     eventSource.close();
   };
-  
+
   // Return cleanup function
   return () => {
     eventSource.close();
