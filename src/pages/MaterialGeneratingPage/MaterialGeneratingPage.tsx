@@ -29,6 +29,7 @@ export const MaterialGeneratingPage: FC = () => {
   const [message, setMessage] = useState('Navbatda kutilmoqda...');
   const [error, setError] = useState<string | null>(null);
   const [materialId, setMaterialId] = useState<number | null>(null);
+  const [generatedType, setGeneratedType] = useState<string | null>(null);
   const [isCancelling, setIsCancelling] = useState(false);
 
   const unsubscribeRef = useRef<(() => void) | null>(null);
@@ -36,6 +37,8 @@ export const MaterialGeneratingPage: FC = () => {
   const materialType = state?.materialType;
   const config = materialType ? getMaterialConfig(materialType) : null;
   const topic = state?.topic || 'Material';
+
+  const actualMaterialType = generatedType || materialType;
 
   const handleProgress = useCallback((event: TaskProgressEvent) => {
     setProgress(event.progress);
@@ -50,6 +53,9 @@ export const MaterialGeneratingPage: FC = () => {
 
     if (event.status === 'success' && event.result?.material_id) {
       setMaterialId(event.result.material_id);
+      if (event.result.material_type) {
+        setGeneratedType(event.result.material_type);
+      }
     } else if (event.status === 'failed') {
       setError(event.error || event.message || 'Xatolik yuz berdi');
     }
@@ -93,9 +99,13 @@ export const MaterialGeneratingPage: FC = () => {
   };
 
   const handleViewMaterial = () => {
-    if (materialId && materialType) {
-      if (materialType === 'roulette') {
+    if (materialId && actualMaterialType) {
+      if (actualMaterialType === 'roulette') {
         navigate(`/roulette/${materialId}`);
+      } else if (actualMaterialType === 'lesson') {
+        // According to routes it might be /lessons/:id or /material/:id
+        // Assuming /lesson/:id based on general conventions, or we can check what the router expects
+        navigate(`/lesson/${materialId}`);
       } else {
         navigate(`/material/${materialId}`);
       }
@@ -180,7 +190,7 @@ export const MaterialGeneratingPage: FC = () => {
                   type="button"
                   className="secondary-btn cancel-btn"
                   onClick={() => navigate('/')}
-                  style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '12px', borderRadius: '12px', background: 'transparent', color: 'white', border: '1px solid rgba(255,255,255,0.2)', cursor: 'pointer' }}
+                  style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '12px', borderRadius: '12px', cursor: 'pointer' }}
                 >
                   <FiHome size={18} />
                   Bosh sahifa
